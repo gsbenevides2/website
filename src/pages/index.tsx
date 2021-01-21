@@ -123,22 +123,17 @@ const Home: React.FC<InferGetStaticPropsType<
           </button>
         </ButtonArea>
         <p>
-          Oi 👋, meu nome é Guilherme da Silva Benevides, tenho
-          {' ' + props.age + ' '}
-          anos, e sou apaixonado por programação, programo a partir dos meus 15
-          anos, comecei como muitos, querendo resolver um problema, automatizar
-          algo no celular, porém como não encontrei a solução na minha loja de
-          apps, fui atrás de como criar o meu próprio, nisso aprendi Python
-          usando o qpython, porém limitações apareceram e tive que supera-las,
-          nisso conheci o DroidScript que permite criar apps usando HTML, CSS e
-          Javascript, estudei e continuo estudando a fim de conhecer ainda mais
-          essa arte que é programar.
-          <br /> Atualmente uso mais o Javascript com ferramentas como NodeJS,
-          React e React Native(Expo). Pretendo expandir meus conhecimentos em
-          outras linguagens como Java(conheço bem pouco) e Python (conheço, mas
-          não muito). Sou apaixonado por novas tecnologias e pretendo sempre
-          continuar nessa jornada sem fim pela TI. Siga-me em minhas redes
-          sociais e saiba o que estou fazendo agora.🚀
+          Oi! Meu nome é Guilherme da Silva Benevides, e sou apaixonado por
+          programação, tenho {` ${props.age} `} anos, e desde os meus 15 escrevo
+          códigos. Programo muito no meu celular, por falta de computador, porém
+          isso não me impede de eu continuar, traz limitações, entretanto
+          continuo aprendendo. Comecei com python, minha vontade era criar um
+          app, porém com as limitações, migrei para o Javascript e através do
+          app DroidScript criei meus primeiros apps. Hoje sei Node.js, React e
+          React Native (Expo). Fiz um curso de Assistente de Desenvolvimento de
+          Sistemas do Novotec, nele vi tecnologias como banco de dados SQL e o
+          básico de Java. Se você deseja me conhecer melhor e ver o que faço
+          atualmente acesse minhas redes sociais.
         </p>
         <button onClick={() => scrollTo(3)}>Veja minhas redes sociais</button>
       </SeccoundPage>

@@ -83,12 +83,16 @@ export const ButtonArea = styled.div`
   flex-direction: column;
   align-items: flex-end;
   button {
-    font-size: 30px;
-    color: white;
     cursor: pointer;
+    border: 1px solid transparent;
+    padding: 10px 15px;
+    color: white;
+    font-size: 30px;
+    margin-top: 1rem;
+    border-radius: 20px;
     background-color: transparent;
     outline: none;
-    border: none;
+    text-transform: uppercase;
     transition: 0.2s;
   }
   button:focus {
