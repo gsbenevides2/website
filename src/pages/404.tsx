@@ -20,13 +20,13 @@ const Page: React.FC = () => {
     window.addEventListener('resize', setDocumentHeightCssVariable)
   })
   return (
-    <Container onClick={playMusic}>
+    <Container>
       <Head>
         <title>Página Não Encontrada</title>
       </Head>
       <Code>
         <span>4</span>
-        <span>0</span>
+        <span onClick={playMusic}>0</span>
         <span>4</span>
       </Code>
       <h1>Ops, a página que você procura não está aqui</h1>
@@ -42,7 +42,7 @@ const Page: React.FC = () => {
           <a href="mailto:gsbenevides2@gmail.com">o administrador.</a>
         </li>
       </ul>
-      <audio loop>
+      <audio>
         <source src="../404.mp3" type="audio/mpeg" />
       </audio>
     </Container>
