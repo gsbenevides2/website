@@ -6,7 +6,8 @@ import {
   FiGithub,
   FiInstagram,
   FiLinkedin,
-  FiTwitter
+  FiTwitter,
+  FiFileText
 } from 'react-icons/fi'
 
 import {
@@ -20,6 +21,7 @@ import {
 } from '../styles/pages/Home'
 
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
+import Link from 'next/link'
 
 export const getStaticProps: GetStaticProps = async () => {
   function calculateAge() {
@@ -102,6 +104,14 @@ const Home: React.FC<InferGetStaticPropsType<
       icon: FiTwitter
     }
   ]
+  const myPages = [
+    {
+      name: 'Currículo',
+      url: '/curriculo',
+      color: '#24292e',
+      icon: FiFileText
+    }
+  ]
   return (
     <Container>
       <Head>
@@ -150,6 +160,16 @@ const Home: React.FC<InferGetStaticPropsType<
                 {React.createElement(media.icon, { size: 60 }, null)}
                 <span>{media.name}</span>
               </a>
+            </SocialItem>
+          ))}
+          {myPages.map((page, index) => (
+            <SocialItem color={page.color} key={index.toString()}>
+              <Link href="curriculo">
+                <a>
+                  {React.createElement(page.icon, { size: 60 }, null)}
+                  <span>{page.name}</span>
+                </a>
+              </Link>
             </SocialItem>
           ))}
         </SocialTable>
