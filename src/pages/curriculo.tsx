@@ -4,7 +4,8 @@ import {
   Container,
   FirstPage,
   CoursePage,
-  WorkshopPage
+  WorkshopPage,
+  LanguagesPage
 } from '../styles/pages/curriculo'
 import { FiArrowUp, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import curriculo from '../assets/curriculo.json'
@@ -13,6 +14,7 @@ const CurriculoPage: React.FC = () => {
   const [page, setPage] = React.useState('home')
   const [course, setCourse] = React.useState(-1)
   const [workshop, setWorkshop] = React.useState(-1)
+  const [language, setLanguage] = React.useState(-1)
 
   function setDocumentHeightCssVariable() {
     const vh = window.innerHeight * 0.01
@@ -68,11 +70,29 @@ const CurriculoPage: React.FC = () => {
     }
   }, [workshop])
 
+  const nextLanguage = React.useCallback(() => {
+    if (language + 1 !== curriculo.languages.length - 1) {
+      document.documentElement.style.setProperty(
+        '--selected-language',
+        (language + 1).toString()
+      )
+      setLanguage(language + 1)
+    }
+  }, [language])
+  const prevLanguage = React.useCallback(() => {
+    if (language - 1 >= -1) {
+      document.documentElement.style.setProperty(
+        '--selected-language',
+        (language - 1).toString()
+      )
+      setLanguage(language - 1)
+    }
+  }, [language])
   React.useEffect(() => {
     function disableScroll() {
       document.body.style.overflow = 'hidden'
     }
-    function setIntialCourseWorkshop() {
+    function setIntialCourseWorkshopAndLanguage() {
       document.documentElement.style.setProperty(
         '--selected-course',
         course.toString()
@@ -81,8 +101,12 @@ const CurriculoPage: React.FC = () => {
         '--selected-workshop',
         workshop.toString()
       )
+      document.documentElement.style.setProperty(
+        '--selected-language',
+        language.toString()
+      )
     }
-    setIntialCourseWorkshop()
+    setIntialCourseWorkshopAndLanguage()
     setDocumentHeightCssVariable()
     disableScroll()
     window.addEventListener('resize', callbackToOnResizeWindow)
@@ -97,7 +121,9 @@ const CurriculoPage: React.FC = () => {
           <li onClick={() => scrollTo('workshops_page')}>
             Treinamentos e Workshops
           </li>
-          <li>Linguagens de Programaçāo</li>
+          <li onClick={() => scrollTo('languages_page')}>
+            Linguagens de Programaçāo
+          </li>
           <li>Baixar Currículo</li>
           <li>
             <Link href="/">Voltar para Página Inicial</Link>
@@ -187,6 +213,40 @@ const CurriculoPage: React.FC = () => {
           </button>
         </div>
       </WorkshopPage>
+      <LanguagesPage
+        id="languages_page"
+        qtdLanguages={curriculo.languages.length}
+      >
+        <div className="top">
+          <h2>Linguagens de Programaçāo</h2>
+          <button onClick={() => scrollTo('home')}>
+            <FiArrowUp />
+          </button>
+        </div>
+        <ul>
+          {curriculo.languages.map((language, index) => (
+            <li key={index.toString()}>
+              <h3>{language.name}</h3>
+              <p>
+                <span>
+                  <strong>Quanto eu sei: </strong>
+                  {language.porcentage}%
+                  <br />
+                </span>
+              </p>
+              <p>{language.text}</p>
+            </li>
+          ))}
+        </ul>
+        <div className="slider">
+          <button onClick={prevLanguage}>
+            <FiChevronLeft />
+          </button>
+          <button onClick={nextLanguage}>
+            <FiChevronRight />
+          </button>
+        </div>
+      </LanguagesPage>
     </Container>
   )
 }

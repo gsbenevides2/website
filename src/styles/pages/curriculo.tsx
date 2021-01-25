@@ -118,6 +118,7 @@ export const CoursePage = styled(Page)<{ qtdCourses: number }>`
     }
   }
 `
+
 export const WorkshopPage = styled(Page)<{ qtdWorkshops: number }>`
   width: 80%;
   margin: 0 auto;
@@ -158,6 +159,78 @@ export const WorkshopPage = styled(Page)<{ qtdWorkshops: number }>`
     position: relative;
     gap: 10px;
     left: calc(var(--selected-workshop) * -100%);
+    transition: left 0.4s;
+    li {
+      margin: 0;
+      padding: 25px;
+      background-color: #404040;
+      border-radius: 33px;
+      h3 {
+        margin-bottom: 5.5px;
+      }
+      p {
+        margin: 2.5px 0px;
+      }
+      a {
+        color: white;
+      }
+      a:hover {
+        color: white;
+      }
+    }
+  }
+  .slider {
+    margin-top: 10px;
+    gap: 5px;
+    button {
+      color: white;
+      font-size: 30px;
+      background-color: transparent;
+      outline: none;
+      border: none;
+    }
+  }
+`
+export const LanguagesPage = styled(Page)<{ qtdLanguages: number }>`
+  width: 80%;
+  margin: 0 auto;
+  overflow: hidden;
+  .top {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    button {
+      cursor: pointer;
+      border: 1px solid transparent;
+      padding: 10px 15px;
+      color: white;
+      font-size: 30px;
+      border-radius: 20px;
+      background-color: transparent;
+      outline: none;
+      text-transform: uppercase;
+      transition: 0.2s;
+    }
+    button:focus {
+      border-style: dashed;
+      background-color: white;
+      color: black;
+      border-color: black;
+    }
+  }
+  ul {
+    width: calc(${props => props.qtdLanguages} * 100%);
+    list-style: none;
+    margin: 10px 0px 0px 0px;
+    padding: 0;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    position: relative;
+    gap: 10px;
+    left: calc(var(--selected-language) * -100%);
     transition: left 0.4s;
     li {
       margin: 0;
