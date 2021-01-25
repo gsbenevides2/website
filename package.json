@@ -11,6 +11,7 @@
     "firebase": "^8.2.3",
     "next": "9.5.2",
     "next-images": "^1.4.1",
+    "nprogress": "^0.2.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-icons": "^4.1.0",
