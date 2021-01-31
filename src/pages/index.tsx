@@ -9,9 +9,8 @@ import {
   FiTwitter,
   FiFileText
 } from 'react-icons/fi'
-
+import { Container } from '../styles/commons/GradientContainer'
 import {
-  Container,
   FirstPage,
   SeccoundPage,
   Page,
@@ -58,6 +57,9 @@ const Home: React.FC<InferGetStaticPropsType<
     setDocumentHeightCssVariable()
     disableScroll()
     window.addEventListener('resize', callbackToOnResizeWindow)
+    return () => {
+      window.removeEventListener('resize', callbackToOnResizeWindow)
+    }
   })
   const socialMedias = [
     {

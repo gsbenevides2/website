@@ -2,8 +2,7 @@ import styled, { keyframes } from 'styled-components'
 import { Container as GradientContainer } from '../commons/GradientContainer'
 
 export const Container = styled(GradientContainer)`
-  height: 100vh;
-  height: calc(var(--vh, 1vh) * 100);
+  scroll-behavior: auto;
   padding: 33px;
   h1 {
     text-align: center;

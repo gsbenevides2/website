@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
+import { Container } from '../styles/commons/GradientContainer'
 import {
-  Container,
   FirstPage,
   CoursePage,
   WorkshopPage,
@@ -110,6 +110,9 @@ const CurriculoPage: React.FC = () => {
     setDocumentHeightCssVariable()
     disableScroll()
     window.addEventListener('resize', callbackToOnResizeWindow)
+    return () => {
+      window.removeEventListener('resize', callbackToOnResizeWindow)
+    }
   })
 
   return (

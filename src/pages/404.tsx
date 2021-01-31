@@ -12,11 +12,7 @@ const Page: React.FC = () => {
     document.documentElement.style.setProperty('--vh', `${vh}px`)
   }
   React.useEffect(() => {
-    function disableScroll() {
-      document.body.style.overflow = 'hidden'
-    }
     setDocumentHeightCssVariable()
-    disableScroll()
     window.addEventListener('resize', setDocumentHeightCssVariable)
   })
   return (
