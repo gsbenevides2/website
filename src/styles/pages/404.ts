@@ -1,15 +1,7 @@
 import styled, { keyframes } from 'styled-components'
+import { Container as GradientContainer } from '../commons/GradientContainer'
 
-const animation = keyframes`
-  0%{background-position:49% 0%}
-  50%{background-position:52% 100%}
-  100%{background-position:49% 0%}
-`
-export const Container = styled.div`
-  background: linear-gradient(0deg, #ef233c, #907ad6, #631d76, #9e4770);
-  background-size: 800% 800%;
-  animation: ${animation} 20s ease infinite;
-  width: 100%;
+export const Container = styled(GradientContainer)`
   height: 100vh;
   height: calc(var(--vh, 1vh) * 100);
   padding: 33px;
