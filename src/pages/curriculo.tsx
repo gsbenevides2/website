@@ -124,7 +124,6 @@ const CurriculoPage: React.FC = () => {
           <li onClick={() => scrollTo('languages_page')}>
             Linguagens de Programaçāo
           </li>
-          <li>Baixar Currículo</li>
           <li>
             <Link href="/">Voltar para Página Inicial</Link>
           </li>
