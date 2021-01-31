@@ -6,11 +6,11 @@ import {
   FiGithub,
   FiInstagram,
   FiLinkedin,
-  FiTwitter
+  FiTwitter,
+  FiFileText
 } from 'react-icons/fi'
-
+import { Container } from '../styles/commons/GradientContainer'
 import {
-  Container,
   FirstPage,
   SeccoundPage,
   Page,
@@ -20,22 +20,10 @@ import {
 } from '../styles/pages/Home'
 
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
+import Link from 'next/link'
+import { calculateAge } from '../utils/calculateAge'
 
 export const getStaticProps: GetStaticProps = async () => {
-  function calculateAge() {
-    const birth = new Date(2003, 4, 30)
-    const now = new Date()
-    let age = now.getFullYear() - birth.getFullYear()
-
-    if (
-      (birth.getMonth() === now.getMonth() &&
-        birth.getDay() !== now.getDay()) ||
-      birth.getMonth() > now.getMonth()
-    ) {
-      age--
-    }
-    return age
-  }
   return {
     props: {
       age: calculateAge()
@@ -69,6 +57,9 @@ const Home: React.FC<InferGetStaticPropsType<
     setDocumentHeightCssVariable()
     disableScroll()
     window.addEventListener('resize', callbackToOnResizeWindow)
+    return () => {
+      window.removeEventListener('resize', callbackToOnResizeWindow)
+    }
   })
   const socialMedias = [
     {
@@ -100,6 +91,14 @@ const Home: React.FC<InferGetStaticPropsType<
       url: 'https://twitter.com/gsbenevides2',
       color: '#1da1f2',
       icon: FiTwitter
+    }
+  ]
+  const myPages = [
+    {
+      name: 'Currículo',
+      url: '/curriculo',
+      color: '#24292e',
+      icon: FiFileText
     }
   ]
   return (
@@ -150,6 +149,16 @@ const Home: React.FC<InferGetStaticPropsType<
                 {React.createElement(media.icon, { size: 60 }, null)}
                 <span>{media.name}</span>
               </a>
+            </SocialItem>
+          ))}
+          {myPages.map((page, index) => (
+            <SocialItem color={page.color} key={index.toString()}>
+              <Link href="curriculo">
+                <a>
+                  {React.createElement(page.icon, { size: 60 }, null)}
+                  <span>{page.name}</span>
+                </a>
+              </Link>
             </SocialItem>
           ))}
         </SocialTable>
