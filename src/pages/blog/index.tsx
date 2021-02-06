@@ -2,10 +2,14 @@ import React from 'react'
 import Header from '../../components/blog/Header'
 import { PageContainer } from '../../styles/pages/BlogHome'
 import Link from 'next/link'
+import Head from 'next/head'
 
 const BlogIndexPage: React.FC = () => {
   return (
     <React.Fragment>
+      <Head>
+        <title>Blog do Guilherme</title>
+      </Head>
       <Header />
       <PageContainer>
         <Link href="/blog/post/criar-sites-com-react-e-ssr">

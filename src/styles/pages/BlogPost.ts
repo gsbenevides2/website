@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
-  margin: 12px;
+  padding: 12px;
   width: 100%;
   text-align: center;
   img {
@@ -9,7 +9,6 @@ export const Container = styled.div`
     display: inline-block;
   }
   .content {
-    margin: 12px;
     text-align: justify;
     a {
       color: white;

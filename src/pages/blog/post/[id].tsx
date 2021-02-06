@@ -1,4 +1,5 @@
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next'
+import Head from 'next/head'
 import React from 'react'
 import Header from '../../../components/blog/Header'
 import LoadingPage from '../../../components/LoadingPage'
@@ -55,6 +56,9 @@ const PostPage: React.FC<InferGetStaticPropsType<
   if (props.post) {
     return (
       <React.Fragment>
+        <Head>
+          <title>{props.post.title}</title>
+        </Head>
         <Header />
         <Container>
           <img src={props.post.image} />
