@@ -7,7 +7,8 @@ import {
   FiInstagram,
   FiLinkedin,
   FiTwitter,
-  FiFileText
+  FiFileText,
+  FiEdit2
 } from 'react-icons/fi'
 import { Container } from '../styles/commons/GradientContainer'
 import {
@@ -58,6 +59,7 @@ const Home: React.FC<InferGetStaticPropsType<
     disableScroll()
     window.addEventListener('resize', callbackToOnResizeWindow)
     return () => {
+      document.body.style.overflow = 'auto'
       window.removeEventListener('resize', callbackToOnResizeWindow)
     }
   })
@@ -99,6 +101,12 @@ const Home: React.FC<InferGetStaticPropsType<
       url: '/curriculo',
       color: '#24292e',
       icon: FiFileText
+    },
+    {
+      name: 'Blog',
+      url: '/blog',
+      color: '#24292e',
+      icon: FiEdit2
     }
   ]
   return (
@@ -153,7 +161,7 @@ const Home: React.FC<InferGetStaticPropsType<
           ))}
           {myPages.map((page, index) => (
             <SocialItem color={page.color} key={index.toString()}>
-              <Link href="curriculo">
+              <Link href={page.url}>
                 <a>
                   {React.createElement(page.icon, { size: 60 }, null)}
                   <span>{page.name}</span>

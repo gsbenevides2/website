@@ -10,6 +10,7 @@ export const Page = styled.div`
   justify-content: center;
   flex-direction: column;
 `
+
 export const FirstPage = styled(Page)`
   img {
     width: 9rem;
@@ -37,6 +38,7 @@ export const FirstPage = styled(Page)`
     border-color: black;
   }
 `
+
 export const SeccoundPage = styled(Page)`
   p {
     width: 80%;
@@ -96,7 +98,7 @@ export const SocialTable = styled.ul`
   display: grid;
   grid-template-columns: 1fr 1fr;
   @media (min-width: 768px) {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
   }
   @media (min-width: 1024px) {
     grid-template-columns: 1fr 1fr 1fr 1fr;
