@@ -17,6 +17,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const collectionSnapshot = await firebase
     .firestore()
     .collection('postsOfBlog')
+    .orderBy('date', 'desc')
     .limit(10)
     .get()
   const posts: Post[] = collectionSnapshot.docs.map(doc => {
