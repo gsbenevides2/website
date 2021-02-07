@@ -42,3 +42,12 @@ export const PageContainer = styled.ul`
     grid-template-columns: 1fr 1fr 1fr;
   }
 `
+
+export const Empty = styled.div`
+  width: 100%;
+  text-align: center;
+  img {
+    width: 80%;
+    display: inline-text;
+  }
+`
