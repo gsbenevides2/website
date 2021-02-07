@@ -37,7 +37,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
     fallback: 'blocking'
   }
 }
-
 function parseDocumentData(documentData: FirebaseDocumentData): FormatedPost {
   const dateObject = documentData.date.toDate()
   const date = `${dateObject.getDate()}/${
@@ -48,7 +47,6 @@ function parseDocumentData(documentData: FirebaseDocumentData): FormatedPost {
     date
   }
 }
-
 export const getStaticProps: GetStaticProps = async context => {
   const { id } = context.params
 
@@ -64,7 +62,9 @@ export const getStaticProps: GetStaticProps = async context => {
     }
   }
   return {
-    props: { post: parseDocumentData(documentSnapshot.data()) },
+    props: {
+      post: parseDocumentData(documentSnapshot.data() as FirebaseDocumentData)
+    },
     revalidate: 60
   }
 }
