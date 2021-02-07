@@ -9,6 +9,12 @@ import firebase from '../../../utils/firebase'
 
 interface FirebaseDocumentData {
   name: string
+  date: firebase.firestore.Timestamp
+  image: string
+  content: string
+}
+interface FormatedPost {
+  name: string
   date: string
   image: string
   content: string
@@ -31,6 +37,18 @@ export const getStaticPaths: GetStaticPaths = async () => {
     fallback: 'blocking'
   }
 }
+
+function parseDocumentData(documentData: FirebaseDocumentData): FormatedPost {
+  const dateObject = documentData.date.toDate()
+  const date = `${dateObject.getDate()}/${
+    dateObject.getMonth() + 1
+  }/${dateObject.getFullYear()}`
+  return {
+    ...documentData,
+    date
+  }
+}
+
 export const getStaticProps: GetStaticProps = async context => {
   const { id } = context.params
 
@@ -46,7 +64,7 @@ export const getStaticProps: GetStaticProps = async context => {
     }
   }
   return {
-    props: { post: documentSnapshot.data() as FirebaseDocumentData },
+    props: { post: parseDocumentData(documentSnapshot.data()) },
     revalidate: 60
   }
 }
