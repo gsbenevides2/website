@@ -10,6 +10,11 @@ export const Container = styled.div`
   }
   .content {
     text-align: justify;
+    ul,
+    ol {
+      margin-left: 12px;
+      padding: 0px;
+    }
     a {
       color: white;
       &:hover {
