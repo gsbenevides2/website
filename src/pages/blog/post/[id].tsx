@@ -23,6 +23,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const documentsSnapshot = await firebase
     .firestore()
     .collection('postsOfBlog')
+    .orderBy('date', 'desc')
     .limit(5)
     .get()
   const paths = documentsSnapshot.docs.map(doc => {
