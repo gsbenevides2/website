@@ -36,9 +36,49 @@ export const getStaticProps: GetStaticProps = async () => {
 const BlogIndexPage: React.FC<InferGetStaticPropsType<
   typeof getStaticProps
 >> = props => {
-  const firstPost = props.posts[0]
-  const postA = props.posts.slice(1, 4)
-  const morePosts = props.posts.slice(5)
+  const [posts, setPosts] = React.useState(props.posts)
+  const [loadingMore, setLoadingMore] = React.useState(false)
+  const [end, setEnd] = React.useState(props.posts.length < 10 ? true : false)
+  const firstPost = posts[0]
+  const postA = posts.slice(1, 4)
+  const morePosts = posts.slice(5)
+  const scrollCallback = React.useCallback(() => {
+    const endOfPage =
+      window.innerHeight + window.scrollY >= document.body.offsetHeight
+    async function loadMorePosts() {
+      const lastDocument = await firebase
+        .firestore()
+        .doc(`postsOfBlog/${posts[posts.length - 1].id}`)
+        .get()
+      const collectionSnapshot = await firebase
+        .firestore()
+        .collection('postsOfBlog')
+        .orderBy('date', 'desc')
+        .startAfter(lastDocument)
+        .limit(10)
+        .get()
+      const newPosts: Post[] = collectionSnapshot.docs.map(doc => {
+        return {
+          name: doc.data().name,
+          image: doc.data().image,
+          id: doc.id
+        }
+      })
+      if (newPosts.length < 10) {
+        setEnd(true)
+      }
+      setPosts([...posts, ...newPosts])
+    }
+    if (endOfPage && !loadingMore && !end) {
+      setLoadingMore(true)
+      loadMorePosts().then(() => {
+        setLoadingMore(false)
+      })
+    }
+  }, [posts, loadingMore, end])
+  React.useEffect(() => {
+    window.addEventListener('scroll', scrollCallback)
+  }, [])
   return (
     <React.Fragment>
       <Head>
