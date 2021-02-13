@@ -71,9 +71,13 @@ const BlogIndexPage: React.FC<InferGetStaticPropsType<
     }
     if (endOfPage && !loadingMore && !end) {
       setLoadingMore(true)
-      loadMorePosts().then(() => {
-        setLoadingMore(false)
-      })
+      loadMorePosts()
+        .then(() => {
+          setLoadingMore(false)
+        })
+        .catch(() => {
+          setLoadingMore(false)
+        })
     }
   }, [posts, loadingMore, end])
   React.useEffect(() => {
@@ -102,7 +106,7 @@ const BlogIndexPage: React.FC<InferGetStaticPropsType<
             </Link>
           ))}
           {morePosts.map(post => (
-            <Link href={`/blog/post/${post.id}`}>
+            <Link key={post.id} href={`/blog/post/${post.id}`}>
               <li className="post postMore">
                 <img src={post.image} />
                 <h2>{post.name}</h2>
