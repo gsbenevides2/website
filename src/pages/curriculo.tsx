@@ -111,6 +111,7 @@ const CurriculoPage: React.FC = () => {
     disableScroll()
     window.addEventListener('resize', callbackToOnResizeWindow)
     return () => {
+      document.body.style.overflow = 'auto'
       window.removeEventListener('resize', callbackToOnResizeWindow)
     }
   })
