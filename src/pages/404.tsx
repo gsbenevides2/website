@@ -39,7 +39,7 @@ const Page: React.FC = () => {
         </li>
       </ul>
       <audio>
-        <source src="../404.mp3" type="audio/mpeg" />
+        <source src="/404.mp3" type="audio/mpeg" />
       </audio>
     </Container>
   )
