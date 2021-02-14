@@ -4,6 +4,7 @@ import React from 'react'
 import Header from '../../../components/blog/Header'
 import LoadingPage from '../../../components/LoadingPage'
 import MarkdownView from '../../../components/MarkdownView'
+import { WelcomeModal } from '../../../components/WelcomeModal'
 import { Container } from '../../../styles/pages/BlogPost'
 import firebase from '../../../utils/firebase'
 
@@ -79,6 +80,7 @@ const PostPage: React.FC<InferGetStaticPropsType<
           <title>{props.post.title}</title>
         </Head>
         <Header />
+        <WelcomeModal />
         <Container>
           <img src={props.post.image} />
           <h1>{props.post.name}</h1>
