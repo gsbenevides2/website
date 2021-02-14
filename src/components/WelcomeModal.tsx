@@ -64,7 +64,7 @@ export const WelcomeModal: React.FC = () => {
     const firstAccess = localStorage.getItem('firstAccess')
     if (!firstAccess) {
       container.current.classList.add('show')
-      localStorage.setItem('firstAccess', Date.now())
+      localStorage.setItem('firstAccess', Date.now().toString())
     }
   }, [])
   return (
