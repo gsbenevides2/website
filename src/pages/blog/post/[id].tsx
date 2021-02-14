@@ -77,7 +77,7 @@ const PostPage: React.FC<InferGetStaticPropsType<
     return (
       <React.Fragment>
         <Head>
-          <title>{props.post.title}</title>
+          <title>{props.post.name}</title>
         </Head>
         <Header />
         <WelcomeModal />
