@@ -97,7 +97,7 @@ export const NotificationQuestionModal: React.FC<Props> = ({ open, close }) => {
   const disableNotifications = React.useCallback(async () => {
     try {
       const token = await firebase.messaging().getToken()
-
+      await firebase.messaging().deleteToken()
       await fcmDoc.set(
         {
           blogTokens: firebase.firestore.FieldValue.arrayRemove(token)
