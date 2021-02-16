@@ -78,6 +78,22 @@ const PostPage: React.FC<InferGetStaticPropsType<
       <React.Fragment>
         <Head>
           <title>{props.post.name}</title>
+          <meta
+            property="description"
+            content="Blog do Guilherme: um lugar de informação e conhecimento."
+          />
+          <meta property="og:site_name" content="Blog do Guilherme" />
+          <meta property="og:title" content={props.post.name} />
+          <meta
+            property="og:description"
+            content="Blog do Guilherme: um lugar de informação e conhecimento."
+          />
+          <meta
+            property="og:image"
+            itemProp="image"
+            content={props.post.image}
+          />
+          <meta property="og:type" content="website" />
         </Head>
         <Header />
         <WelcomeModal />
