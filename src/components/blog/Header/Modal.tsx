@@ -71,7 +71,6 @@ interface Props {
 export const NotificationQuestionModal: React.FC<Props> = ({ open, close }) => {
   const container = React.useRef<HTMLDivElement>(null)
   const [status, setStatus] = React.useState('disabled')
-  const fcmDoc = firebase.firestore().doc('others/fcm')
   const enableNotifications = React.useCallback(async () => {
     try {
       const permission = await window.Notification.requestPermission()
@@ -80,14 +79,7 @@ export const NotificationQuestionModal: React.FC<Props> = ({ open, close }) => {
         return
       }
       const token = await firebase.messaging().getToken()
-
-      await fcmDoc.set(
-        {
-          blogTokens: firebase.firestore.FieldValue.arrayUnion(token)
-        },
-        { merge: true }
-      )
-
+      await fetch(`/api/fcmToken?token=${token}`, { method: 'POST' })
       localStorage.setItem('fcmToken', token)
       setStatus('actived')
     } catch (e) {
@@ -98,13 +90,7 @@ export const NotificationQuestionModal: React.FC<Props> = ({ open, close }) => {
     try {
       const token = await firebase.messaging().getToken()
       await firebase.messaging().deleteToken()
-      await fcmDoc.set(
-        {
-          blogTokens: firebase.firestore.FieldValue.arrayRemove(token)
-        },
-        { merge: true }
-      )
-
+      await fetch(`/api/fcmToken?token=${token}`, { method: 'DELETE' })
       localStorage.removeItem('fcmToken')
       close()
       setStatus('disabled')
@@ -132,20 +118,10 @@ export const NotificationQuestionModal: React.FC<Props> = ({ open, close }) => {
             const token = await firebase.messaging().getToken()
 
             if (fcmToken !== token) {
-              await fcmDoc.set(
-                {
-                  blogTokens: firebase.firestore.FieldValue.arrayUnion(token)
-                },
-                { merge: true }
-              )
-              await fcmDoc.set(
-                {
-                  blogTokens: firebase.firestore.FieldValue.arrayRemove(
-                    fcmToken
-                  )
-                },
-                { merge: true }
-              )
+              await fetch(`/api/fcmToken?token=${token}`, { method: 'POST' })
+              await fetch(`/api/fcmToken?token=${fcmToken}`, {
+                method: 'DELETE'
+              })
               localStorage.setItem('fcmToken', fcmToken)
             }
             setStatus('actived')
