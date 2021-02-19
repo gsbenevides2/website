@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
+import Head from 'next/head'
 import { Container } from '../styles/commons/GradientContainer'
 import {
   FirstPage,
@@ -118,6 +119,20 @@ const CurriculoPage: React.FC = () => {
 
   return (
     <Container>
+      <Head>
+        <title>Curriculo</title>
+        <meta
+          property="description"
+          content="Curriculo do Guilherme da Silva Benevides"
+        />
+        <meta property="og:site_name" content="Curriculo" />
+        <meta property="og:title" content="Curriculo" />
+        <meta
+          property="og:description"
+          content="Curriculo do Guilherme da Silva Benevides"
+        />
+        <meta property="og:type" content="website" />
+      </Head>
       <FirstPage id="home">
         <h2>Saiba mais sobre mim:</h2>
         <ul>

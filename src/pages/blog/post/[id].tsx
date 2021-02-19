@@ -1,9 +1,16 @@
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next'
+import {
+  GetServerSideProps,
+  GetStaticPaths,
+  GetStaticProps,
+  InferGetServerSidePropsType,
+  InferGetStaticPropsType
+} from 'next'
 import Head from 'next/head'
 import React from 'react'
 import Header from '../../../components/blog/Header'
 import LoadingPage from '../../../components/LoadingPage'
 import MarkdownView from '../../../components/MarkdownView'
+import { WelcomeModal } from '../../../components/WelcomeModal'
 import { Container } from '../../../styles/pages/BlogPost'
 import firebase from '../../../utils/firebase'
 
@@ -19,6 +26,7 @@ interface FormatedPost {
   image: string
   content: string
 }
+/*
 export const getStaticPaths: GetStaticPaths = async () => {
   const documentsSnapshot = await firebase
     .firestore()
@@ -38,6 +46,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     fallback: 'blocking'
   }
 }
+	*/
 function parseDocumentData(documentData: FirebaseDocumentData): FormatedPost {
   const dateObject = documentData.date.toDate()
   const date = `${dateObject.getDate()}/${
@@ -48,7 +57,7 @@ function parseDocumentData(documentData: FirebaseDocumentData): FormatedPost {
     date
   }
 }
-export const getStaticProps: GetStaticProps = async context => {
+export const getServerSideProps: GetServerSideProps = async context => {
   const { id } = context.params
 
   const documentSnapshot = await firebase
@@ -58,27 +67,42 @@ export const getStaticProps: GetStaticProps = async context => {
   if (!documentSnapshot.exists) {
     return {
       props: {},
-      revalidate: 300,
       notFound: true
     }
   }
   return {
     props: {
       post: parseDocumentData(documentSnapshot.data() as FirebaseDocumentData)
-    },
-    revalidate: 60
+    }
   }
 }
-const PostPage: React.FC<InferGetStaticPropsType<
-  typeof getStaticProps
+const PostPage: React.FC<InferGetServerSidePropsType<
+  typeof getServerSideProps
 >> = props => {
   if (props.post) {
     return (
       <React.Fragment>
         <Head>
-          <title>{props.post.title}</title>
+          <title>{props.post.name}</title>
+          <meta
+            property="description"
+            content="Blog do Guilherme: um lugar de informação e conhecimento."
+          />
+          <meta property="og:site_name" content="Blog do Guilherme" />
+          <meta property="og:title" content={props.post.name} />
+          <meta
+            property="og:description"
+            content="Blog do Guilherme: um lugar de informação e conhecimento."
+          />
+          <meta
+            property="og:image"
+            itemProp="image"
+            content={props.post.image}
+          />
+          <meta property="og:type" content="website" />
         </Head>
         <Header />
+        <WelcomeModal />
         <Container>
           <img src={props.post.image} />
           <h1>{props.post.name}</h1>

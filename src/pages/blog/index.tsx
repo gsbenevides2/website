@@ -6,6 +6,7 @@ import Head from 'next/head'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import firebase from '../../utils/firebase'
 import emptyImage from '../../assets/empty.png'
+import { WelcomeModal } from '../../components/WelcomeModal'
 
 interface Post {
   name: string
@@ -83,12 +84,25 @@ const BlogIndexPage: React.FC<InferGetStaticPropsType<
   React.useEffect(() => {
     window.addEventListener('scroll', scrollCallback)
   }, [])
+
   return (
     <React.Fragment>
       <Head>
         <title>Blog do Guilherme</title>
+        <meta
+          property="description"
+          content="Blog do Guilherme: um lugar de informação e conhecimento."
+        />
+        <meta property="og:site_name" content="Blog do Guilherme" />
+        <meta property="og:title" content="Página Inicial" />
+        <meta
+          property="og:description"
+          content="Blog do Guilherme: um lugar de informação e conhecimento."
+        />
+        <meta property="og:type" content="website" />
       </Head>
       <Header />
+      <WelcomeModal />
       {firstPost ? (
         <PageContainer>
           <Link href={`/blog/post/${firstPost.id}`}>
