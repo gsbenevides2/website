@@ -113,6 +113,11 @@ const Home: React.FC<InferGetStaticPropsType<
     <Container>
       <Head>
         <title>Página Inicial</title>
+        <meta property="description" content="Site do Guilherme" />
+        <meta property="og:site_name" content="Site do Guilherme" />
+        <meta property="og:title" content="Site do Guilherme" />
+        <meta property="og:description" content="Site do Guilherme" />
+        <meta property="og:type" content="website" />
       </Head>
       <FirstPage id="page_1">
         <img

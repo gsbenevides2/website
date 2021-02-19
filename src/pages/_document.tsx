@@ -47,8 +47,13 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css?family=Roboto:400,500,700"
             rel="stylesheet"
           />
-
-				 <link rel="icon" href="/favicon.ico" />
+          {process.env.NODE_ENV === 'development' && (
+            <>
+              <script src="//cdn.jsdelivr.net/npm/eruda"></script>
+              <script>eruda.init();</script>
+            </>
+          )}
+          <link rel="icon" href="/favicon.ico" />
         </Head>
         <body>
           <Main />
