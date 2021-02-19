@@ -1,4 +1,10 @@
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next'
+import {
+  GetServerSideProps,
+  GetStaticPaths,
+  GetStaticProps,
+  InferGetServerSidePropsType,
+  InferGetStaticPropsType
+} from 'next'
 import Head from 'next/head'
 import React from 'react'
 import Header from '../../../components/blog/Header'
@@ -20,6 +26,7 @@ interface FormatedPost {
   image: string
   content: string
 }
+/*
 export const getStaticPaths: GetStaticPaths = async () => {
   const documentsSnapshot = await firebase
     .firestore()
@@ -39,6 +46,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     fallback: 'blocking'
   }
 }
+	*/
 function parseDocumentData(documentData: FirebaseDocumentData): FormatedPost {
   const dateObject = documentData.date.toDate()
   const date = `${dateObject.getDate()}/${
@@ -49,7 +57,7 @@ function parseDocumentData(documentData: FirebaseDocumentData): FormatedPost {
     date
   }
 }
-export const getStaticProps: GetStaticProps = async context => {
+export const getServerSideProps: GetServerSideProps = async context => {
   const { id } = context.params
 
   const documentSnapshot = await firebase
@@ -59,19 +67,17 @@ export const getStaticProps: GetStaticProps = async context => {
   if (!documentSnapshot.exists) {
     return {
       props: {},
-      revalidate: 300,
       notFound: true
     }
   }
   return {
     props: {
       post: parseDocumentData(documentSnapshot.data() as FirebaseDocumentData)
-    },
-    revalidate: 60
+    }
   }
 }
-const PostPage: React.FC<InferGetStaticPropsType<
-  typeof getStaticProps
+const PostPage: React.FC<InferGetServerSidePropsType<
+  typeof getServerSideProps
 >> = props => {
   if (props.post) {
     return (
