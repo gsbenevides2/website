@@ -9,6 +9,9 @@ export const Container = styled.div`
     display: inline-block;
   }
   .content {
+    h1,h2,h3,h4,h5,h6{
+      margin-top:5px;
+    }
     text-align: justify;
     ul,
     ol {
