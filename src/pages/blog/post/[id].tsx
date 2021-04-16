@@ -1,12 +1,9 @@
-import {
-  GetServerSideProps,
-  GetStaticPaths,
-  GetStaticProps,
-  InferGetServerSidePropsType,
-  InferGetStaticPropsType
-} from 'next'
-import Head from 'next/head'
 import React from 'react'
+
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
+import Head from 'next/head'
+import { v4 as getUuid } from 'uuid'
+
 import Header from '../../../components/blog/Header'
 import LoadingPage from '../../../components/LoadingPage'
 import MarkdownView from '../../../components/MarkdownView'
@@ -19,45 +16,35 @@ interface FirebaseDocumentData {
   date: firebase.firestore.Timestamp
   image: string
   content: string
+  views: string[]
 }
 interface FormatedPost {
+  id: string
   name: string
   date: string
   image: string
   content: string
+  views: number
 }
-/*
-export const getStaticPaths: GetStaticPaths = async () => {
-  const documentsSnapshot = await firebase
-    .firestore()
-    .collection('postsOfBlog')
-    .orderBy('date', 'desc')
-    .limit(5)
-    .get()
-  const paths = documentsSnapshot.docs.map(doc => {
-    return {
-      params: {
-        id: doc.id
-      }
-    }
-  })
-  return {
-    paths,
-    fallback: 'blocking'
-  }
-}
-	*/
-function parseDocumentData(documentData: FirebaseDocumentData): FormatedPost {
+function parseDocumentData(
+  documentData: FirebaseDocumentData,
+  id: string
+): FormatedPost {
   const dateObject = documentData.date.toDate()
   const date = `${dateObject.getDate()}/${
     dateObject.getMonth() + 1
   }/${dateObject.getFullYear()}`
   return {
+    id,
     ...documentData,
-    date
+    date,
+    views: documentData.views.length
   }
 }
-export const getServerSideProps: GetServerSideProps = async context => {
+export interface ServerSideProps {
+  post: FormatedPost
+}
+export const getServerSideProps: GetServerSideProps<ServerSideProps> = async context => {
   const { id } = context.params
 
   const documentSnapshot = await firebase
@@ -72,13 +59,50 @@ export const getServerSideProps: GetServerSideProps = async context => {
   }
   return {
     props: {
-      post: parseDocumentData(documentSnapshot.data() as FirebaseDocumentData)
+      post: parseDocumentData(
+        documentSnapshot.data() as FirebaseDocumentData,
+        documentSnapshot.id
+      )
     }
   }
 }
 const PostPage: React.FC<InferGetServerSidePropsType<
   typeof getServerSideProps
 >> = props => {
+  const [postViews, setViews] = React.useState('Carregando visualizações')
+  React.useEffect(() => {
+    function loadUuid() {
+      let uuid = localStorage.getItem('userId')
+      if (!uuid) {
+        uuid = getUuid()
+        localStorage.setItem('userId', uuid)
+      }
+      return uuid
+    }
+    function setView(uuid: string) {
+      fetch(`/api/views?postId=${props.post.id}&userId=${uuid}`, {
+        method: 'PUT'
+      })
+        .then(async response => {
+          const { successCode } = await response.json()
+          if (successCode === 1) {
+            setViews(`${props.post.views + 1} Visualizações`)
+          } else if (successCode === 2) {
+            setViews(`${props.post.views} Visualizações`)
+          } else {
+            setViews('Erro ao carreagar visualizações')
+          }
+        })
+        .catch(() => {
+          setViews('Erro ao carreagar visualizações')
+        })
+    }
+    if (window.location.pathname !== '/blog/postExemple') {
+      setView(loadUuid())
+    } else {
+      setViews(`${props.post.views} Visualizações`)
+    }
+  }, [props.post.id, props.post.views])
   if (props.post) {
     return (
       <React.Fragment>
@@ -107,6 +131,8 @@ const PostPage: React.FC<InferGetServerSidePropsType<
           <img src={props.post.image} />
           <h1>{props.post.name}</h1>
           <span>Por Guilherme da Silva Benevides</span>
+          <br />
+          <span>{postViews}</span>
           <br />
           <span>{props.post.date}</span>
           <div className="content">

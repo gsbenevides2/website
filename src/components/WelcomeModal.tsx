@@ -1,5 +1,7 @@
 import React from 'react'
+
 import styled from 'styled-components'
+
 import WelcomeBlog from '../assets/welcome_blog.png'
 
 const Container = styled.div`

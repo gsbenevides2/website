@@ -1,6 +1,10 @@
-import Link from 'next/link'
 import React from 'react'
+import { FiArrowUp, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
+
 import Head from 'next/head'
+import Link from 'next/link'
+
+import curriculo from '../assets/curriculo.json'
 import { Container } from '../styles/commons/GradientContainer'
 import {
   FirstPage,
@@ -8,8 +12,6 @@ import {
   WorkshopPage,
   LanguagesPage
 } from '../styles/pages/curriculo'
-import { FiArrowUp, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
-import curriculo from '../assets/curriculo.json'
 
 const CurriculoPage: React.FC = () => {
   const [page, setPage] = React.useState('home')

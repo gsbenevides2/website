@@ -1,7 +1,9 @@
 import React from 'react'
-import styled from 'styled-components'
-import Link from 'next/link'
 import { FiBell } from 'react-icons/fi'
+
+import Link from 'next/link'
+import styled from 'styled-components'
+
 import { NotificationQuestionModal } from './Modal'
 const HeaderStyled = styled.header`
   background-color: #434343;

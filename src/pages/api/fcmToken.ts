@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+
 import firebaseAdmin from '../../utils/firebaseAdmin'
 
 const fcmTokensDocument = firebaseAdmin.firestore().doc('others/fcm')

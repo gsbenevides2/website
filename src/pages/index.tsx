@@ -1,5 +1,4 @@
 import React from 'react'
-import Head from 'next/head'
 import {
   FiArrowUp,
   FiFacebook,
@@ -10,6 +9,11 @@ import {
   FiFileText,
   FiEdit2
 } from 'react-icons/fi'
+
+import { GetStaticProps, InferGetStaticPropsType } from 'next'
+import Head from 'next/head'
+import Link from 'next/link'
+
 import { Container } from '../styles/commons/GradientContainer'
 import {
   FirstPage,
@@ -19,9 +23,6 @@ import {
   SocialItem,
   ButtonArea
 } from '../styles/pages/Home'
-
-import { GetStaticProps, InferGetStaticPropsType } from 'next'
-import Link from 'next/link'
 import { calculateAge } from '../utils/calculateAge'
 
 export const getStaticProps: GetStaticProps = async () => {

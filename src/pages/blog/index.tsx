@@ -1,20 +1,24 @@
 import React from 'react'
-import Header from '../../components/blog/Header'
-import { Empty, PageContainer } from '../../styles/pages/BlogHome'
-import Link from 'next/link'
-import Head from 'next/head'
+
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
-import firebase from '../../utils/firebase'
+import Head from 'next/head'
+import Link from 'next/link'
+
 import emptyImage from '../../assets/empty.png'
+import Header from '../../components/blog/Header'
 import { WelcomeModal } from '../../components/WelcomeModal'
+import { Empty, PageContainer } from '../../styles/pages/BlogHome'
+import firebase from '../../utils/firebase'
 
 interface Post {
   name: string
   id: string
   image: string
 }
-
-export const getStaticProps: GetStaticProps = async () => {
+interface Props {
+  posts: Post[]
+}
+export const getStaticProps: GetStaticProps<Props> = async () => {
   const collectionSnapshot = await firebase
     .firestore()
     .collection('postsOfBlog')
@@ -24,7 +28,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const posts: Post[] = collectionSnapshot.docs.map(doc => {
     return {
       name: doc.data().name,
-      image: doc.data().image,
+      image: doc.data().thumbnail_webp || doc.data().image,
       id: doc.id
     }
   })
@@ -39,7 +43,7 @@ const BlogIndexPage: React.FC<InferGetStaticPropsType<
 >> = props => {
   const [posts, setPosts] = React.useState(props.posts)
   const [loadingMore, setLoadingMore] = React.useState(false)
-  const [end, setEnd] = React.useState(props.posts.length < 10 ? true : false)
+  const [end, setEnd] = React.useState(props.posts.length < 10)
   const firstPost = posts[0]
   const postA = posts.slice(1, 4)
   const morePosts = posts.slice(5)

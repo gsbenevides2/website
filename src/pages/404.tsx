@@ -1,7 +1,9 @@
 import React from 'react'
-import { Container, Code } from '../styles/pages/404'
-import Link from 'next/link'
+
 import Head from 'next/head'
+import Link from 'next/link'
+
+import { Container, Code } from '../styles/pages/404'
 
 const Page: React.FC = () => {
   const playMusic = React.useCallback(() => {
