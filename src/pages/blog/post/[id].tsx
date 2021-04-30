@@ -25,6 +25,7 @@ interface FormatedPost {
   image: string
   content: string
   views: number
+  preview: boolean
 }
 function parseDocumentData(
   documentData: FirebaseDocumentData,
@@ -38,7 +39,8 @@ function parseDocumentData(
     id,
     ...documentData,
     date,
-    views: documentData.views.length
+    views: documentData.views.length,
+    preview: false
   }
 }
 export interface ServerSideProps {
@@ -97,12 +99,12 @@ const PostPage: React.FC<InferGetServerSidePropsType<
           setViews('Erro ao carreagar visualizações')
         })
     }
-    if (window.location.pathname !== '/blog/postExemple') {
+    if (!props.post.preview) {
       setView(loadUuid())
     } else {
       setViews(`${props.post.views} Visualizações`)
     }
-  }, [props.post.id, props.post.views])
+  }, [props.post.id, props.post.views, props.post.preview])
   if (props.post) {
     return (
       <React.Fragment>
