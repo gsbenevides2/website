@@ -167,7 +167,7 @@ const Home: React.FC<InferGetStaticPropsType<
           ))}
           {myPages.map((page, index) => (
             <SocialItem color={page.color} key={index.toString()}>
-              <Link href={page.url}>
+              <Link href={page.url} as={page.url}>
                 <a>
                   {React.createElement(page.icon, { size: 60 }, null)}
                   <span>{page.name}</span>

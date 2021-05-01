@@ -50,7 +50,7 @@ const Header: React.FC = () => {
         close={closeNotificationModal}
       />
       <HeaderStyled>
-        <Link href="/blog">
+        <Link as="/blog" href="/blog">
           <h1> Blog do Guilherme</h1>
         </Link>
         <button onClick={openNotificationModal}>

@@ -109,14 +109,18 @@ const BlogIndexPage: React.FC<InferGetStaticPropsType<
       <WelcomeModal />
       {firstPost ? (
         <PageContainer>
-          <Link href={`/blog/post/${firstPost.id}`}>
+          <Link href="/blog/post/[id]" as={`/blog/post/${firstPost.id}`}>
             <li className="firstPost">
               <img src={firstPost.image} />
               <h2>{firstPost.name}</h2>
             </li>
           </Link>
           {postA.map(post => (
-            <Link key={post.id} href={`/blog/post/${post.id}`}>
+            <Link
+              key={post.id}
+              href="/blog/post/[id]"
+              as={`/blog/post/${post.id}`}
+            >
               <li className="post postA">
                 <img src={post.image} />
                 <h2>{post.name}</h2>
@@ -124,7 +128,11 @@ const BlogIndexPage: React.FC<InferGetStaticPropsType<
             </Link>
           ))}
           {morePosts.map(post => (
-            <Link key={post.id} href={`/blog/post/${post.id}`}>
+            <Link
+              key={post.id}
+              href="/blog/post/[id]"
+              as={`/blog/post/${post.id}`}
+            >
               <li className="post postMore">
                 <img src={post.image} />
                 <h2>{post.name}</h2>

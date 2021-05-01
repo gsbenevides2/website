@@ -43,16 +43,18 @@ function parseDocumentData(
     preview: false
   }
 }
+
 export interface ServerSideProps {
   post: FormatedPost
 }
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async context => {
   const { id } = context.params
-
+  console.time('Obtendo Post')
   const documentSnapshot = await firebase
     .firestore()
     .doc(`postsOfBlog/${id}`)
     .get()
+  console.timeEnd('Obtendo Post')
   if (!documentSnapshot.exists) {
     return {
       props: {},
