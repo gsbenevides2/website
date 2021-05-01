@@ -22,24 +22,23 @@ const Page: React.FC = () => {
       <Head>
         <title>Página Não Encontrada</title>
       </Head>
-      <Code>
-        <span>4</span>
-        <span onClick={playMusic}>0</span>
-        <span>4</span>
-      </Code>
-      <h1>Ops, a página que você procura não está aqui</h1>
-      <h2>Tente umas das opções abaixo:</h2>
-      <ul>
-        <li>Verique a url, ela pode estar incorreta.</li>
-        <li>
-          Vá <Link href="/">página inicial.</Link>
-        </li>
-        <li>
-          Pode ser o que você esteja procurando, tenha sido removido, qualquer
-          duvida entre em contato com{' '}
-          <a href="mailto:gsbenevides2@gmail.com">o administrador.</a>
-        </li>
-      </ul>
+      <div className="content">
+        <h1>Ops! Não encontrei o que procuras 😔</h1>
+        <h2>Tente umas das opções abaixo:</h2>
+        <ul>
+          <li>Verique a url(link), ela pode estar incorreta.</li>
+          <li>
+            Vá <Link href="/">página inicial</Link>. E procure por lá.
+          </li>
+          <li>
+            Pode ser o que você esteja procurando, tenha sido removido, qualquer
+            duvida entre em contato com{' '}
+            <a href="mailto:gsbenevides2@gmail.com">o administrador.</a>
+          </li>
+          <li>Ou você procura outra coisa...</li>
+        </ul>
+        <h5 onClick={playMusic}>Código do Erro:404</h5>
+      </div>
       <audio>
         <source src="/404.mp3" type="audio/mpeg" />
       </audio>

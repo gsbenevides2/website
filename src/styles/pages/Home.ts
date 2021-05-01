@@ -12,6 +12,9 @@ export const Page = styled.div`
 `
 
 export const FirstPage = styled(Page)`
+  h2 {
+    padding: 10px;
+  }
   img {
     width: 9rem;
     border-radius: 50%;

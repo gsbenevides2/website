@@ -8,15 +8,25 @@ export const Container = styled.div`
     width: 100%;
     display: inline-block;
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     margin-top: 15px;
   }
   .content {
     text-align: justify;
     ul,
+    ol,
+    p,
+    img {
+      padding: 10px;
+    }
+    ul,
     ol {
       margin-left: 12px;
-      padding: 0px;
     }
     a {
       color: white;

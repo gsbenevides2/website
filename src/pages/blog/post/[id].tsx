@@ -39,7 +39,7 @@ function parseDocumentData(
     id,
     ...documentData,
     date,
-    views: documentData.views.length,
+    views: documentData.views?.length || 0,
     preview: false
   }
 }
