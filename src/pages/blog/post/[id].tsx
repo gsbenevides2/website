@@ -14,7 +14,11 @@ import firebase from '../../../utils/firebase'
 interface FirebaseDocumentData {
   name: string
   date: firebase.firestore.Timestamp
-  image: string
+  thumbnail: {
+    originalWebp: string
+    metaTag: string
+  }
+  description: string
   content: string
   views: string[]
 }
@@ -22,7 +26,9 @@ interface FormatedPost {
   id: string
   name: string
   date: string
-  image: string
+  thumbnail: string
+  metaTag: string
+  description: string
   content: string
   views: number
   preview: boolean
@@ -37,8 +43,12 @@ function parseDocumentData(
   }/${dateObject.getFullYear()}`
   return {
     id,
-    ...documentData,
+    name: documentData.name,
+    content: documentData.content,
+    thumbnail: documentData.thumbnail.originalWebp,
+    metaTag: documentData.thumbnail.metaTag,
     date,
+    description: documentData.description,
     views: documentData.views?.length || 0,
     preview: false
   }
@@ -46,13 +56,18 @@ function parseDocumentData(
 
 export interface ServerSideProps {
   post: FormatedPost
+  url: string
 }
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async context => {
   const { id } = context.params
   console.time('Obtendo Post')
   const documentSnapshot = await firebase
     .firestore()
-    .doc(`postsOfBlog/${id}`)
+    .doc(
+      `apps/${
+        process.env.NODE_ENV === 'production' ? 'production' : 'development'
+      }/postsOfBlog/${id}`
+    )
     .get()
   console.timeEnd('Obtendo Post')
   if (!documentSnapshot.exists) {
@@ -66,7 +81,8 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async con
       post: parseDocumentData(
         documentSnapshot.data() as FirebaseDocumentData,
         documentSnapshot.id
-      )
+      ),
+      url: context.req.url
     }
   }
 }
@@ -112,27 +128,19 @@ const PostPage: React.FC<InferGetServerSidePropsType<
       <React.Fragment>
         <Head>
           <title>{props.post.name}</title>
-          <meta
-            property="description"
-            content="Blog do Guilherme: um lugar de informação e conhecimento."
-          />
+          <meta property="description" content={props.post.description} />
           <meta property="og:site_name" content="Blog do Guilherme" />
           <meta property="og:title" content={props.post.name} />
-          <meta
-            property="og:description"
-            content="Blog do Guilherme: um lugar de informação e conhecimento."
-          />
-          <meta
-            property="og:image"
-            itemProp="image"
-            content={props.post.image}
-          />
+          <meta property="og:description" content={props.post.description} />
+          <meta property="og:image" content={props.post.metaTag} />
           <meta property="og:type" content="website" />
+          <meta property="og:url" content={props.url} />
+          <meta name="twitter:card" content="summary_large_image" />
         </Head>
         <Header />
         <WelcomeModal />
         <Container>
-          <img src={props.post.image} />
+          <img src={props.post.thumbnail} />
           <h1>{props.post.name}</h1>
           <span>Por Guilherme da Silva Benevides</span>
           <br />

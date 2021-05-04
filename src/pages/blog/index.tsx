@@ -21,14 +21,18 @@ interface Props {
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const collectionSnapshot = await firebase
     .firestore()
-    .collection('postsOfBlog')
+    .collection(
+      `apps/${
+        process.env.NODE_ENV === 'production' ? 'production' : 'development'
+      }/postsOfBlog`
+    )
     .orderBy('date', 'desc')
     .limit(10)
     .get()
   const posts: Post[] = collectionSnapshot.docs.map(doc => {
     return {
       name: doc.data().name,
-      image: doc.data().thumbnail_webp || doc.data().image,
+      image: doc.data().thumbnail.list,
       id: doc.id
     }
   })
@@ -53,11 +57,19 @@ const BlogIndexPage: React.FC<InferGetStaticPropsType<
     async function loadMorePosts() {
       const lastDocument = await firebase
         .firestore()
-        .doc(`postsOfBlog/${posts[posts.length - 1].id}`)
+        .doc(
+          `apps/${
+            process.env.NODE_ENV === 'production' ? 'production' : 'development'
+          }/postsOfBlog/${posts[posts.length - 1].id}`
+        )
         .get()
       const collectionSnapshot = await firebase
         .firestore()
-        .collection('postsOfBlog')
+        .collection(
+          `apps/${
+            process.env.NODE_ENV === 'production' ? 'production' : 'development'
+          }/postsOfBlog`
+        )
         .orderBy('date', 'desc')
         .startAfter(lastDocument)
         .limit(10)

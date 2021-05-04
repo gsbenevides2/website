@@ -13,7 +13,11 @@ const putHandler: NextApiHandler = (request, response) => {
   } else {
     const firestorePostDocument = firebaseAdmin
       .firestore()
-      .doc(`postsOfBlog/${postId}`)
+      .doc(
+        `apps/${
+          process.env.NODE_ENV === 'production' ? 'production' : 'development'
+        }/postsOfBlog/${postId}`
+      )
     firestorePostDocument
       .get()
       .then(documentSnapshot => {

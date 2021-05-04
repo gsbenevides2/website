@@ -6,6 +6,6 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async con
   const { ngrokId } = context.query
   const postResponse = await fetch(`https://${ngrokId}.ngrok.io/post`)
   const post = await postResponse.json()
-  return { props: { post } }
+  return { props: { post, url: context.req.url } }
 }
 export default PostPage
