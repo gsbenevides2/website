@@ -63,11 +63,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async con
   console.time('Obtendo Post')
   const documentSnapshot = await firebase
     .firestore()
-    .doc(
-      `apps/${
-        process.env.NODE_ENV === 'production' ? 'production' : 'development'
-      }/postsOfBlog/${id}`
-    )
+    .doc(`apps/${process.env.NEXT_ENV}/postsOfBlog/${id}`)
     .get()
   console.timeEnd('Obtendo Post')
   if (!documentSnapshot.exists) {

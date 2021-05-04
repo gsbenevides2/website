@@ -4,11 +4,7 @@ import firebaseAdmin from '../../utils/firebaseAdmin'
 
 const fcmTokensDocument = firebaseAdmin
   .firestore()
-  .doc(
-    `apps/${
-      process.env.NODE_ENV === 'production' ? 'production' : 'development'
-    }/others/fcm`
-  )
+  .doc(`apps/${process.env.NEXT_ENV}/others/fcm`)
 interface FunctionReturn {
   statusCode: number
   message: string
