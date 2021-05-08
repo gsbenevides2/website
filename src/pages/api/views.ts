@@ -13,7 +13,7 @@ const putHandler: NextApiHandler = (request, response) => {
   } else {
     const firestorePostDocument = firebaseAdmin
       .firestore()
-      .doc(`apps/${process.env.NODE_ENV}/postsOfBlog/${postId}`)
+      .doc(`apps/${process.env.NEXT_ENV}/postsOfBlog/${postId}`)
     firestorePostDocument
       .get()
       .then(documentSnapshot => {
