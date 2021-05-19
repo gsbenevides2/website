@@ -5,7 +5,7 @@ if (!firebaseAdmin.apps.length) {
   const credentials = JSON.parse(data.toString('utf8'))
   firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.cert(credentials),
-    storageBucket: 'gs://site-do-guilherme.appspot.com'
+    storageBucket: `gs://${credentials.project_id}.appspot.com`
   })
 }
 export default firebaseAdmin
