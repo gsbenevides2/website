@@ -3,7 +3,7 @@ import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 
-import { Container, Code } from '../styles/pages/404'
+import { Container } from '../styles/pages/Error'
 
 const Page: React.FC = () => {
   const playMusic = React.useCallback(() => {
@@ -22,20 +22,23 @@ const Page: React.FC = () => {
       <Head>
         <title>Erro Interno no Servidor</title>
       </Head>
-      <div className="content">
-        <h1>Morriii ☠️⚰️</h1>
-        <h2>
-          Infelizmente faleci ao tentar processar sua solicitaçāo. Tente
-          novamente mais tarde.
-        </h2>
+      <div className="card">
+        <img
+          onClick={playMusic}
+          src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/openmoji/272/robot_1f916.png"
+          alt="Robo"
+        />
+        <h1>Ops, algo de errado aconteceu!</h1>
         <p>
-          Caso o erro persista, entre em contato com o{' '}
-          <a href="mailto:gsbenevides2@gmail.com">o administrador.</a>
+          Algo estava fora dos planos. E aconteceu um erro no sistema. Reporte o
+          erro para o Gui.
         </p>
-        <h5 onClick={playMusic}>Código do Erro:500</h5>
+        <Link href="/">
+          <a />
+        </Link>
       </div>
       <audio>
-        <source src="/404.mp3" type="audio/mpeg" />
+        <source src="/error.mp3" type="audio/mpeg" />
       </audio>
     </Container>
   )

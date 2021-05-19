@@ -4,141 +4,173 @@ export const Page = styled.div`
   height: 100vh;
   height: calc(var(--vh, 1vh) * 100);
   width: 100%;
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
 `
 
 export const FirstPage = styled(Page)`
-  h2 {
-    padding: 10px;
+  .card {
+    background-color: #474b4e;
+    border-radius: 15px;
+
+    width: 280px;
+    height: 460px;
+
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translate(-50%);
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 22px;
+
+    img {
+      width: 125px;
+      height: 125px;
+
+      border-radius: 50%;
+      background: white;
+
+      padding: 5px;
+    }
+
+    h1 {
+      font-weight: 400;
+      text-align: center;
+    }
+    button {
+      background-color: #535353;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      outline: none !important;
+      -webkit-tap-highlight-color: transparent;
+
+      padding: 10px;
+      font-size: 28pt;
+      margin-top: 100px;
+
+      display: flex;
+      justify-content: center;
+
+      transition: 2s transform, 500ms border-radius, 1s background-color;
+
+      &:hover {
+        background-color: #595a5d;
+        border-radius: 50%;
+        transform: scale(1.5);
+      }
+    }
   }
-  img {
-    width: 9rem;
-    border-radius: 50%;
-    margin-bottom: 1.3rem;
-  }
-  text-align: center;
-  button {
-    cursor: pointer;
-    border: 1.5px solid white;
-    padding: 10px 15px;
-    color: white;
-    font-size: 25px;
-    margin-top: 1rem;
-    border-radius: 20px;
-    background-color: transparent;
-    outline: none;
-    text-transform: uppercase;
-    transition: 0.2s;
-  }
-  button:focus {
-    border-style: dashed;
-    background-color: white;
-    color: black;
-    border-color: black;
+  @media (max-height: 460px) {
+    .card {
+      height: 320px;
+      top: 30px;
+    }
+    .card h1 {
+      margin-bottom: 10px;
+    }
+    .card button {
+      margin-top: 0px;
+    }
   }
 `
 
 export const SeccoundPage = styled(Page)`
-  p {
-    width: 80%;
-    font-size: 0.9rem;
-  }
-  button {
-    cursor: pointer;
-    border: 1px solid white;
-    padding: 10px 15px;
-    color: white;
-    font-size: 1rem;
-    margin-top: 1rem;
-    border-radius: 20px;
-    background-color: transparent;
-    outline: none;
-    text-transform: uppercase;
-    transition: 0.2s;
-  }
-  button:focus {
-    border-style: dashed;
-    background-color: white;
-    color: black;
-    border-color: black;
-  }
-  @media (min-width: 1024px) {
-    font-size: 1rem;
-  }
-`
-export const ButtonArea = styled.div`
-  width: 80%;
+  padding-top: 60px;
+
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  button {
-    cursor: pointer;
-    border: 1px solid transparent;
-    padding: 10px 15px;
-    color: white;
-    font-size: 30px;
-    margin-top: 1rem;
-    border-radius: 20px;
-    background-color: transparent;
-    outline: none;
-    text-transform: uppercase;
-    transition: 0.2s;
+  align-items: center;
+
+  .card {
+    background-color: #474b4e;
+    border-radius: 15px;
+
+    width: 80%;
+    max-width: 580px;
+    padding: 22px;
+
+    p {
+      margin: 0px;
+      font-size: 12pt;
+      text-align: justify;
+    }
   }
-  button:focus {
-    border-style: dashed;
-    background-color: white;
-    color: black;
-    border-color: black;
+
+  .social-media {
+    padding: 0px 5px;
+    margin: 22px 0px 0px 0px;
+    list-style: none;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-auto-flow: column;
+    overflow: hidden;
+    overflow-x: scroll;
+
+    a {
+      padding: 12px;
+      font-size: 55pt;
+      border-radius: 10px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      align-items: center;
+      transition: background-color 1s, color 2s;
+      border: 3px inset transparent;
+      width: 132px;
+      margin-right: 12px;
+      outline: none !important;
+      -webkit-tap-highlight-color: transparent;
+      svg .icon {
+        transition: stroke 2s;
+      }
+      span {
+        font-size: 16pt;
+      }
+      &:hover {
+        background-color: white;
+        color: #121212;
+        border: 3px inset #121212;
+        .icon {
+          stroke: #121212;
+        }
+      }
+      &.facebook:hover {
+        color: #4267b2;
+        border-color: #4267b2;
+        .icon {
+          stroke: #4267b2;
+        }
+      }
+      &.twitter:hover {
+        color: #1da1f2;
+        border-color: #1da1f2;
+        .icon {
+          stroke: #1da1f2;
+        }
+      }
+      &.linkedin:hover {
+        color: #0072b1;
+        border-color: #0072b1;
+        .icon {
+          stroke: #0072b1;
+        }
+      }
+      &.instagram:hover {
+        color: #e1306c;
+        border-color: #e1306c;
+        .icon {
+          stroke: #e1306c;
+        }
+      }
+    }
   }
-`
-export const SocialTable = styled.ul`
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  @media (min-width: 768px) {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-  }
-  @media (min-width: 1024px) {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-  }
-`
-export const SocialItem = styled.li`
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: block;
-  padding: 12px;
-  margin: 10px;
-  background-color: transparent;
-  border-radius: 10px;
-  color: white;
-  transition: 0.2s;
-  a {
-    transition: 0.2s;
-    color: inherit;
-    text-decoration: none;
-    font-size: 25px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: transparent;
-  }
-  a:visited {
-    color: inherit;
-    text-decoration: none;
-  }
-  a:hover {
-    color: inherit;
-    background-color: transparent;
-    text-decoration: none;
-  }
-  &:hover {
-    color: ${props => props.color};
-    background-color: white;
+  @media (min-width: 875px) {
+    .social-media {
+      width: 874px;
+    }
   }
 `

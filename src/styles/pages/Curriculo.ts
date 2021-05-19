@@ -11,26 +11,45 @@ export const Page = styled.div`
   flex-direction: column;
 `
 export const FirstPage = styled(Page)`
-  h2 {
+  flex-direction: row;
+  justify-content: space-evenly;
+  p {
+    background-color: #474b4e;
+    max-width: 480px;
+    margin-right: 30px;
+    padding: 12px;
+    font-size: 15px;
+    border-radius: 15px;
+  }
+  div h2 {
     text-align: center;
     margin-bottom: 24px;
   }
-  ul {
+  div ul {
     li {
-      text-size: 16px;
+      font-size: 16px;
       margin-bottom: 12px;
-      text-decoration: underline;
       color: white;
+      width: fit-content;
       transition: 0.2s;
       a {
         color: inherit;
+        text-decoration: none;
+        outline: none !important;
+        -webkit-tap-highlight-color: transparent;
       }
       a:hover {
         color: inherit;
       }
     }
     li:hover {
-      color: black;
+      border-bottom: 1px solid white;
+    }
+  }
+  @media (max-width: 720px) {
+    flex-direction: column;
+    p {
+      margin: 15px;
     }
   }
 `
@@ -50,17 +69,22 @@ export const CoursePage = styled(Page)<{ qtdCourses: number }>`
       padding: 10px 15px;
       color: white;
       font-size: 30px;
-      border-radius: 20px;
+      border-radius: 12px;
       background-color: transparent;
       outline: none;
       text-transform: uppercase;
       transition: 0.2s;
+      outline: none !important;
+      -webkit-tap-highlight-color: transparent;
     }
     button:focus {
       border-style: dashed;
       background-color: white;
       color: black;
       border-color: black;
+      .icon {
+        stroke: black;
+      }
     }
   }
   ul {
@@ -78,8 +102,8 @@ export const CoursePage = styled(Page)<{ qtdCourses: number }>`
     li {
       margin: 0;
       padding: 25px;
-      background-color: #404040;
-      border-radius: 33px;
+      background-color: #474b4e;
+      border-radius: 15px;
       h3 {
         margin-bottom: 5.5px;
       }
@@ -123,17 +147,22 @@ export const WorkshopPage = styled(Page)<{ qtdWorkshops: number }>`
       padding: 10px 15px;
       color: white;
       font-size: 30px;
-      border-radius: 20px;
+      border-radius: 12px;
       background-color: transparent;
       outline: none;
       text-transform: uppercase;
       transition: 0.2s;
+      outline: none !important;
+      -webkit-tap-highlight-color: transparent;
     }
     button:focus {
       border-style: dashed;
       background-color: white;
       color: black;
       border-color: black;
+      .icon {
+        stroke: black;
+      }
     }
   }
   ul {
@@ -151,8 +180,8 @@ export const WorkshopPage = styled(Page)<{ qtdWorkshops: number }>`
     li {
       margin: 0;
       padding: 25px;
-      background-color: #404040;
-      border-radius: 33px;
+      background-color: #474b4e;
+      border-radius: 15px;
       h3 {
         margin-bottom: 5.5px;
       }
@@ -195,17 +224,22 @@ export const LanguagesPage = styled(Page)<{ qtdLanguages: number }>`
       padding: 10px 15px;
       color: white;
       font-size: 30px;
-      border-radius: 20px;
+      border-radius: 12px;
       background-color: transparent;
       outline: none;
       text-transform: uppercase;
       transition: 0.2s;
+      outline: none !important;
+      -webkit-tap-highlight-color: transparent;
     }
     button:focus {
       border-style: dashed;
       background-color: white;
       color: black;
       border-color: black;
+      .icon {
+        stroke: black;
+      }
     }
   }
   ul {
@@ -223,8 +257,8 @@ export const LanguagesPage = styled(Page)<{ qtdLanguages: number }>`
     li {
       margin: 0;
       padding: 25px;
-      background-color: #404040;
-      border-radius: 33px;
+      background-color: #474b4e;
+      border-radius: 15px;
       h3 {
         margin-bottom: 5.5px;
       }

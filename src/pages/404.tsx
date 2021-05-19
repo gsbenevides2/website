@@ -3,7 +3,7 @@ import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 
-import { Container, Code } from '../styles/pages/404'
+import { Container } from '../styles/pages/Error'
 
 const Page: React.FC = () => {
   const playMusic = React.useCallback(() => {
@@ -22,25 +22,20 @@ const Page: React.FC = () => {
       <Head>
         <title>Página Não Encontrada</title>
       </Head>
-      <div className="content">
-        <h1>Ops! Não encontrei o que procuras 😔</h1>
-        <h2>Tente umas das opções abaixo:</h2>
-        <ul>
-          <li>Verique a url(link), ela pode estar incorreta.</li>
-          <li>
-            Vá <Link href="/">página inicial</Link>. E procure por lá.
-          </li>
-          <li>
-            Pode ser o que você esteja procurando, tenha sido removido, qualquer
-            duvida entre em contato com{' '}
-            <a href="mailto:gsbenevides2@gmail.com">o administrador.</a>
-          </li>
-          <li>Ou você procura outra coisa...</li>
-        </ul>
-        <h5 onClick={playMusic}>Código do Erro:404</h5>
+      <div className="card">
+        <img
+          onClick={playMusic}
+          src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/openmoji/272/robot_1f916.png"
+          alt="Robo"
+        />
+        <h1>Ops não encontrei o que procuras</h1>
+        <p>Talvez o link que você abriu esteja quebrado ou errado.</p>
+        <Link href="/">
+          <a />
+        </Link>
       </div>
       <audio>
-        <source src="/404.mp3" type="audio/mpeg" />
+        <source src="/error.mp3" type="audio/mpeg" />
       </audio>
     </Container>
   )

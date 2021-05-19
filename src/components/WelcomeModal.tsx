@@ -15,6 +15,7 @@ const Container = styled.div`
   transition: visibility 0s, opacity 0.5s linear;
   opacity: 0;
   .content {
+    max-width: 320px;
     width: 80%;
     background-color: #121212;
     padding: 12px;

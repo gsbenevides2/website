@@ -8,7 +8,7 @@ import emptyImage from '../../assets/empty.png'
 import Header from '../../components/blog/Header'
 import { WelcomeModal } from '../../components/WelcomeModal'
 import { Empty, PageContainer } from '../../styles/pages/BlogHome'
-import firebase from '../../utils/firebase'
+import { getInitialPosts, getNextPosts } from '../../utils/firebase/post'
 
 interface Post {
   name: string
@@ -19,19 +19,7 @@ interface Props {
   posts: Post[]
 }
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const collectionSnapshot = await firebase
-    .firestore()
-    .collection(`apps/${process.env.NEXT_ENV}/postsOfBlog`)
-    .orderBy('date', 'desc')
-    .limit(10)
-    .get()
-  const posts: Post[] = collectionSnapshot.docs.map(doc => {
-    return {
-      name: doc.data().name,
-      image: doc.data().thumbnail.list,
-      id: doc.id
-    }
-  })
+  const posts = await getInitialPosts()
   return {
     props: { posts },
     revalidate: 60
@@ -47,37 +35,18 @@ const BlogIndexPage: React.FC<InferGetStaticPropsType<
   const firstPost = posts[0]
   const postA = posts.slice(1, 4)
   const morePosts = posts.slice(5)
+
   const scrollCallback = React.useCallback(() => {
     const endOfPage =
       window.innerHeight + window.scrollY >= document.body.offsetHeight
     async function loadMorePosts() {
-      const lastDocument = await firebase
-        .firestore()
-        .doc(
-          `apps/${process.env.NEXT_PUBLIC_ENV}/postsOfBlog/${
-            posts[posts.length - 1].id
-          }`
-        )
-        .get()
-      const collectionSnapshot = await firebase
-        .firestore()
-        .collection(`apps/${process.env.NEXT_PUBLIC_ENV}/postsOfBlog`)
-        .orderBy('date', 'desc')
-        .startAfter(lastDocument)
-        .limit(10)
-        .get()
-      const newPosts: Post[] = collectionSnapshot.docs.map(doc => {
-        return {
-          name: doc.data().name,
-          image: doc.data().image,
-          id: doc.id
-        }
-      })
-      if (newPosts.length < 10) {
+      const morePosts = await getNextPosts(posts[posts.length - 1].id)
+      if (morePosts.length < 10) {
         setEnd(true)
       }
-      setPosts([...posts, ...newPosts])
+      setPosts([...posts, ...morePosts])
     }
+
     if (endOfPage && !loadingMore && !end) {
       setLoadingMore(true)
       loadMorePosts()
@@ -89,6 +58,7 @@ const BlogIndexPage: React.FC<InferGetStaticPropsType<
         })
     }
   }, [posts, loadingMore, end])
+
   React.useEffect(() => {
     window.addEventListener('scroll', scrollCallback)
   }, [])

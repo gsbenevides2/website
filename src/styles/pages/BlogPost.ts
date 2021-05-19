@@ -3,6 +3,10 @@ import styled from 'styled-components'
 export const Container = styled.div`
   padding: 12px;
   width: 100%;
+  max-width: 600px;
+  position: relative;
+  left: 50%;
+  transform: translate(-50%);
   text-align: center;
   img {
     width: 100%;
@@ -23,6 +27,11 @@ export const Container = styled.div`
     p,
     img {
       padding: 10px;
+    }
+    img {
+      position: relative;
+      left: 50%;
+      transform: translate(-50%);
     }
     ul,
     ol {

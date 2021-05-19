@@ -1,23 +1,26 @@
 import React from 'react'
-import { FiArrowUp, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 
 import Head from 'next/head'
 import Link from 'next/link'
 
 import curriculo from '../assets/curriculo.json'
+import { ArrowUpSvg } from '../components/curriculo/ArrowUpSvg'
+import { ChevronLeftSvg } from '../components/curriculo/ChevronLeftSvg'
+import { ChevronRightSvg } from '../components/curriculo/ChevronRightSvg'
 import { Container } from '../styles/commons/GradientContainer'
 import {
   FirstPage,
   CoursePage,
   WorkshopPage,
   LanguagesPage
-} from '../styles/pages/curriculo'
-
+} from '../styles/pages/Curriculo'
 const CurriculoPage: React.FC = () => {
   const [page, setPage] = React.useState('home')
   const [course, setCourse] = React.useState(-1)
   const [workshop, setWorkshop] = React.useState(-1)
   const [language, setLanguage] = React.useState(-1)
+  const [touchStart, setTouchStart] = React.useState<number>()
+  const [touchEvent, setTouchEvent] = React.useState<0 | 1>()
 
   function setDocumentHeightCssVariable() {
     const vh = window.innerHeight * 0.01
@@ -91,6 +94,32 @@ const CurriculoPage: React.FC = () => {
       setLanguage(language - 1)
     }
   }, [language])
+
+  const handleTouchEvent = React.useCallback(
+    (
+      page: 'Course' | 'Workshop' | 'Language',
+      e: React.TouchEvent<HTMLLIElement>
+    ) => {
+      console.log(e)
+      if (e.type === 'touchstart') {
+        const x = e.touches[0].screenX
+        setTouchStart(x)
+      } else if (e.type === 'touchmove') {
+        const x = e.touches[0].screenX
+        setTouchEvent(touchStart - x >= 0 ? 1 : 0)
+      } else if (e.type === 'touchend') {
+        if (page === 'Language') {
+          touchEvent ? nextLanguage() : prevLanguage()
+        } else if (page === 'Workshop') {
+          touchEvent ? nextWorkshop() : prevWorkshop()
+        } else if (page === 'Course') {
+          touchEvent ? nextCourse() : prevCourse()
+        }
+      }
+    },
+    [touchStart, touchEvent]
+  )
+
   React.useEffect(() => {
     function disableScroll() {
       document.body.style.overflow = 'hidden'
@@ -136,30 +165,56 @@ const CurriculoPage: React.FC = () => {
         <meta property="og:type" content="website" />
       </Head>
       <FirstPage id="home">
-        <h2>Saiba mais sobre mim:</h2>
-        <ul>
-          <li onClick={() => scrollTo('course_page')}>Cursos</li>
-          <li onClick={() => scrollTo('workshops_page')}>
-            Treinamentos e Workshops
-          </li>
-          <li onClick={() => scrollTo('languages_page')}>
-            Linguagens de Programaçāo
-          </li>
-          <li>
-            <Link href="/">Voltar para Página Inicial</Link>
-          </li>
-        </ul>
+        <p>
+          Olá, sou Guilherme e nessa página você ira encontrar mais informações
+          sobre minha experiência profissional com a área de desenvolvimento de
+          sistemas. Mas deixa eu contar um pouco mais:
+          <br />
+          Comecei a programar com 15 anos, na época meu objetivo era criar um
+          app que fizesse algo que nenhum outro fazia na Google Play. Nisso
+          comecei com Python no app QPython, criei coisas interessantes como um
+          conversor de temperatura que usava a biblioteca Android Helper. Porém
+          pela falta de computador, não consegui ir mais à frente, porém conheci
+          outro app DroidScript, nele vi bastante da Javascript, um pouco de
+          HTML e CSS. Fiz um app legal que puxava informações do modem da Vivo.
+          Pena que nessa época não conhecia o Git.
+          <br />
+          Para finalizar conheci o desenvolvimento web, crie sites e
+          WebApps(PWAs), mais tarde conheci o Node e com a Rocketseat conheci
+          React, React Native e me aprofundei em NodeJS.
+          <br />
+        </p>
+        <div>
+          <h2>Saiba mais sobre mim:</h2>
+          <ul>
+            <li onClick={() => scrollTo('course_page')}>Cursos</li>
+            <li onClick={() => scrollTo('workshops_page')}>
+              Treinamentos e Workshops
+            </li>
+            <li onClick={() => scrollTo('languages_page')}>
+              Linguagens de Programaçāo
+            </li>
+            <li>
+              <Link href="/">Voltar para Página Inicial</Link>
+            </li>
+          </ul>
+        </div>
       </FirstPage>
       <CoursePage id="course_page" qtdCourses={curriculo.courses.length}>
         <div className="top">
           <h2>Cursos</h2>
           <button onClick={() => scrollTo('home')}>
-            <FiArrowUp />
+            <ArrowUpSvg />
           </button>
         </div>
         <ul>
           {curriculo.courses.map((course, index) => (
-            <li key={index.toString()}>
+            <li
+              key={index.toString()}
+              onTouchStart={e => handleTouchEvent('Course', e)}
+              onTouchMove={e => handleTouchEvent('Course', e)}
+              onTouchEnd={e => handleTouchEvent('Course', e)}
+            >
               <h3>{course.name}</h3>
               <p>
                 {Object.keys(course.labels).map(label => (
@@ -183,10 +238,10 @@ const CurriculoPage: React.FC = () => {
         </ul>
         <div className="slider">
           <button onClick={prevCourse}>
-            <FiChevronLeft />
+            <ChevronLeftSvg />
           </button>
           <button onClick={nextCourse}>
-            <FiChevronRight />
+            <ChevronRightSvg />
           </button>
         </div>
       </CoursePage>
@@ -197,12 +252,17 @@ const CurriculoPage: React.FC = () => {
         <div className="top">
           <h2>Treinamentos e Workshops</h2>
           <button onClick={() => scrollTo('home')}>
-            <FiArrowUp />
+            <ArrowUpSvg />
           </button>
         </div>
         <ul>
           {curriculo.workshops.map((workshop, index) => (
-            <li key={index.toString()}>
+            <li
+              key={index.toString()}
+              onTouchStart={e => handleTouchEvent('Workshop', e)}
+              onTouchMove={e => handleTouchEvent('Workshop', e)}
+              onTouchEnd={e => handleTouchEvent('Workshop', e)}
+            >
               <h3>{workshop.name}</h3>
               <p>
                 {Object.keys(workshop.labels).map(label => (
@@ -226,10 +286,10 @@ const CurriculoPage: React.FC = () => {
         </ul>
         <div className="slider">
           <button onClick={prevWorkshop}>
-            <FiChevronLeft />
+            <ChevronLeftSvg />
           </button>
           <button onClick={nextWorkshop}>
-            <FiChevronRight />
+            <ChevronRightSvg />
           </button>
         </div>
       </WorkshopPage>
@@ -240,12 +300,17 @@ const CurriculoPage: React.FC = () => {
         <div className="top">
           <h2>Linguagens de Programaçāo</h2>
           <button onClick={() => scrollTo('home')}>
-            <FiArrowUp />
+            <ArrowUpSvg />
           </button>
         </div>
         <ul>
           {curriculo.languages.map((language, index) => (
-            <li key={index.toString()}>
+            <li
+              key={index.toString()}
+              onTouchStart={e => handleTouchEvent('Language', e)}
+              onTouchMove={e => handleTouchEvent('Language', e)}
+              onTouchEnd={e => handleTouchEvent('Language', e)}
+            >
               <h3>{language.name}</h3>
               <p>
                 <span>
@@ -260,10 +325,10 @@ const CurriculoPage: React.FC = () => {
         </ul>
         <div className="slider">
           <button onClick={prevLanguage}>
-            <FiChevronLeft />
+            <ChevronLeftSvg />
           </button>
           <button onClick={nextLanguage}>
-            <FiChevronRight />
+            <ChevronRightSvg />
           </button>
         </div>
       </LanguagesPage>

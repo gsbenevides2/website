@@ -1,28 +1,18 @@
 import React from 'react'
-import {
-  FiArrowUp,
-  FiFacebook,
-  FiGithub,
-  FiInstagram,
-  FiLinkedin,
-  FiTwitter,
-  FiFileText,
-  FiEdit2
-} from 'react-icons/fi'
 
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
 
+import { ArrowDownSvg } from '../components/home/ArrowDownSvg'
+import { BlogSvg } from '../components/home/BlogSvg'
+import { CurriculumSvg } from '../components/home/CurriculumSvg'
+import { GitHubSvg } from '../components/home/GitHubSvg'
+import { InstagramSvg } from '../components/home/InstagramSvg'
+import { LinkedinSvg } from '../components/home/LinkedinSvg'
+import { TwitterSvg } from '../components/home/TwitterSvg'
 import { Container } from '../styles/commons/GradientContainer'
-import {
-  FirstPage,
-  SeccoundPage,
-  Page,
-  SocialTable,
-  SocialItem,
-  ButtonArea
-} from '../styles/pages/Home'
+import { FirstPage, SeccoundPage } from '../styles/pages/Home'
 import { calculateAge } from '../utils/calculateAge'
 
 export const getStaticProps: GetStaticProps = async () => {
@@ -64,52 +54,6 @@ const Home: React.FC<InferGetStaticPropsType<
       window.removeEventListener('resize', callbackToOnResizeWindow)
     }
   })
-  const socialMedias = [
-    {
-      name: 'Github',
-      url: 'https://github.com/gsbenevides2',
-      color: '#24292e',
-      icon: FiGithub
-    },
-    {
-      name: 'Instagram',
-      url: 'https://instagram.com/gsbenevides2',
-      color: '#dd2a7b',
-      icon: FiInstagram
-    },
-    {
-      name: 'Linkedin',
-      url: 'https://www.linkedin.com/in/gsbenevides2',
-      color: '#0e76a8',
-      icon: FiLinkedin
-    },
-    {
-      name: 'Facebook',
-      url: 'https://www.facebook.com/Gsbenevides2',
-      color: '#3b5998',
-      icon: FiFacebook
-    },
-    {
-      name: 'Twitter',
-      url: 'https://twitter.com/gsbenevides2',
-      color: '#1da1f2',
-      icon: FiTwitter
-    }
-  ]
-  const myPages = [
-    {
-      name: 'Currículo',
-      url: '/curriculo',
-      color: '#24292e',
-      icon: FiFileText
-    },
-    {
-      name: 'Blog',
-      url: '/blog',
-      color: '#24292e',
-      icon: FiEdit2
-    }
-  ]
   return (
     <Container>
       <Head>
@@ -121,62 +65,88 @@ const Home: React.FC<InferGetStaticPropsType<
         <meta property="og:type" content="website" />
       </Head>
       <FirstPage id="page_1">
-        <img
-          src="https://avatars0.githubusercontent.com/u/45762112?s=460&u=94ef867a7a94c17a8205b3cf5fe6cd0384dd7c36&v=4"
-          alt="Rosto de Guilherme"
-        />
-        <h1>Olá seja bem-vindo</h1>
-        <h2>Meu nome é Guilherme deseja me conhecer melhor?</h2>
-        <button onClick={() => scrollTo(2)}>Sim</button>
+        <div className="card">
+          <img
+            src="https://avatars0.githubusercontent.com/u/45762112?s=460&u=94ef867a7a94c17a8205b3cf5fe6cd0384dd7c36&v=4"
+            alt="Rosto de Guilherme"
+          />
+          <h1>Bem-Vindo</h1>
+          <button onClick={() => scrollTo(2)}>
+            <ArrowDownSvg />
+          </button>
+        </div>
       </FirstPage>
       <SeccoundPage id="page_2">
-        <ButtonArea>
-          <button onClick={() => scrollTo(1)}>
-            <FiArrowUp />
-          </button>
-        </ButtonArea>
-        <p>
-          Oi! Meu nome é Guilherme da Silva Benevides, e sou apaixonado por
-          programação, tenho {` ${props.age} `} anos, e desde os meus 15 escrevo
-          códigos. Programo muito no meu celular, por falta de computador, porém
-          isso não me impede de eu continuar, traz limitações, entretanto
-          continuo aprendendo. Comecei com python, minha vontade era criar um
-          app, porém com as limitações, migrei para o Javascript e através do
-          app DroidScript criei meus primeiros apps. Hoje sei Node.js, React e
-          React Native (Expo). Fiz um curso de Assistente de Desenvolvimento de
-          Sistemas do Novotec, nele vi tecnologias como banco de dados SQL e o
-          básico de Java. Se você deseja me conhecer melhor e ver o que faço
-          atualmente acesse minhas redes sociais.
-        </p>
-        <button onClick={() => scrollTo(3)}>Veja minhas redes sociais</button>
-      </SeccoundPage>
-      <Page id="page_3">
-        <ButtonArea>
-          <button onClick={() => scrollTo(2)}>
-            <FiArrowUp />
-          </button>
-        </ButtonArea>
-        <SocialTable>
-          {socialMedias.map((media, index) => (
-            <SocialItem color={media.color} key={index.toString()}>
-              <a target="_blank" rel="noreferrer" href={media.url}>
-                {React.createElement(media.icon, { size: 60 }, null)}
-                <span>{media.name}</span>
+        <div className="card">
+          <p onClick={() => scrollTo(1)}>
+            Olá me chamo Guilherme, {` ${props.age} `} tenho anos, seja muito
+            bem-vindo ao meu site. Sou desenvolvedor Javascript, crio sites,
+            WebApps e Apps para celular(Expo/React Native). Caso queira me
+            conhecer mais acesse os links abaixo.
+          </p>
+        </div>
+        <ul className="social-media">
+          <li>
+            <Link href="/curriculo">
+              <a>
+                <CurriculumSvg />
+                <span>Curriculo</span>
               </a>
-            </SocialItem>
-          ))}
-          {myPages.map((page, index) => (
-            <SocialItem color={page.color} key={index.toString()}>
-              <Link href={page.url} as={page.url}>
-                <a>
-                  {React.createElement(page.icon, { size: 60 }, null)}
-                  <span>{page.name}</span>
-                </a>
-              </Link>
-            </SocialItem>
-          ))}
-        </SocialTable>
-      </Page>
+            </Link>
+          </li>
+          <li>
+            <a
+              href="https://twitter.com/gsbenevides2"
+              target="_blank"
+              rel="noreferrer"
+              className="twitter"
+            >
+              <TwitterSvg />
+              <span>Twitter</span>
+            </a>
+          </li>
+          <li>
+            <Link href="/blog">
+              <a>
+                <BlogSvg />
+                <span>Blog</span>
+              </a>
+            </Link>
+          </li>
+          <li>
+            <a
+              href="https://linkedin.com/gsbenevides2"
+              className="linkedin"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <LinkedinSvg />
+              <span>Linkedin</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://github.com/gsbenevides2"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <GitHubSvg />
+              <span>Github</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://instagram.com/gsbenevides2"
+              className="instagram"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <InstagramSvg />
+              <span>Instagram</span>
+            </a>
+          </li>
+        </ul>
+      </SeccoundPage>
     </Container>
   )
 }

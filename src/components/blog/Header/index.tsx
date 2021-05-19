@@ -1,20 +1,42 @@
 import React from 'react'
-import { FiBell } from 'react-icons/fi'
 
 import Link from 'next/link'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 
+import { BellSvg } from '../BellSvg'
 import { NotificationQuestionModal } from './Modal'
+const typing = keyframes`
+  from {
+    width: 0;
+  }
+  to {
+    width: 283px;
+  }
+`
+const blinkCaret = keyframes`
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: white;
+  }
+`
 const HeaderStyled = styled.header`
-  background-color: #434343;
+  background-color: #474b4e;
   margin: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   h1 {
     font-size: 2rem;
-    padding: 12px;
+    margin: 12px;
+    overflow: hidden;
+    white-space: nowrap;
     font-weight: 400;
+    border-right: 2px solid white;
+    animation: ${typing} 3.5s steps(30, end),
+      ${blinkCaret} 0.75s step-end infinite;
   }
   button {
     color: white;
@@ -26,9 +48,15 @@ const HeaderStyled = styled.header`
     border-radius: 50%;
     transition: 0.2s;
     outline: none;
+    width: 37px;
+    height: 37px;
+    font-size: 22px;
     &:focus {
       background-color: white;
       color: black;
+      .icon {
+        stroke: black;
+      }
     }
   }
 `
@@ -51,10 +79,10 @@ const Header: React.FC = () => {
       />
       <HeaderStyled>
         <Link as="/blog" href="/blog">
-          <h1> Blog do Guilherme</h1>
+          <h1>Blog do Guilherme</h1>
         </Link>
         <button onClick={openNotificationModal}>
-          <FiBell size={22} />
+          <BellSvg />
         </button>
       </HeaderStyled>
     </React.Fragment>

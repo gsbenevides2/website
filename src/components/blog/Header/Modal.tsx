@@ -3,7 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import Notification from '../../../assets/notification.png'
-import firebase from '../../../utils/firebase'
+import { deleteToken, getToken } from '../../../utils/firebase/messaging'
 
 const Container = styled.div`
   position: absolute;
@@ -16,10 +16,11 @@ const Container = styled.div`
   transition: visibility 0s, opacity 0.5s linear;
   opacity: 0;
   .content {
+    max-width: 320px;
     width: 80%;
     background-color: #121212;
     padding: 12px;
-    border-radius: 28px;
+    border-radius: 15px;
     position: relative;
     top: 50%;
     left: 50%;
@@ -41,7 +42,7 @@ const Container = styled.div`
       color: white;
       font-size: 19px;
       margin-top: 1rem;
-      border-radius: 20px;
+      border-radius: 15px;
       outline: none;
       width: 80%;
       transition: 0.2s;
@@ -80,7 +81,7 @@ export const NotificationQuestionModal: React.FC<Props> = ({ open, close }) => {
         setStatus('browser-permission-denied')
         return
       }
-      const token = await firebase.messaging().getToken()
+      const token = await getToken()
       await fetch(`/api/fcmToken?token=${token}`, { method: 'POST' })
       localStorage.setItem('fcmToken', token)
       setStatus('actived')
@@ -90,8 +91,8 @@ export const NotificationQuestionModal: React.FC<Props> = ({ open, close }) => {
   }, [])
   const disableNotifications = React.useCallback(async () => {
     try {
-      const token = await firebase.messaging().getToken()
-      await firebase.messaging().deleteToken()
+      const token = await getToken()
+      await deleteToken()
       await fetch(`/api/fcmToken?token=${token}`, { method: 'DELETE' })
       localStorage.removeItem('fcmToken')
       close()
@@ -117,7 +118,7 @@ export const NotificationQuestionModal: React.FC<Props> = ({ open, close }) => {
         try {
           const fcmToken = localStorage.getItem('fcmToken')
           if (fcmToken) {
-            const token = await firebase.messaging().getToken()
+            const token = await getToken()
 
             if (fcmToken !== token) {
               await fetch(`/api/fcmToken?token=${token}`, { method: 'POST' })

@@ -9,19 +9,8 @@ import LoadingPage from '../../../components/LoadingPage'
 import MarkdownView from '../../../components/MarkdownView'
 import { WelcomeModal } from '../../../components/WelcomeModal'
 import { Container } from '../../../styles/pages/BlogPost'
-import firebase from '../../../utils/firebase'
+import { getPost } from '../../../utils/firebase/post'
 
-interface FirebaseDocumentData {
-  name: string
-  date: firebase.firestore.Timestamp
-  thumbnail: {
-    originalWebp: string
-    metaTag: string
-  }
-  description: string
-  content: string
-  views: string[]
-}
 interface FormatedPost {
   id: string
   name: string
@@ -33,26 +22,6 @@ interface FormatedPost {
   views: number
   preview: boolean
 }
-function parseDocumentData(
-  documentData: FirebaseDocumentData,
-  id: string
-): FormatedPost {
-  const dateObject = documentData.date.toDate()
-  const date = `${dateObject.getDate()}/${
-    dateObject.getMonth() + 1
-  }/${dateObject.getFullYear()}`
-  return {
-    id,
-    name: documentData.name,
-    content: documentData.content,
-    thumbnail: documentData.thumbnail.originalWebp,
-    metaTag: documentData.thumbnail.metaTag,
-    date,
-    description: documentData.description,
-    views: documentData.views?.length || 0,
-    preview: false
-  }
-}
 
 export interface ServerSideProps {
   post: FormatedPost
@@ -60,13 +29,8 @@ export interface ServerSideProps {
 }
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async context => {
   const { id } = context.params
-  console.time('Obtendo Post')
-  const documentSnapshot = await firebase
-    .firestore()
-    .doc(`apps/${process.env.NEXT_ENV}/postsOfBlog/${id}`)
-    .get()
-  console.timeEnd('Obtendo Post')
-  if (!documentSnapshot.exists) {
+  const post = await getPost(id as string)
+  if (!post) {
     return {
       props: {},
       notFound: true
@@ -74,10 +38,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async con
   }
   return {
     props: {
-      post: parseDocumentData(
-        documentSnapshot.data() as FirebaseDocumentData,
-        documentSnapshot.id
-      ),
+      post,
       url: context.req.url
     }
   }
