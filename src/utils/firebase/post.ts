@@ -10,7 +10,7 @@ import {
   query,
   startAfter,
   Timestamp
-} from 'firebase/firestore'
+} from 'firebase/firestore/lite'
 
 import { getConfig } from './config'
 
