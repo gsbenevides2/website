@@ -1,5 +1,7 @@
 import React from 'react'
 
+import theme from '../../styles/theme'
+
 export function ArrowDownSvg(): React.ReactElement {
   return (
     <svg
@@ -12,7 +14,8 @@ export function ArrowDownSvg(): React.ReactElement {
     >
       <g
         fill="none"
-        stroke="White"
+        className="icon"
+        stroke={theme.colors.white}
         strokeWidth="1"
         strokeLinecap="round"
         strokeLinejoin="round"

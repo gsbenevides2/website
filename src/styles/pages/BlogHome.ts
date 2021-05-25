@@ -8,6 +8,7 @@ export const PageContainer = styled.ul`
     padding: 5px;
     transition: 500ms;
     gap: 5px;
+    cursor: pointer;
     &.firstPost {
       grid-row: 1/4;
       img {

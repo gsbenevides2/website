@@ -13,17 +13,17 @@ const typing = keyframes`
     width: 283px;
   }
 `
+
 const blinkCaret = keyframes`
-  from,
-  to {
+  from,to {
     border-color: transparent;
   }
   50% {
-    border-color: white;
+    border-color: ${props => props.theme.colors.white};
   }
 `
 const HeaderStyled = styled.header`
-  background-color: #474b4e;
+  background-color: ${props => props.theme.colors.primary};
   margin: 0;
   display: flex;
   justify-content: space-between;
@@ -34,7 +34,8 @@ const HeaderStyled = styled.header`
     overflow: hidden;
     white-space: nowrap;
     font-weight: 400;
-    border-right: 2px solid white;
+    cursor: pointer;
+    border-right: 2px solid ${props => props.theme.colors.white};
     animation: ${typing} 3.5s steps(30, end),
       ${blinkCaret} 0.75s step-end infinite;
   }
@@ -52,10 +53,10 @@ const HeaderStyled = styled.header`
     height: 37px;
     font-size: 22px;
     &:focus {
-      background-color: white;
-      color: black;
+      background-color: ${props => props.theme.colors.white};
+      color: ${props => props.theme.colors.black};
       .icon {
-        stroke: black;
+        stroke: ${props => props.theme.colors.black};
       }
     }
   }

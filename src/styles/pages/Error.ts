@@ -15,11 +15,11 @@ export const Container = styled(GradientContainer)`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #474b4e;
-    border-radius: 15px;
+    background-color: ${props => props.theme.colors.primary};
+    border-radius: ${props => props.theme.sizes.borderRadius};
     padding: 22px;
     img {
-      background-color: white;
+      background: ${props => props.theme.colors.white};
       border-radius: 50%;
       width: 80px;
       height: 80px;
@@ -35,17 +35,15 @@ export const Container = styled(GradientContainer)`
       text-align: justify;
     }
     a {
-      background-color: #535353;
+      background-color: ${props => props.theme.colors.seccoundary};
       border: none;
       width: 100%;
-      border-radius: 12px;
-      cursor: pointer;
+      border-radius: ${props => props.theme.sizes.borderRadius};
       outline: none !important;
-      -webkit-tap-highlight-color: transparent;
 
       padding: 10px;
       font-size: 14pt;
-      color: white;
+      color: ${props => props.theme.colors.white};
       text-decoration: none;
       margin-top: 5px;
 
@@ -57,7 +55,7 @@ export const Container = styled(GradientContainer)`
         content: 'Bora navegar?';
       }
       &:hover {
-        background-color: #595a5d;
+        background-color: ${props => props.theme.colors.accent};
         transform: scale(1.05);
         &:after {
           content: "Let's Go";

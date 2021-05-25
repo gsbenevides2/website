@@ -14,12 +14,12 @@ export const FirstPage = styled(Page)`
   flex-direction: row;
   justify-content: space-evenly;
   p {
-    background-color: #474b4e;
+    background-color: ${props => props.theme.colors.primary};
+    border-radius: ${props => props.theme.sizes.borderRadius};
     max-width: 480px;
     margin-right: 30px;
     padding: 12px;
     font-size: 15px;
-    border-radius: 15px;
   }
   div h2 {
     text-align: center;
@@ -29,21 +29,21 @@ export const FirstPage = styled(Page)`
     li {
       font-size: 16px;
       margin-bottom: 12px;
-      color: white;
+      color: ${props => props.theme.colors.white};
       width: fit-content;
       transition: 0.2s;
+      cursor: pointer;
       a {
         color: inherit;
         text-decoration: none;
         outline: none !important;
-        -webkit-tap-highlight-color: transparent;
       }
       a:hover {
         color: inherit;
       }
     }
     li:hover {
-      border-bottom: 1px solid white;
+      border-bottom: 1px solid ${props => props.theme.colors.white};
     }
   }
   @media (max-width: 720px) {
@@ -53,7 +53,11 @@ export const FirstPage = styled(Page)`
     }
   }
 `
-export const CoursePage = styled(Page)<{ qtdCourses: number }>`
+interface ListProps {
+  length: number
+  name: string
+}
+export const ListPage = styled(Page)<ListProps>`
   width: 80%;
   margin: 0 auto;
   overflow: hidden;
@@ -64,31 +68,29 @@ export const CoursePage = styled(Page)<{ qtdCourses: number }>`
     justify-content: space-between;
     align-items: center;
     button {
-      cursor: pointer;
       border: 1px solid transparent;
       padding: 10px 15px;
       color: white;
       font-size: 30px;
-      border-radius: 12px;
+      border-radius: ${props => props.theme.sizes.borderRadius};
       background-color: transparent;
       outline: none;
       text-transform: uppercase;
       transition: 0.2s;
       outline: none !important;
-      -webkit-tap-highlight-color: transparent;
     }
     button:focus {
       border-style: dashed;
-      background-color: white;
-      color: black;
-      border-color: black;
+      background-color: ${props => props.theme.colors.white};
+      color: ${props => props.theme.colors.black};
+      border-color: ${props => props.theme.colors.black};
       .icon {
-        stroke: black;
+        stroke: ${props => props.theme.colors.black};
       }
     }
   }
   ul {
-    width: calc(${props => props.qtdCourses} * 100%);
+    width: calc(${props => props.length} * 100%);
     list-style: none;
     margin: 10px 0px 0px 0px;
     padding: 0;
@@ -97,13 +99,13 @@ export const CoursePage = styled(Page)<{ qtdCourses: number }>`
     grid-auto-columns: 1fr;
     position: relative;
     gap: 10px;
-    left: calc(var(--selected-course) * -100%);
+    left: calc(var(--selected-${props => props.name}) * -100%);
     transition: left 0.4s;
     li {
+      background-color: ${props => props.theme.colors.primary};
+      border-radius: ${props => props.theme.sizes.borderRadius};
       margin: 0;
       padding: 25px;
-      background-color: #474b4e;
-      border-radius: 15px;
       h3 {
         margin-bottom: 5.5px;
       }
@@ -111,10 +113,10 @@ export const CoursePage = styled(Page)<{ qtdCourses: number }>`
         margin: 2.5px 0px;
       }
       a {
-        color: white;
+        color: ${props => props.theme.colors.white};
       }
       a:hover {
-        color: white;
+        color: ${props => props.theme.colors.white};
       }
     }
   }
@@ -122,162 +124,7 @@ export const CoursePage = styled(Page)<{ qtdCourses: number }>`
     margin-top: 10px;
     gap: 5px;
     button {
-      color: white;
-      font-size: 30px;
-      background-color: transparent;
-      outline: none;
-      border: none;
-    }
-  }
-`
-
-export const WorkshopPage = styled(Page)<{ qtdWorkshops: number }>`
-  width: 80%;
-  margin: 0 auto;
-  overflow: hidden;
-  .top {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    button {
-      cursor: pointer;
-      border: 1px solid transparent;
-      padding: 10px 15px;
-      color: white;
-      font-size: 30px;
-      border-radius: 12px;
-      background-color: transparent;
-      outline: none;
-      text-transform: uppercase;
-      transition: 0.2s;
-      outline: none !important;
-      -webkit-tap-highlight-color: transparent;
-    }
-    button:focus {
-      border-style: dashed;
-      background-color: white;
-      color: black;
-      border-color: black;
-      .icon {
-        stroke: black;
-      }
-    }
-  }
-  ul {
-    width: calc(${props => props.qtdWorkshops} * 100%);
-    list-style: none;
-    margin: 10px 0px 0px 0px;
-    padding: 0;
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: 1fr;
-    position: relative;
-    gap: 10px;
-    left: calc(var(--selected-workshop) * -100%);
-    transition: left 0.4s;
-    li {
-      margin: 0;
-      padding: 25px;
-      background-color: #474b4e;
-      border-radius: 15px;
-      h3 {
-        margin-bottom: 5.5px;
-      }
-      p {
-        margin: 2.5px 0px;
-      }
-      a {
-        color: white;
-      }
-      a:hover {
-        color: white;
-      }
-    }
-  }
-  .slider {
-    margin-top: 10px;
-    gap: 5px;
-    button {
-      color: white;
-      font-size: 30px;
-      background-color: transparent;
-      outline: none;
-      border: none;
-    }
-  }
-`
-export const LanguagesPage = styled(Page)<{ qtdLanguages: number }>`
-  width: 80%;
-  margin: 0 auto;
-  overflow: hidden;
-  .top {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    button {
-      cursor: pointer;
-      border: 1px solid transparent;
-      padding: 10px 15px;
-      color: white;
-      font-size: 30px;
-      border-radius: 12px;
-      background-color: transparent;
-      outline: none;
-      text-transform: uppercase;
-      transition: 0.2s;
-      outline: none !important;
-      -webkit-tap-highlight-color: transparent;
-    }
-    button:focus {
-      border-style: dashed;
-      background-color: white;
-      color: black;
-      border-color: black;
-      .icon {
-        stroke: black;
-      }
-    }
-  }
-  ul {
-    width: calc(${props => props.qtdLanguages} * 100%);
-    list-style: none;
-    margin: 10px 0px 0px 0px;
-    padding: 0;
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: 1fr;
-    position: relative;
-    gap: 10px;
-    left: calc(var(--selected-language) * -100%);
-    transition: left 0.4s;
-    li {
-      margin: 0;
-      padding: 25px;
-      background-color: #474b4e;
-      border-radius: 15px;
-      h3 {
-        margin-bottom: 5.5px;
-      }
-      p {
-        margin: 2.5px 0px;
-      }
-      a {
-        color: white;
-      }
-      a:hover {
-        color: white;
-      }
-    }
-  }
-  .slider {
-    margin-top: 10px;
-    gap: 5px;
-    button {
-      color: white;
+      color: ${props => props.theme.colors.white};
       font-size: 30px;
       background-color: transparent;
       outline: none;

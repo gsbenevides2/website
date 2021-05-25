@@ -1,5 +1,7 @@
 import React from 'react'
 
+import theme from '../../styles/theme'
+
 export function BellSvg(): React.ReactElement {
   return (
     <svg
@@ -13,7 +15,7 @@ export function BellSvg(): React.ReactElement {
       <g
         fill="none"
         className="icon"
-        stroke="white"
+        stroke={theme.colors.white}
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"

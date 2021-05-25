@@ -8,8 +8,8 @@ export const Page = styled.div`
 
 export const FirstPage = styled(Page)`
   .card {
-    background-color: #474b4e;
-    border-radius: 15px;
+    background-color: ${props => props.theme.colors.primary};
+    border-radius: ${props => props.theme.sizes.borderRadius};
 
     width: 280px;
     height: 460px;
@@ -24,14 +24,12 @@ export const FirstPage = styled(Page)`
     flex-direction: column;
     padding-top: 22px;
 
-    img {
+    div img {
       width: 125px;
       height: 125px;
 
       border-radius: 50%;
-      background: white;
-
-      padding: 5px;
+      background: ${props => props.theme.colors.white};
     }
 
     h1 {
@@ -39,12 +37,10 @@ export const FirstPage = styled(Page)`
       text-align: center;
     }
     button {
-      background-color: #535353;
+      background-color: ${props => props.theme.colors.seccoundary};
       border: none;
-      border-radius: 12px;
-      cursor: pointer;
+      border-radius: ${props => props.theme.sizes.borderRadius};
       outline: none !important;
-      -webkit-tap-highlight-color: transparent;
 
       padding: 10px;
       font-size: 28pt;
@@ -56,7 +52,7 @@ export const FirstPage = styled(Page)`
       transition: 2s transform, 500ms border-radius, 1s background-color;
 
       &:hover {
-        background-color: #595a5d;
+        background-color: ${props => props.theme.colors.accent};
         border-radius: 50%;
         transform: scale(1.5);
       }
@@ -84,8 +80,8 @@ export const SeccoundPage = styled(Page)`
   align-items: center;
 
   .card {
-    background-color: #474b4e;
-    border-radius: 15px;
+    background-color: ${props => props.theme.colors.primary};
+    border-radius: ${props => props.theme.sizes.borderRadius};
 
     width: 80%;
     max-width: 580px;
@@ -112,8 +108,8 @@ export const SeccoundPage = styled(Page)`
     a {
       padding: 12px;
       font-size: 55pt;
-      border-radius: 10px;
-      color: white;
+      border-radius: ${props => props.theme.sizes.borderRadius};
+      color: ${props => props.theme.colors.white};
       display: flex;
       flex-direction: column;
       text-decoration: none;
@@ -123,7 +119,6 @@ export const SeccoundPage = styled(Page)`
       width: 132px;
       margin-right: 12px;
       outline: none !important;
-      -webkit-tap-highlight-color: transparent;
       svg .icon {
         transition: stroke 2s;
       }
@@ -131,11 +126,11 @@ export const SeccoundPage = styled(Page)`
         font-size: 16pt;
       }
       &:hover {
-        background-color: white;
-        color: #121212;
-        border: 3px inset #121212;
+        background-color: ${props => props.theme.colors.white};
+        color: ${props => props.theme.colors.black};
+        border: 3px inset ${props => props.theme.colors.black};
         .icon {
-          stroke: #121212;
+          stroke: ${props => props.theme.colors.black};
         }
       }
       &.facebook:hover {

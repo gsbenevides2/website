@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
+import { NextSeo } from 'next-seo'
 import Head from 'next/head'
 import { v4 as getUuid } from 'uuid'
 
@@ -83,17 +84,23 @@ const PostPage: React.FC<InferGetServerSidePropsType<
   if (props.post) {
     return (
       <React.Fragment>
-        <Head>
-          <title>{props.post.name}</title>
-          <meta property="description" content={props.post.description} />
-          <meta property="og:site_name" content="Blog do Guilherme" />
-          <meta property="og:title" content={props.post.name} />
-          <meta property="og:description" content={props.post.description} />
-          <meta property="og:image" content={props.post.metaTag} />
-          <meta property="og:type" content="website" />
-          <meta property="og:url" content={props.url} />
-          <meta name="twitter:card" content="summary_large_image" />
-        </Head>
+        <NextSeo
+          title={`${props.post.name} - Blog do Guilherme`}
+          description={props.post.description}
+          openGraph={{
+            title: `${props.post.name} - Blog do Guilherme`,
+            description: props.post.description,
+            site_name: 'Blog do Guilherme',
+            locale: 'pt_BR',
+            images: [{ url: props.post.metaTag }],
+            type: 'blog'
+          }}
+          twitter={{
+            site: '@gsbenevides2',
+            handle: '@gsbenevides2',
+            cardType: 'summary_large_image'
+          }}
+        />
         <Header />
         <WelcomeModal />
         <Container>

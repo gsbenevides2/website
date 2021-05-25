@@ -1,7 +1,8 @@
 import React from 'react'
 
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
-import Head from 'next/head'
+import { NextSeo } from 'next-seo'
+import Image from 'next/image'
 import Link from 'next/link'
 
 import { ArrowDownSvg } from '../components/home/ArrowDownSvg'
@@ -12,7 +13,7 @@ import { InstagramSvg } from '../components/home/InstagramSvg'
 import { LinkedinSvg } from '../components/home/LinkedinSvg'
 import { TwitterSvg } from '../components/home/TwitterSvg'
 import { Container } from '../styles/commons/GradientContainer'
-import { FirstPage, SeccoundPage } from '../styles/pages/Home'
+import * as Styled from '../styles/pages/Home'
 import { calculateAge } from '../utils/calculateAge'
 
 export const getStaticProps: GetStaticProps = async () => {
@@ -20,7 +21,7 @@ export const getStaticProps: GetStaticProps = async () => {
     props: {
       age: calculateAge()
     },
-    revalidate: 2629746
+    revalidate: 60
   }
 }
 
@@ -56,27 +57,46 @@ const Home: React.FC<InferGetStaticPropsType<
   })
   return (
     <Container>
-      <Head>
-        <title>Página Inicial</title>
-        <meta property="description" content="Site do Guilherme" />
-        <meta property="og:site_name" content="Site do Guilherme" />
-        <meta property="og:title" content="Site do Guilherme" />
-        <meta property="og:description" content="Site do Guilherme" />
-        <meta property="og:type" content="website" />
-      </Head>
-      <FirstPage id="page_1">
+      <NextSeo
+        title="Bem Vindo ao Site do Guilherme"
+        description="Um site sobre Guilherme da Silva Benevides."
+        openGraph={{
+          title: 'Bem Vindo ao Site do Guilherme',
+          description: 'Um site sobre Guilherme da Silva Benevides.',
+          site_name: 'Site do Guilherme',
+          images: [
+            {
+              url: '/home.png',
+              width: 500,
+              height: 334,
+              alt:
+                'Minha foto de perfil em um fundo preto. Com um texto branco escrito: Página Inicial.'
+            }
+          ],
+          type: 'website',
+          url: 'https://gui.dev.br/',
+          locale: 'pt_BR'
+        }}
+        twitter={{
+          site: '@gsbenevides2',
+          cardType: 'summary_large_image'
+        }}
+      />
+      <Styled.FirstPage id="page_1">
         <div className="card">
-          <img
-            src="https://avatars0.githubusercontent.com/u/45762112?s=460&u=94ef867a7a94c17a8205b3cf5fe6cd0384dd7c36&v=4"
+          <Image
+            src="/profile.png"
             alt="Rosto de Guilherme"
+            width="125"
+            height="125"
           />
           <h1>Bem-Vindo</h1>
           <button onClick={() => scrollTo(2)}>
             <ArrowDownSvg />
           </button>
         </div>
-      </FirstPage>
-      <SeccoundPage id="page_2">
+      </Styled.FirstPage>
+      <Styled.SeccoundPage id="page_2">
         <div className="card">
           <p onClick={() => scrollTo(1)}>
             Olá me chamo Guilherme, {` ${props.age} `} tenho anos, seja muito
@@ -146,7 +166,7 @@ const Home: React.FC<InferGetStaticPropsType<
             </a>
           </li>
         </ul>
-      </SeccoundPage>
+      </Styled.SeccoundPage>
     </Container>
   )
 }

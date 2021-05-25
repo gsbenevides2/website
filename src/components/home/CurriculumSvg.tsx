@@ -1,5 +1,7 @@
 import React from 'react'
 
+import theme from '../../styles/theme'
+
 export function CurriculumSvg(): React.ReactElement {
   return (
     <svg
@@ -13,7 +15,7 @@ export function CurriculumSvg(): React.ReactElement {
       <g
         className="icon"
         fill="none"
-        stroke="white"
+        stroke={theme.colors.white}
         strokeWidth="1"
         strokeLinecap="round"
         strokeLinejoin="round"

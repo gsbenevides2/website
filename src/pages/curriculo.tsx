@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Head from 'next/head'
+import { NextSeo } from 'next-seo'
 import Link from 'next/link'
 
 import curriculo from '../assets/curriculo.json'
@@ -8,12 +8,8 @@ import { ArrowUpSvg } from '../components/curriculo/ArrowUpSvg'
 import { ChevronLeftSvg } from '../components/curriculo/ChevronLeftSvg'
 import { ChevronRightSvg } from '../components/curriculo/ChevronRightSvg'
 import { Container } from '../styles/commons/GradientContainer'
-import {
-  FirstPage,
-  CoursePage,
-  WorkshopPage,
-  LanguagesPage
-} from '../styles/pages/Curriculo'
+import * as Styled from '../styles/pages/Curriculo'
+
 const CurriculoPage: React.FC = () => {
   const [page, setPage] = React.useState('home')
   const [course, setCourse] = React.useState(-1)
@@ -150,21 +146,38 @@ const CurriculoPage: React.FC = () => {
 
   return (
     <Container>
-      <Head>
-        <title>Curriculo</title>
-        <meta
-          property="description"
-          content="Curriculo do Guilherme da Silva Benevides"
-        />
-        <meta property="og:site_name" content="Curriculo" />
-        <meta property="og:title" content="Curriculo" />
-        <meta
-          property="og:description"
-          content="Curriculo do Guilherme da Silva Benevides"
-        />
-        <meta property="og:type" content="website" />
-      </Head>
-      <FirstPage id="home">
+      <NextSeo
+        title="Currículo"
+        description="Currículo de Guilherme da Silva Benevides."
+        openGraph={{
+          site_name: 'Site do Guilherme',
+          title: 'Currículo',
+          description: 'Currículo de Guilherme da Silva Benevides.',
+          type: 'profile',
+          locale: 'pt_BR',
+          profile: {
+            gender: 'male',
+            firstName: 'Guilherme',
+            lastName: 'Benevides',
+            username: 'gsbenevides2'
+          },
+          images: [
+            {
+              url: '/curriculum.png',
+              alt:
+                'Minha foto de perfil no fundo preto ao lado escrito em branco: Currículo.',
+              width: 500,
+              height: 334
+            }
+          ],
+          url: 'https://gui.dev.br/curriculo'
+        }}
+        twitter={{
+          site: '@gsbenevides2',
+          cardType: 'summary_large_image'
+        }}
+      />
+      <Styled.FirstPage id="home">
         <p>
           Olá, sou Guilherme e nessa página você ira encontrar mais informações
           sobre minha experiência profissional com a área de desenvolvimento de
@@ -199,8 +212,12 @@ const CurriculoPage: React.FC = () => {
             </li>
           </ul>
         </div>
-      </FirstPage>
-      <CoursePage id="course_page" qtdCourses={curriculo.courses.length}>
+      </Styled.FirstPage>
+      <Styled.ListPage
+        id="course_page"
+        length={curriculo.courses.length}
+        name="course"
+      >
         <div className="top">
           <h2>Cursos</h2>
           <button onClick={() => scrollTo('home')}>
@@ -244,10 +261,11 @@ const CurriculoPage: React.FC = () => {
             <ChevronRightSvg />
           </button>
         </div>
-      </CoursePage>
-      <WorkshopPage
+      </Styled.ListPage>
+      <Styled.ListPage
         id="workshops_page"
-        qtdWorkshops={curriculo.workshops.length}
+        length={curriculo.workshops.length}
+        name="workshop"
       >
         <div className="top">
           <h2>Treinamentos e Workshops</h2>
@@ -292,10 +310,11 @@ const CurriculoPage: React.FC = () => {
             <ChevronRightSvg />
           </button>
         </div>
-      </WorkshopPage>
-      <LanguagesPage
+      </Styled.ListPage>
+      <Styled.ListPage
+        name="language"
         id="languages_page"
-        qtdLanguages={curriculo.languages.length}
+        length={curriculo.languages.length}
       >
         <div className="top">
           <h2>Linguagens de Programaçāo</h2>
@@ -331,7 +350,7 @@ const CurriculoPage: React.FC = () => {
             <ChevronRightSvg />
           </button>
         </div>
-      </LanguagesPage>
+      </Styled.ListPage>
     </Container>
   )
 }

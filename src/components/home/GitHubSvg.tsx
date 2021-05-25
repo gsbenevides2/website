@@ -1,5 +1,7 @@
 import React from 'react'
 
+import theme from '../../styles/theme'
+
 export function GitHubSvg(): React.ReactElement {
   return (
     <svg
@@ -12,7 +14,7 @@ export function GitHubSvg(): React.ReactElement {
     >
       <g
         fill="none"
-        stroke="white"
+        stroke={theme.colors.white}
         strokeWidth="1"
         className="icon"
         strokeLinecap="round"

@@ -38,9 +38,9 @@ export const Container = styled.div`
       margin-left: 12px;
     }
     a {
-      color: white;
+      color: ${props => props.theme.colors.white};
       &:hover {
-        color: white;
+        color: ${props => props.theme.colors.white};
       }
     }
   }

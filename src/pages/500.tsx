@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { NextSeo } from 'next-seo'
 import Head from 'next/head'
 import Link from 'next/link'
 
@@ -22,6 +23,30 @@ const Page: React.FC = () => {
       <Head>
         <title>Erro Interno no Servidor</title>
       </Head>
+      <NextSeo
+        title="Erro Interno do Servidor"
+        description="Aconteceu um erro ao processar sua requisição."
+        openGraph={{
+          title: 'Erro Interno do Servidor',
+          description: 'Aconteceu um erro ao processar sua requisição.',
+          type: 'website',
+          locale: 'pt_BR',
+          site_name: 'Site e Blog do Guilherme',
+          images: [
+            {
+              url: '/500.png',
+              alt:
+                'A minha foto de perfil no fundo preto ao lado um texto em branco escrito: Erro Interno do Servidor.',
+              width: 500,
+              height: 334
+            }
+          ]
+        }}
+        twitter={{
+          site: '@gsbenevides2',
+          cardType: 'summary_large_image'
+        }}
+      />
       <div className="card">
         <img
           onClick={playMusic}

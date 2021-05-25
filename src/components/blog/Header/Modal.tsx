@@ -18,9 +18,9 @@ const Container = styled.div`
   .content {
     max-width: 320px;
     width: 80%;
-    background-color: #121212;
+    background-color: ${props => props.theme.colors.background};
     padding: 12px;
-    border-radius: 15px;
+    border-radius: ${props => props.theme.sizes.borderRadius};
     position: relative;
     top: 50%;
     left: 50%;
@@ -35,29 +35,33 @@ const Container = styled.div`
       text-align: justify;
     }
     button {
-      cursor: pointer;
       border: 1.5px solid transparent;
       padding: 10px 15px;
       background-color: transparent;
-      color: white;
+      color: ${props => props.theme.colors.white};
       font-size: 19px;
       margin-top: 1rem;
-      border-radius: 15px;
+      border-radius: ${props => props.theme.sizes.borderRadius};
       outline: none;
       width: 80%;
       transition: 0.2s;
-      &.primary {
-        background-color: grey;
-        border: 1.5px solid grey;
-        text-transform: uppercase;
+      &:focus {
+        border-style: dashed;
+        background-color: ${props => props.theme.colors.white};
+        color: ${props => props.theme.colors.black};
+        border-color: ${props => props.theme.colors.black};
       }
-    }
-
-    button:focus {
-      border-style: dashed;
-      background-color: white;
-      color: black;
-      border-color: black;
+      &.primary {
+        background-color: ${props => props.theme.colors.seccoundary};
+        border: 1.5px solid ${props => props.theme.colors.seccoundary};
+        text-transform: uppercase;
+        &:focus {
+          border-style: dashed;
+          color: ${props => props.theme.colors.white};
+          background-color: ${props => props.theme.colors.accent};
+          border-color: ${props => props.theme.colors.accent};
+        }
+      }
     }
   }
   &.show {

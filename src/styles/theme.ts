@@ -1,8 +1,15 @@
 const theme = {
   colors: {
     background: '#121214',
-    text: '#e1e1e6',
-    primary: '#8257e6'
+    black: '#121214',
+    white: '#f4f4f4',
+    primary: '#474b4e',
+    seccoundary: '#434343',
+    accent: '#595a5d',
+    gradient: ['#000000', '#434343']
+  },
+  sizes: {
+    borderRadius: '15px'
   }
 }
 
