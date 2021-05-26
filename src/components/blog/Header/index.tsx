@@ -1,8 +1,9 @@
 import React from 'react'
 
 import Link from 'next/link'
-import styled, { keyframes } from 'styled-components'
+import styled, { keyframes, SimpleInterpolation } from 'styled-components'
 
+import theme from '../../../styles/theme'
 import { BellSvg } from '../BellSvg'
 import { NotificationQuestionModal } from './Modal'
 const typing = keyframes`
@@ -14,13 +15,15 @@ const typing = keyframes`
   }
 `
 
+const white = theme.colors.white
+
 const blinkCaret = keyframes`
   from,to {
     border-color: transparent;
   }
-  50% {
-    border-color: ${props => props.theme.colors.white};
-  }
+ 50% {
+	border-color: ${white};
+ }
 `
 const HeaderStyled = styled.header`
   background-color: ${props => props.theme.colors.primary};
