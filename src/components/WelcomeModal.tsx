@@ -17,9 +17,9 @@ const Container = styled.div`
   .content {
     max-width: 320px;
     width: 80%;
-    background-color: #121212;
+    background-color: ${props => props.theme.colors.background};
     padding: 12px;
-    border-radius: 28px;
+    border-radius: ${props => props.theme.sizes.borderRadius};
     position: relative;
     top: 50%;
     left: 50%;
@@ -32,24 +32,30 @@ const Container = styled.div`
     }
     p {
       text-align: justify;
+      a {
+        color: ${props => props.theme.colors.white};
+        &:hover {
+          color: ${props => props.theme.colors.white};
+        }
+      }
     }
     button {
       cursor: pointer;
-      border: 1.5px solid grey;
       padding: 10px 15px;
-      background-color: grey;
-      color: white;
+      color: ${props => props.theme.colors.white};
       font-size: 19px;
       margin-top: 1rem;
-      border-radius: 20px;
+      border-radius: ${props => props.theme.sizes.borderRadius};
       outline: none;
       transition: 0.2s;
+      background-color: ${props => props.theme.colors.seccoundary};
+      border: 1.5px solid ${props => props.theme.colors.seccoundary};
     }
     button:focus {
       border-style: dashed;
-      background-color: white;
-      color: black;
-      border-color: black;
+      color: ${props => props.theme.colors.white};
+      background-color: ${props => props.theme.colors.accent};
+      border-color: ${props => props.theme.colors.accent};
     }
   }
   &.show {
@@ -61,13 +67,15 @@ const Container = styled.div`
 export const WelcomeModal: React.FC = () => {
   const container = React.useRef<HTMLDivElement>(null)
   const close = React.useCallback(() => {
-    container.current.classList.remove('show')
+    setTimeout(() => {
+      container.current.classList.remove('show')
+    }, 2000)
   }, [container])
   React.useEffect(() => {
-    const firstAccess = localStorage.getItem('firstAccess')
+    const firstAccess = localStorage.getItem('firstAccess_v2')
     if (!firstAccess) {
       container.current.classList.add('show')
-      localStorage.setItem('firstAccess', Date.now().toString())
+      localStorage.setItem('firstAccess_v2', Date.now().toString())
     }
   }, [])
   return (
@@ -75,12 +83,16 @@ export const WelcomeModal: React.FC = () => {
       <div className="content">
         <img src={WelcomeBlog} />
         <p>
-          Fala dev! Meu nome é Guilherme e é um prazer imenso ter você aqui
-          comigo, seja muito bem vindo ao meu blog. Nesse espaço publicarei
-          conteúdo sobre minha vida, programação e tudo que eu achar relevante
-          vai estar aqui. Desejo uma otima leitura.
+          Beleza! Meu nome é Guilherme e é um prazer imenso ter você aqui
+          comigo, seja muito bem vindo. Nesse espaço publicarei conteúdo sobre
+          minha vida, programação e tudo que eu achar relevante vai estar aqui.
+          Desejo uma otima leitura. Ao continuar você concorda com os termos{' '}
+          <a href="/politica" target="_blank">
+            aqui
+          </a>
+          .
         </p>
-        <button onClick={close}>Let's go</button>
+        <button onClick={close}>Let&apos;s go</button>
       </div>
     </Container>
   )

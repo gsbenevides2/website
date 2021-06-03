@@ -13,7 +13,8 @@ import { getInitialPosts, getNextPosts } from '../../utils/firebase/post'
 interface Post {
   name: string
   id: string
-  image: string
+  thumbnail: string
+  thumbnailAlt: string
 }
 interface Props {
   posts: Post[]
@@ -97,7 +98,7 @@ const BlogIndexPage: React.FC<InferGetStaticPropsType<
         <PageContainer>
           <Link href="/blog/post/[id]" as={`/blog/post/${firstPost.id}`}>
             <li className="firstPost">
-              <img src={firstPost.image} />
+              <img src={firstPost.thumbnail} alt={firstPost.thumbnailAlt} />
               <h2>{firstPost.name}</h2>
             </li>
           </Link>
@@ -108,7 +109,7 @@ const BlogIndexPage: React.FC<InferGetStaticPropsType<
               as={`/blog/post/${post.id}`}
             >
               <li className="post postA">
-                <img src={post.image} />
+                <img src={post.thumbnail} alt={post.thumbnailAlt} />
                 <h2>{post.name}</h2>
               </li>
             </Link>
@@ -120,7 +121,7 @@ const BlogIndexPage: React.FC<InferGetStaticPropsType<
               as={`/blog/post/${post.id}`}
             >
               <li className="post postMore">
-                <img src={post.image} />
+                <img src={post.thumbnail} alt={post.thumbnailAlt} />
                 <h2>{post.name}</h2>
               </li>
             </Link>

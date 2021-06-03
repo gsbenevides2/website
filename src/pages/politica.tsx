@@ -1,16 +1,19 @@
 import React from 'react'
 
 import { NextSeo } from 'next-seo'
-import { useRouter } from 'next/router'
 
 import * as Styled from '../styles/pages/Politica'
 
 const Politica: React.FC = () => {
-  const router = useRouter()
   function scrollTo(id: string) {
     document.getElementById(id).scrollIntoView({
       behavior: 'smooth'
     })
+  }
+  function close() {
+    setTimeout(() => {
+      window.close()
+    }, 2000)
   }
   return (
     <Styled.Container>
@@ -282,7 +285,7 @@ const Politica: React.FC = () => {
         leis do site e do blog e você se submete irrevogavelmente à jurisdição
         exclusiva dos tribunais naquele estado ou localidade.
       </p>
-      <button onClick={router.back}>Voltar</button>
+      <button onClick={close}>Sair</button>
     </Styled.Container>
   )
 }

@@ -25,7 +25,8 @@ const database = getFirestore(app)
 interface PostSimple {
   name: string
   id: string
-  image: string
+  thumbnail: string
+  thumbnailAlt: string
 }
 
 interface FirestorePost {
@@ -35,6 +36,7 @@ interface FirestorePost {
     originalWebp: string
     metaTag: string
     list: string
+    alt: string
   }
   description: string
   content: string
@@ -46,11 +48,11 @@ interface Post {
   name: string
   date: string
   thumbnail: string
+  thumbnailAlt: string
   metaTag: string
   description: string
   content: string
-  views: number
-  preview: boolean
+  views: string[]
 }
 const postsCollection = collection(
   database,
@@ -63,7 +65,8 @@ export async function getInitialPosts(): Promise<PostSimple[]> {
   const posts = collectionSnapshot.docs.map(doc => {
     return {
       name: doc.data().name,
-      image: doc.data().thumbnail.list,
+      thumbnailAlt: doc.data().thumbnail.alt,
+      thumbnail: doc.data().thumbnail.list,
       id: doc.id
     }
   })
@@ -83,7 +86,8 @@ export async function getNextPosts(lastPostId: string): Promise<PostSimple[]> {
   const newPosts = collectionSnapshot.docs.map(doc => {
     return {
       name: doc.data().name,
-      image: doc.data().thumbnail.list,
+      thumbnailAlt: doc.data().thumbnail.alt,
+      thumbnail: doc.data().thumbnail.list,
       id: doc.id
     }
   })
@@ -104,10 +108,10 @@ export async function getPost(postId: string): Promise<Post | null> {
     name: documentData.name,
     content: documentData.content,
     thumbnail: documentData.thumbnail.originalWebp,
+    thumbnailAlt: documentData.thumbnail.alt,
     metaTag: documentData.thumbnail.metaTag,
     date,
     description: documentData.description,
-    views: documentData.views?.length || 0,
-    preview: false
+    views: documentData.views
   }
 }
