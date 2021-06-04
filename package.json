@@ -13,6 +13,7 @@
     "firebase-admin": "^9.5.0",
     "next": "^10.2.0",
     "next-images": "^1.4.1",
+    "next-pwa": "^5.2.21",
     "next-seo": "^4.24.0",
     "nookies": "^2.5.2",
     "nprogress": "^0.2.0",

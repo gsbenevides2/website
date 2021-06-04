@@ -32,7 +32,7 @@ export default function PublisherPage(): React.ReactElement {
   const socket = io(
     process.env.PUBLIC_NEXT_ENV === 'production'
       ? 'https://gsbenevides2.herokuapp.com'
-      : process.env.BACKEND_URL ||
+      : process.env.NEXT_PUBLIC_BACKEND_URL ||
           'https://gsbenevides2-development.herokuapp.com/'
   )
   const goToSendPostStep = React.useCallback(() => {
