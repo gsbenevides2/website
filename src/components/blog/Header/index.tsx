@@ -85,7 +85,10 @@ const Header: React.FC = () => {
         <Link as="/blog" href="/blog">
           <h1>Blog do Guilherme</h1>
         </Link>
-        <button onClick={openNotificationModal}>
+        <button
+          aria-label="Ligar/Desligar notificações"
+          onClick={openNotificationModal}
+        >
           <BellSvg />
         </button>
       </HeaderStyled>

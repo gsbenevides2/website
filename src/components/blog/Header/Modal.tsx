@@ -1,5 +1,6 @@
 import React from 'react'
 
+import NextImage from 'next/image'
 import styled from 'styled-components'
 
 import Notification from '../../../assets/notification.png'
@@ -15,6 +16,7 @@ const Container = styled.div`
   visibility: hidden;
   transition: visibility 0s, opacity 0.5s linear;
   opacity: 0;
+  z-index: 1;
   .content {
     max-width: 320px;
     width: 80%;
@@ -29,7 +31,6 @@ const Container = styled.div`
     flex-direction: column;
     align-items: center;
     img {
-      width: 80%;
     }
     p {
       text-align: justify;
@@ -143,7 +144,12 @@ export const NotificationQuestionModal: React.FC<Props> = ({ open, close }) => {
     <Container ref={container}>
       {status === 'disabled' && (
         <div className="content">
-          <img src={Notification} />
+          <NextImage
+            alt="Dois personagens segurando ums notificação"
+            height="163"
+            width="236"
+            src={Notification}
+          />
           <p>
             Olá, você deseja receber notificações em seu navegador quando eu
             publicar uma nova postagem?
@@ -156,7 +162,12 @@ export const NotificationQuestionModal: React.FC<Props> = ({ open, close }) => {
       )}
       {status === 'notSupport' && (
         <div className="content ">
-          <img src={Notification} />
+          <NextImage
+            alt="Dois personagens segurando ums notificação"
+            height="163"
+            width="236"
+            src={Notification}
+          />
           <p>Infelizmente seu navegador não tem suporte as notificações</p>
           <button className="primary" onClick={close}>
             OK
@@ -165,7 +176,12 @@ export const NotificationQuestionModal: React.FC<Props> = ({ open, close }) => {
       )}
       {status === 'actived' && (
         <div className="content ">
-          <img src={Notification} />
+          <NextImage
+            alt="Dois personagens segurando ums notificação"
+            height="163"
+            width="236"
+            src={Notification}
+          />
           <p>As notificações estão ativadas</p>
           <button className="primary" onClick={close}>
             OK
@@ -178,7 +194,12 @@ export const NotificationQuestionModal: React.FC<Props> = ({ open, close }) => {
       )}
       {status === 'error' && (
         <div className="content ">
-          <img src={Notification} />
+          <NextImage
+            alt="Dois personagens segurando ums notificação"
+            height="163"
+            width="236"
+            src={Notification}
+          />
           <p>
             Ocorreu um erro recarregue a pagina e tente novamente mais tarde
           </p>
@@ -189,7 +210,12 @@ export const NotificationQuestionModal: React.FC<Props> = ({ open, close }) => {
       )}
       {status === 'browser-permission-denied' && (
         <div className="content ">
-          <img src={Notification} />
+          <NextImage
+            alt="Dois personagens segurando ums notificação"
+            height="163"
+            width="236"
+            src={Notification}
+          />
           <p>
             Ops, você não falou pro seu navegador que eu posso enviar
             notificações vá nas configurações e me permita. Após isso recaregue

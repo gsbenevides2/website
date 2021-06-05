@@ -1,5 +1,6 @@
 import React from 'react'
 
+import NextImage from 'next/image'
 import styled from 'styled-components'
 
 import WelcomeBlog from '../assets/welcome_blog.png'
@@ -14,6 +15,7 @@ const Container = styled.div`
   visibility: hidden;
   transition: visibility 0s, opacity 0.5s linear;
   opacity: 0;
+  z-index: 1;
   .content {
     max-width: 320px;
     width: 80%;
@@ -28,7 +30,6 @@ const Container = styled.div`
     flex-direction: column;
     align-items: center;
     img {
-      width: 80%;
     }
     p {
       text-align: justify;
@@ -81,7 +82,12 @@ export const WelcomeModal: React.FC = () => {
   return (
     <Container ref={container}>
       <div className="content">
-        <img src={WelcomeBlog} />
+        <NextImage
+          alt="Duas pessoas em ilutração"
+          width="236"
+          height="204"
+          src={WelcomeBlog}
+        />
         <p>
           Beleza! Meu nome é Guilherme e é um prazer imenso ter você aqui
           comigo, seja muito bem vindo. Nesse espaço publicarei conteúdo sobre
