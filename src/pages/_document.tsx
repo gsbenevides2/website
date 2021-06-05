@@ -48,7 +48,7 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,700"
             rel="stylesheet"
           />
-          {process.env.NEXT_ENV === 'development' && (
+          {process.env.ERUDA === 'true' && (
             <>
               <script src="//cdn.jsdelivr.net/npm/eruda"></script>
               <script>eruda.init();</script>

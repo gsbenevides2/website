@@ -2,6 +2,7 @@ import React from 'react'
 
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { NextSeo } from 'next-seo'
+import NextImage from 'next/image'
 import Link from 'next/link'
 
 import emptyImage from '../../assets/empty.png'
@@ -98,7 +99,14 @@ const BlogIndexPage: React.FC<InferGetStaticPropsType<
         <PageContainer>
           <Link href="/blog/post/[id]" as={`/blog/post/${firstPost.id}`}>
             <li className="firstPost">
-              <img src={firstPost.thumbnail} alt={firstPost.thumbnailAlt} />
+              <NextImage
+                height=""
+                width=""
+                className="thumb"
+                layout="responsive"
+                src={firstPost.thumbnail}
+                alt={firstPost.thumbnailAlt}
+              />
               <h2>{firstPost.name}</h2>
             </li>
           </Link>
@@ -109,7 +117,14 @@ const BlogIndexPage: React.FC<InferGetStaticPropsType<
               as={`/blog/post/${post.id}`}
             >
               <li className="post postA">
-                <img src={post.thumbnail} alt={post.thumbnailAlt} />
+                <NextImage
+                  height="100"
+                  width="150"
+                  className="thumb"
+                  layout="responsive"
+                  src={post.thumbnail}
+                  alt={post.thumbnailAlt}
+                />
                 <h2>{post.name}</h2>
               </li>
             </Link>
@@ -121,7 +136,14 @@ const BlogIndexPage: React.FC<InferGetStaticPropsType<
               as={`/blog/post/${post.id}`}
             >
               <li className="post postMore">
-                <img src={post.thumbnail} alt={post.thumbnailAlt} />
+                <NextImage
+                  height="100"
+                  width="150"
+                  className="thumb"
+                  layout="responsive"
+                  src={post.thumbnail}
+                  alt={post.thumbnailAlt}
+                />
                 <h2>{post.name}</h2>
               </li>
             </Link>

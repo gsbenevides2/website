@@ -9,17 +9,28 @@ export const PageContainer = styled.ul`
     transition: 500ms;
     gap: 5px;
     cursor: pointer;
+    div {
+      div {
+        display: none !important;
+      }
+      img {
+        position: relative !important;
+        display: inline-block !important;
+      }
+    }
     &.firstPost {
       grid-row: 1/4;
       img {
-        width: 100%;
+        width: 100% !important;
+        height: 100% !important;
       }
     }
     &.post {
       display: flex;
       flex-direction: columns;
       img {
-        height: 100px;
+        width: 150px !important;
+        height: 100px !important;
       }
       h2 {
         font-size: 15px;
@@ -49,7 +60,7 @@ export const Empty = styled.div`
   width: 100%;
   text-align: center;
   img {
-    width: 80%;
-    display: inline-text;
+    width: 80% !important;
+    display: inline-text !important;
   }
 `
