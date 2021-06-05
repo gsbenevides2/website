@@ -8,9 +8,16 @@ export const Container = styled.div`
   left: 50%;
   transform: translate(-50%);
   text-align: center;
-  img {
-    width: 100%;
-    display: inline-block;
+  div:not(.content) {
+    div {
+      display: none !important;
+    }
+    img.thumb {
+      position: relative !important;
+      width: 100% !important;
+      display: inline-block !important;
+      height: 100% !important;
+    }
   }
   h1,
   h2,
@@ -28,10 +35,19 @@ export const Container = styled.div`
     img {
       padding: 10px;
     }
-    img {
+    img.next {
+      position: relative !important;
+      left: 50% !important;
+      display: block !important;
+      transform: translate(-50%) !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+    div {
       position: relative;
-      left: 50%;
-      transform: translate(-50%);
+      display: block !important;
+      width: 100% !important;
+      height: 100% !important;
     }
     ul,
     ol {

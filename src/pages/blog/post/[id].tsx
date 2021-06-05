@@ -2,6 +2,7 @@ import React from 'react'
 
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { NextSeo } from 'next-seo'
+import NextImage from 'next/image'
 import { parseCookies, setCookie } from 'nookies'
 import { v4 as getUuid } from 'uuid'
 
@@ -86,7 +87,14 @@ const PostPage: React.FC<InferGetServerSidePropsType<
         <Header />
         <WelcomeModal />
         <Container>
-          <img src={props.post.thumbnail} alt={props.post.thumbnailAlt} />
+          <NextImage
+            width=""
+            height=""
+            className="thumb"
+            layout="responsive"
+            src={props.post.thumbnail}
+            alt={props.post.thumbnailAlt}
+          />
           <h1>{props.post.name}</h1>
           <span>Por Guilherme da Silva Benevides</span>
           <br />

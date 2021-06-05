@@ -3,8 +3,8 @@ import ReactMarkdown from 'react-markdown'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism'
 
+import NextImage from 'next/image'
 import styled from 'styled-components'
-
 const CopyToClipabord = styled.span`
   display: inline-block;
   background-color: #282a36;
@@ -74,11 +74,29 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ language, value }) => {
     </>
   )
 }
+interface ImageProps {
+  alt: string
+  src: string
+}
+const Image: React.FC<ImageProps> = props => {
+  return (
+    <NextImage
+      layout="fixed"
+      alt={props.alt}
+      src={props.src}
+      width=""
+      height=""
+      className="next"
+    />
+  )
+}
+
 const MarkdownView: React.FC<MarkdownViewProps> = ({ text }) => {
   return (
     <ReactMarkdown
       renderers={{
-        code: CodeBlock
+        code: CodeBlock,
+        image: Image
       }}
       source={text}
     />
