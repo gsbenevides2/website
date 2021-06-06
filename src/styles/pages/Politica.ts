@@ -30,7 +30,7 @@ export const Container = styled.div`
     margin: 12px 22px;
   }
   a {
-    color: white;
+    color: ${props => props.theme.colors.white};
   }
   button {
     cursor: pointer;
@@ -38,22 +38,22 @@ export const Container = styled.div`
     left: 50%;
     transform: translate(-50%);
     padding: 10px 15px;
-    color: white;
+    color: ${props => props.theme.colors.white};
     font-size: 19px;
     margin-top: 1rem;
-    border-radius: 15px;
+    border-radius: ${props => props.theme.sizes.borderRadius};
     outline: none;
     width: 80%;
     transition: 0.2s;
-    background-color: grey;
-    border: 1.5px solid grey;
+    background-color: ${props => props.theme.colors.primary};
+    border: 1.5px solid ${props => props.theme.colors.primary};
     text-transform: uppercase;
   }
 
   button:focus {
     border-style: dashed;
-    background-color: white;
-    color: black;
-    border-color: black;
+    background-color: ${props => props.theme.colors.white};
+    color: ${props => props.theme.colors.black};
+    border-color: ${props => props.theme.colors.black};
   }
 `
