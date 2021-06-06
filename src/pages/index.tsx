@@ -91,7 +91,7 @@ const Home: React.FC<InferGetStaticPropsType<
             height="125"
           />
           <h1>Bem-Vindo</h1>
-          <button onClick={() => scrollTo(2)}>
+          <button aria-label="Ir a Seção abaixo" onClick={() => scrollTo(2)}>
             <ArrowDownSvg />
           </button>
         </div>

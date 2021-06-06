@@ -245,19 +245,19 @@ const CurriculoPage: React.FC = () => {
               <p>{course.text}</p>
               {course.links
                 ? Object.keys(course.links).map(link => (
-                    <a key={link} href={course.links[link]}>
-                      {link}
-                    </a>
-                  ))
+                  <a key={link} href={course.links[link]}>
+                    {link}
+                  </a>
+                ))
                 : undefined}
             </li>
           ))}
         </ul>
         <div className="slider">
-          <button onClick={prevCourse}>
+          <button aria-label="Curso Anterior" onClick={prevCourse}>
             <ChevronLeftSvg />
           </button>
-          <button onClick={nextCourse}>
+          <button aria-label="Proximo Curso" onClick={nextCourse}>
             <ChevronRightSvg />
           </button>
         </div>
@@ -269,7 +269,7 @@ const CurriculoPage: React.FC = () => {
       >
         <div className="top">
           <h2>Treinamentos e Workshops</h2>
-          <button onClick={() => scrollTo('home')}>
+          <button aria-label="Voltar a lista" onClick={() => scrollTo('home')}>
             <ArrowUpSvg />
           </button>
         </div>
@@ -294,19 +294,19 @@ const CurriculoPage: React.FC = () => {
               <p>{workshop.text}</p>
               {workshop.links
                 ? Object.keys(workshop.links).map(link => (
-                    <a key={link} href={workshop.links[link]}>
-                      {link}
-                    </a>
-                  ))
+                  <a key={link} href={workshop.links[link]}>
+                    {link}
+                  </a>
+                ))
                 : undefined}
             </li>
           ))}
         </ul>
         <div className="slider">
-          <button onClick={prevWorkshop}>
+          <button aria-label="Workshop Anterior" onClick={prevWorkshop}>
             <ChevronLeftSvg />
           </button>
-          <button onClick={nextWorkshop}>
+          <button aria-label="Próximo Workshop" onClick={nextWorkshop}>
             <ChevronRightSvg />
           </button>
         </div>
@@ -318,7 +318,7 @@ const CurriculoPage: React.FC = () => {
       >
         <div className="top">
           <h2>Linguagens de Programaçāo</h2>
-          <button onClick={() => scrollTo('home')}>
+          <button aria-label="Voltar a lista" onClick={() => scrollTo('home')}>
             <ArrowUpSvg />
           </button>
         </div>
@@ -342,11 +342,11 @@ const CurriculoPage: React.FC = () => {
             </li>
           ))}
         </ul>
-        <div className="slider">
+        <div aria-label="Linguagem Anterior" className="slider">
           <button onClick={prevLanguage}>
             <ChevronLeftSvg />
           </button>
-          <button onClick={nextLanguage}>
+          <button aria-label="Próxima Linguagem" onClick={nextLanguage}>
             <ChevronRightSvg />
           </button>
         </div>
