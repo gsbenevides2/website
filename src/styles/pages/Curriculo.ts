@@ -10,6 +10,16 @@ export const Page = styled.div`
   justify-content: center;
   flex-direction: column;
 `
+const SectionPage = styled.section`
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  width: 100%;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+`
 export const FirstPage = styled(Page)`
   flex-direction: row;
   justify-content: space-evenly;
@@ -57,7 +67,7 @@ interface ListProps {
   length: number
   name: string
 }
-export const ListPage = styled(Page)<ListProps>`
+export const ListPage = styled(SectionPage)<ListProps>`
   width: 80%;
   margin: 0 auto;
   overflow: hidden;

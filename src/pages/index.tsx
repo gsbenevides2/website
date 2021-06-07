@@ -98,74 +98,78 @@ const Home: React.FC<InferGetStaticPropsType<
       </Styled.FirstPage>
       <Styled.SeccoundPage id="page_2">
         <div className="card">
-          <p onClick={() => scrollTo(1)}>
-            Olá me chamo Guilherme, {` ${props.age} `} tenho anos, seja muito
-            bem-vindo ao meu site. Sou desenvolvedor Javascript, crio sites,
-            WebApps e Apps para celular(Expo/React Native). Caso queira me
-            conhecer mais acesse os links abaixo.
-          </p>
+          <main>
+            <p onClick={() => scrollTo(1)}>
+              Olá me chamo Guilherme, {` ${props.age} `} tenho anos, seja muito
+              bem-vindo ao meu site. Sou desenvolvedor Javascript, crio sites,
+              WebApps e Apps para celular(Expo/React Native). Caso queira me
+              conhecer mais acesse os links abaixo.
+            </p>
+          </main>
         </div>
-        <ul className="social-media">
-          <li>
-            <Link href="/curriculo">
-              <a>
-                <CurriculumSvg />
-                <span>Curriculo</span>
+        <nav>
+          <ul className="social-media">
+            <li>
+              <Link href="/curriculo">
+                <a>
+                  <CurriculumSvg />
+                  <span>Curriculo</span>
+                </a>
+              </Link>
+            </li>
+            <li>
+              <a
+                href="https://twitter.com/gsbenevides2"
+                target="_blank"
+                rel="noreferrer"
+                className="twitter"
+              >
+                <TwitterSvg />
+                <span>Twitter</span>
               </a>
-            </Link>
-          </li>
-          <li>
-            <a
-              href="https://twitter.com/gsbenevides2"
-              target="_blank"
-              rel="noreferrer"
-              className="twitter"
-            >
-              <TwitterSvg />
-              <span>Twitter</span>
-            </a>
-          </li>
-          <li>
-            <Link href="/blog">
-              <a>
-                <BlogSvg />
-                <span>Blog</span>
+            </li>
+            <li>
+              <Link href="/blog">
+                <a>
+                  <BlogSvg />
+                  <span>Blog</span>
+                </a>
+              </Link>
+            </li>
+            <li>
+              <a
+                href="https://linkedin.com/gsbenevides2"
+                className="linkedin"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <LinkedinSvg />
+                <span>Linkedin</span>
               </a>
-            </Link>
-          </li>
-          <li>
-            <a
-              href="https://linkedin.com/gsbenevides2"
-              className="linkedin"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <LinkedinSvg />
-              <span>Linkedin</span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://github.com/gsbenevides2"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <GitHubSvg />
-              <span>Github</span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://instagram.com/gsbenevides2"
-              className="instagram"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <InstagramSvg />
-              <span>Instagram</span>
-            </a>
-          </li>
-        </ul>
+            </li>
+            <li>
+              <a
+                href="https://github.com/gsbenevides2"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <GitHubSvg />
+                <span>Github</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://instagram.com/gsbenevides2"
+                className="instagram"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <InstagramSvg />
+                <span>Instagram</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
       </Styled.SeccoundPage>
     </Container>
   )

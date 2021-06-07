@@ -178,39 +178,43 @@ const CurriculoPage: React.FC = () => {
         }}
       />
       <Styled.FirstPage id="home">
-        <p>
-          Olá, sou Guilherme e nessa página você ira encontrar mais informações
-          sobre minha experiência profissional com a área de desenvolvimento de
-          sistemas. Mas deixa eu contar um pouco mais:
-          <br />
-          Comecei a programar com 15 anos, na época meu objetivo era criar um
-          app que fizesse algo que nenhum outro fazia na Google Play. Nisso
-          comecei com Python no app QPython, criei coisas interessantes como um
-          conversor de temperatura que usava a biblioteca Android Helper. Porém
-          pela falta de computador, não consegui ir mais à frente, porém conheci
-          outro app DroidScript, nele vi bastante da Javascript, um pouco de
-          HTML e CSS. Fiz um app legal que puxava informações do modem da Vivo.
-          Pena que nessa época não conhecia o Git.
-          <br />
-          Para finalizar conheci o desenvolvimento web, crie sites e
-          WebApps(PWAs), mais tarde conheci o Node e com a Rocketseat conheci
-          React, React Native e me aprofundei em NodeJS.
-          <br />
-        </p>
+        <main>
+          <p>
+            Olá, sou Guilherme e nessa página você ira encontrar mais
+            informações sobre minha experiência profissional com a área de
+            desenvolvimento de sistemas. Mas deixa eu contar um pouco mais:
+            <br />
+            Comecei a programar com 15 anos, na época meu objetivo era criar um
+            app que fizesse algo que nenhum outro fazia na Google Play. Nisso
+            comecei com Python no app QPython, criei coisas interessantes como
+            um conversor de temperatura que usava a biblioteca Android Helper.
+            Porém pela falta de computador, não consegui ir mais à frente, porém
+            conheci outro app DroidScript, nele vi bastante da Javascript, um
+            pouco de HTML e CSS. Fiz um app legal que puxava informações do
+            modem da Vivo. Pena que nessa época não conhecia o Git.
+            <br />
+            Para finalizar conheci o desenvolvimento web, crie sites e
+            WebApps(PWAs), mais tarde conheci o Node e com a Rocketseat conheci
+            React, React Native e me aprofundei em NodeJS.
+            <br />
+          </p>
+        </main>
         <div>
           <h2>Saiba mais sobre mim:</h2>
-          <ul>
-            <li onClick={() => scrollTo('course_page')}>Cursos</li>
-            <li onClick={() => scrollTo('workshops_page')}>
-              Treinamentos e Workshops
-            </li>
-            <li onClick={() => scrollTo('languages_page')}>
-              Linguagens de Programaçāo
-            </li>
-            <li>
-              <Link href="/">Voltar para Página Inicial</Link>
-            </li>
-          </ul>
+          <nav>
+            <ul>
+              <li onClick={() => scrollTo('course_page')}>Cursos</li>
+              <li onClick={() => scrollTo('workshops_page')}>
+                Treinamentos e Workshops
+              </li>
+              <li onClick={() => scrollTo('languages_page')}>
+                Linguagens de Programaçāo
+              </li>
+              <li>
+                <Link href="/">Voltar para Página Inicial</Link>
+              </li>
+            </ul>
+          </nav>
         </div>
       </Styled.FirstPage>
       <Styled.ListPage
@@ -245,10 +249,10 @@ const CurriculoPage: React.FC = () => {
               <p>{course.text}</p>
               {course.links
                 ? Object.keys(course.links).map(link => (
-                  <a key={link} href={course.links[link]}>
-                    {link}
-                  </a>
-                ))
+                    <a key={link} href={course.links[link]}>
+                      {link}
+                    </a>
+                  ))
                 : undefined}
             </li>
           ))}
@@ -294,10 +298,10 @@ const CurriculoPage: React.FC = () => {
               <p>{workshop.text}</p>
               {workshop.links
                 ? Object.keys(workshop.links).map(link => (
-                  <a key={link} href={workshop.links[link]}>
-                    {link}
-                  </a>
-                ))
+                    <a key={link} href={workshop.links[link]}>
+                      {link}
+                    </a>
+                  ))
                 : undefined}
             </li>
           ))}

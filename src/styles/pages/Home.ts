@@ -94,7 +94,8 @@ export const SeccoundPage = styled(Page)`
     }
   }
 
-  .social-media {
+  .social-media,
+  nav {
     padding: 0px 5px;
     margin: 22px 0px 0px 0px;
     list-style: none;

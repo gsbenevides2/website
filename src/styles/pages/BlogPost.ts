@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const Container = styled.div`
+export const Container = styled.article`
   padding: 12px;
   width: 100%;
   max-width: 600px;
