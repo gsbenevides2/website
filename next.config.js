@@ -9,7 +9,13 @@ module.exports =
 	withBundleAnalyzer(
 		withPWA(
 			withImages({
-				images: {domains: ['firebasestorage.googleapis.com']},
+				images: {
+					domains: [
+						'firebasestorage.googleapis.com',
+						'gsbenevides2-development.herokuapp.com',
+						'gsbenevides2.herokuapp.com'
+					]
+				},
 				future: {
 					webpack5: true
 				},
