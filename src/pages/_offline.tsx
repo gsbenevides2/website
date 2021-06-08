@@ -7,15 +7,15 @@ const Page: React.FC = () => {
     <ErrorPage
       options={{
         header: {
-          title: 'Página Não Encontrada',
-          description: 'A página acessada não foi encontrada.',
+          title: 'Sem internet',
+          description: 'Ops parece que voçê está sem internet.',
           url: '/404.png',
           alt:
             'A minha foto de perfil no fundo preto ao lado em branco escrito: Página Não Encontrada.'
         },
         page: {
-          h1: 'Ops não encontrei o que procuras!',
-          p: 'Talvez o link que você abriu esteja quebrado ou errado.'
+          h1: 'Sem internet!',
+          p: 'Ops parece que voçê está sem internet.'
         }
       }}
     />
