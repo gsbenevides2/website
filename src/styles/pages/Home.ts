@@ -165,7 +165,8 @@ export const SeccoundPage = styled(Page)`
     }
   }
   @media (min-width: 875px) {
-    .social-media {
+    .social-media,
+     nav {
       width: 874px;
     }
   }
