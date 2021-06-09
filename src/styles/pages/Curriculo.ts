@@ -70,6 +70,7 @@ interface ListProps {
 export const ListPage = styled(SectionPage)<ListProps>`
   width: 80%;
   margin: 0 auto;
+  max-width: 600px;
   overflow: hidden;
   .top {
     width: 100%;
