@@ -13,7 +13,8 @@ module.exports =
 					domains: [
 						'firebasestorage.googleapis.com',
 						'gsbenevides2-development.herokuapp.com',
-						'gsbenevides2.herokuapp.com'
+						'gsbenevides2.herokuapp.com',
+						'4fe6cdfea98a.ngrok.io'
 					]
 				},
 				future: {

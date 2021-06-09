@@ -29,6 +29,12 @@ export const Container = styled.article`
   }
   .content {
     text-align: justify;
+    blockquote {
+      border-left: 3px solid ${props => props.theme.colors.white};
+      margin: 0px 12px;
+      padding: 0px 6px;
+      font-size: 18px;
+    }
     ul,
     ol,
     p,
