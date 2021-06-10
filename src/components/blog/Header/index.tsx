@@ -1,18 +1,46 @@
 import React from 'react'
-import styled from 'styled-components'
+
 import Link from 'next/link'
-import { FiBell } from 'react-icons/fi'
+import styled, { keyframes, SimpleInterpolation } from 'styled-components'
+
+import theme from '../../../styles/theme'
+import { BellSvg } from '../BellSvg'
 import { NotificationQuestionModal } from './Modal'
+const typing = keyframes`
+  from {
+    width: 0;
+  }
+  to {
+    width: 283px;
+  }
+`
+
+const white = theme.colors.white
+
+const blinkCaret = keyframes`
+  from,to {
+    border-color: transparent;
+  }
+ 50% {
+	border-color: ${white};
+ }
+`
 const HeaderStyled = styled.header`
-  background-color: #434343;
+  background-color: ${props => props.theme.colors.primary};
   margin: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   h1 {
     font-size: 2rem;
-    padding: 12px;
+    margin: 12px;
+    overflow: hidden;
+    white-space: nowrap;
     font-weight: 400;
+    cursor: pointer;
+    border-right: 2px solid ${props => props.theme.colors.white};
+    animation: ${typing} 3.5s steps(30, end),
+      ${blinkCaret} 0.75s step-end infinite;
   }
   button {
     color: white;
@@ -24,9 +52,15 @@ const HeaderStyled = styled.header`
     border-radius: 50%;
     transition: 0.2s;
     outline: none;
+    width: 37px;
+    height: 37px;
+    font-size: 22px;
     &:focus {
-      background-color: white;
-      color: black;
+      background-color: ${props => props.theme.colors.white};
+      color: ${props => props.theme.colors.black};
+      .icon {
+        stroke: ${props => props.theme.colors.black};
+      }
     }
   }
 `
@@ -48,11 +82,14 @@ const Header: React.FC = () => {
         close={closeNotificationModal}
       />
       <HeaderStyled>
-        <Link href="/blog">
-          <h1> Blog do Guilherme</h1>
+        <Link as="/blog" href="/blog">
+          <h1>Blog do Guilherme</h1>
         </Link>
-        <button onClick={openNotificationModal}>
-          <FiBell size={22} />
+        <button
+          aria-label="Ligar/Desligar notificações"
+          onClick={openNotificationModal}
+        >
+          <BellSvg />
         </button>
       </HeaderStyled>
     </React.Fragment>

@@ -1,7 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+
 import firebaseAdmin from '../../utils/firebaseAdmin'
 
-const fcmTokensDocument = firebaseAdmin.firestore().doc('others/fcm')
+const fcmTokensDocument = firebaseAdmin
+  .firestore()
+  .doc(`apps/${process.env.NEXT_ENV}/others/fcm`)
 interface FunctionReturn {
   statusCode: number
   message: string

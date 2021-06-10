@@ -1,24 +1,36 @@
 import styled from 'styled-components'
 
 export const PageContainer = styled.ul`
-  margin: 5px;
+  margin: 10px;
   list-style: none;
   li {
     margin: 0;
     padding: 5px;
-    transition: 2s;
+    transition: 500ms;
     gap: 5px;
+    cursor: pointer;
+    div {
+      div {
+        display: none !important;
+      }
+      img {
+        position: relative !important;
+        display: inline-block !important;
+      }
+    }
     &.firstPost {
       grid-row: 1/4;
       img {
-        width: 100%;
+        width: 100% !important;
+        height: 100% !important;
       }
     }
     &.post {
       display: flex;
       flex-direction: columns;
       img {
-        height: 100px;
+        width: 150px !important;
+        height: 100px !important;
       }
       h2 {
         font-size: 15px;
@@ -31,10 +43,11 @@ export const PageContainer = styled.ul`
       }
     }
     &:hover {
-      background-color: white;
       color: black;
-      padding: 10px;
-      border-radius: 25px;
+      background-color: rgba(245, 245, 245, 0.9);
+      backdrop-filter: blur(15px);
+      transform: scale(1.03);
+      box-shadow: 0px 0px 2em #f5f5f5;
     }
   }
   @media (min-width: 481px) {
@@ -47,7 +60,7 @@ export const Empty = styled.div`
   width: 100%;
   text-align: center;
   img {
-    width: 80%;
-    display: inline-text;
+    width: 80% !important;
+    display: inline-text !important;
   }
 `

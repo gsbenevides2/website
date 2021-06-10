@@ -6,7 +6,11 @@ const animation = keyframes`
   100%{background-position:0% 50%}
 `
 export const Container = styled.div`
-  background: linear-gradient(270deg, #000000, #434343);
+  background: linear-gradient(
+    270deg,
+    ${props => props.theme.colors.gradient[0]},
+    ${props => props.theme.colors.gradient[1]}
+  );
   background-size: 400% 400%;
   animation: ${animation} 20s ease infinite;
   width: 100%;
