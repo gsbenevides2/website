@@ -30,7 +30,7 @@ export default function PublisherPage(): React.ReactElement {
   const [password, setPassword] = React.useState('')
   const [logs, setLogs] = React.useState<Log[]>([])
   const socket = io(
-    process.env.PUBLIC_NEXT_ENV === 'production'
+    process.env.NEXT_PUBLIC_ENV === 'production'
       ? 'https://gsbenevides2.herokuapp.com'
       : process.env.NEXT_PUBLIC_BACKEND_URL ||
           'https://gsbenevides2-development.herokuapp.com/'
