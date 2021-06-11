@@ -91,6 +91,7 @@ export const NotificationQuestionModal: React.FC<Props> = ({ open, close }) => {
       localStorage.setItem('fcmToken', token)
       setStatus('actived')
     } catch (e) {
+      console.log(e)
       setStatus('error')
     }
   }, [])
@@ -103,6 +104,7 @@ export const NotificationQuestionModal: React.FC<Props> = ({ open, close }) => {
       close()
       setStatus('disabled')
     } catch (e) {
+      console.log(e)
       setStatus('error')
     }
   }, [])

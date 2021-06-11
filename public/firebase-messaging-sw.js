@@ -1,5 +1,5 @@
-importScripts('https://www.gstatic.com/firebasejs/7.9.1/firebase-app.js')
-importScripts('https://www.gstatic.com/firebasejs/7.9.1/firebase-messaging.js')
+importScripts('https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/8.6.7/firebase-messaging.js');
 
 firebase.initializeApp({
   apiKey: 'AIzaSyC4ngJLgSnWp347vkfw_AQMdsAdnX7YgMs',
@@ -10,5 +10,6 @@ firebase.initializeApp({
   messagingSenderId: '275309435614',
   appId: '1:275309435614:web:32584032f37c23066a804f',
   measurementId: 'G-8JWXTL94KZ'
-})
-firebase.messaging()
+});
+
+firebase.messaging();
