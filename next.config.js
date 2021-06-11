@@ -5,17 +5,19 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 	enabled: process.env.ANALYZE === 'true'
 })
 
+const domains = [
+	'firebasestorage.googleapis.com',
+	'gsbenevides2-development.herokuapp.com',
+	'gsbenevides2.herokuapp.com'
+]
+if (process.env.BACKEND_URL) domains.push(process.env.BACKEND_URL)
+
 module.exports =
 	withBundleAnalyzer(
 		withPWA(
 			withImages({
 				images: {
-					domains: [
-						'firebasestorage.googleapis.com',
-						'gsbenevides2-development.herokuapp.com',
-						'gsbenevides2.herokuapp.com',
-						'4fe6cdfea98a.ngrok.io'
-					]
+					domains
 				},
 				future: {
 					webpack5: true
