@@ -1,7 +1,9 @@
 import { initializeApp, getApp, FirebaseApp } from 'firebase/app'
 import {
   collection,
+  CollectionReference,
   doc,
+  DocumentData,
   getDoc,
   getDocs,
   getFirestore,
@@ -29,7 +31,7 @@ interface PostSimple {
   thumbnailAlt: string
 }
 
-interface FirestorePost {
+interface FirestorePost extends DocumentData {
   name: string
   date: Timestamp
   thumbnail: {
@@ -57,10 +59,10 @@ interface Post {
 const postsCollection = collection(
   database,
   `apps/${process.env.NEXT_PUBLIC_ENV || process.env.NEXT_ENV}/postsOfBlog`
-)
+) as CollectionReference<FirestorePost>
 export async function getInitialPosts(): Promise<PostSimple[]> {
   const collectionSnapshot = await getDocs<FirestorePost>(
-    query(postsCollection, orderBy('date', 'desc'), limit(10))
+    query<FirestorePost>(postsCollection, orderBy('date', 'desc'), limit(10))
   )
   const posts = collectionSnapshot.docs.map(doc => {
     return {
@@ -76,7 +78,7 @@ export async function getInitialPosts(): Promise<PostSimple[]> {
 export async function getNextPosts(lastPostId: string): Promise<PostSimple[]> {
   const lastDocument = doc(postsCollection, lastPostId)
   const collectionSnapshot = await getDocs<FirestorePost>(
-    query(
+    query<FirestorePost>(
       postsCollection,
       orderBy('date', 'asc'),
       startAfter(lastDocument),
@@ -95,7 +97,7 @@ export async function getNextPosts(lastPostId: string): Promise<PostSimple[]> {
 }
 export async function getPost(postId: string): Promise<Post | null> {
   const documentSnapshot = await getDoc<FirestorePost>(
-    doc(postsCollection, postId)
+    doc<FirestorePost>(postsCollection, postId)
   )
   if (!documentSnapshot.exists()) return null
   const documentData = documentSnapshot.data()
