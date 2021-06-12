@@ -27,7 +27,12 @@ export const Container = styled.article`
   h6 {
     margin-top: 15px;
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     margin-top: 15px;
   }
   .content {
@@ -71,7 +76,7 @@ export const Container = styled.article`
   }
   @media (min-width: 481px) {
     img {
-      width: 70%;
+      width: 70% !important;
     }
   }
 `
