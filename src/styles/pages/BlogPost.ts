@@ -17,6 +17,9 @@ export const Container = styled.article`
       width: 100% !important;
       display: inline-block !important;
       height: 100% !important;
+      @media (min-width: 481px) {
+        width: 70% !important;
+      }
     }
   }
   h1,
@@ -56,6 +59,9 @@ export const Container = styled.article`
       transform: translate(-50%) !important;
       width: 100% !important;
       height: 100% !important;
+      @media (min-width: 481px) {
+        width: 70% !important;
+      }
     }
     div {
       position: relative;
@@ -72,11 +78,6 @@ export const Container = styled.article`
       &:hover {
         color: ${props => props.theme.colors.white};
       }
-    }
-  }
-  @media (min-width: 481px) {
-    img {
-      width: 70% !important;
     }
   }
 `
