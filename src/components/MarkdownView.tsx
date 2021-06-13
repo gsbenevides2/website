@@ -79,24 +79,37 @@ interface ImageProps {
   src: string
 }
 const Image: React.FC<ImageProps> = props => {
+  const openImage = React.useCallback(() => {
+    window.open(props.src)
+  }, [])
   return (
-    <NextImage
-      layout="fixed"
-      alt={props.alt}
-      src={props.src}
-      width=""
-      height=""
-      className="next"
-    />
+    <div onClick={openImage} className="image">
+      <NextImage
+        layout="fill"
+        alt={props.alt}
+        src={props.src}
+        className="next"
+      />
+    </div>
   )
 }
-
+interface LinkProps {
+  href: string
+}
+const Link: React.FC<LinkProps> = props => {
+  return (
+    <a target="__blank" rel="noopener noreferrer" href={props.href}>
+      {props.children}
+    </a>
+  )
+}
 const MarkdownView: React.FC<MarkdownViewProps> = ({ text }) => {
   return (
     <ReactMarkdown
       renderers={{
         code: CodeBlock,
-        image: Image
+        image: Image,
+        link: Link
       }}
       source={text}
     />

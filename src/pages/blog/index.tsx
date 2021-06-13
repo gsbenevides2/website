@@ -28,136 +28,134 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   }
 }
 
-const BlogIndexPage: React.FC<InferGetStaticPropsType<
-  typeof getStaticProps
->> = props => {
-  const [posts, setPosts] = React.useState(props.posts)
-  const [loadingMore, setLoadingMore] = React.useState(false)
-  const [end, setEnd] = React.useState(props.posts.length < 10)
-  const firstPost = posts[0]
-  const postA = posts.slice(1, 4)
-  const morePosts = posts.slice(5)
+const BlogIndexPage: React.FC<InferGetStaticPropsType<typeof getStaticProps>> =
+  props => {
+    const [posts, setPosts] = React.useState(props.posts)
+    const [loadingMore, setLoadingMore] = React.useState(false)
+    const [end, setEnd] = React.useState(props.posts.length < 10)
+    const firstPost = posts[0]
+    const postA = posts.slice(1, 4)
+    const morePosts = posts.slice(4)
+    const scrollCallback = React.useCallback(() => {
+      const endOfPage =
+        window.innerHeight + window.scrollY >= document.body.offsetHeight
 
-  const scrollCallback = React.useCallback(() => {
-    const endOfPage =
-      window.innerHeight + window.scrollY >= document.body.offsetHeight
-    async function loadMorePosts() {
-      const morePosts = await getNextPosts(posts[posts.length - 1].id)
-      if (morePosts.length < 10) {
-        setEnd(true)
+      async function loadMorePosts() {
+        const morePosts = await getNextPosts(posts[posts.length - 1].id)
+        if (morePosts.length < 10) {
+          setEnd(true)
+        }
+        setPosts([...posts, ...morePosts])
       }
-      setPosts([...posts, ...morePosts])
-    }
 
-    if (endOfPage && !loadingMore && !end) {
-      setLoadingMore(true)
-      loadMorePosts()
-        .then(() => {
-          setLoadingMore(false)
-        })
-        .catch(() => {
-          setLoadingMore(false)
-        })
-    }
-  }, [posts, loadingMore, end])
+      if (endOfPage && !loadingMore && !end) {
+        setLoadingMore(true)
+        loadMorePosts()
+          .then(() => {
+            setLoadingMore(false)
+          })
+          .catch(() => {
+            setLoadingMore(false)
+          })
+      }
+    }, [posts, loadingMore, end])
 
-  React.useEffect(() => {
-    window.addEventListener('scroll', scrollCallback)
-  }, [])
+    React.useEffect(() => {
+      window.addEventListener('scroll', scrollCallback)
+    }, [])
 
-  return (
-    <React.Fragment>
-      <NextSeo
-        title="Blog do Guilherme"
-        description="Blog do Guilherme: um lugar de informação e conhecimento."
-        openGraph={{
-          title: 'Blog do Guilherme',
-          description:
-            'Blog do Guilherme: um lugar de informação e conhecimento.',
-          site_name: 'Blog do Guilherme',
-          locale: 'pt_BR',
-          images: [
-            {
-              url: '/blog.png',
-              alt:
-                'A minha foto de perfil no fundo preto ao lado escrito em branco: Blog do Guilherme.',
-              width: 500,
-              height: 334
-            }
-          ],
-          type: 'blog'
-        }}
-        twitter={{
-          site: '@gsbenevides2',
-          handle: '@gsbenevides2',
-          cardType: 'summary_large_image'
-        }}
-      />
-      <Header />
-      <WelcomeModal />
-      {firstPost ? (
-        <PageContainer>
-          <Link href="/blog/post/[id]" as={`/blog/post/${firstPost.id}`}>
-            <li className="firstPost">
-              <NextImage
-                height=""
-                width=""
-                className="thumb"
-                layout="responsive"
-                src={firstPost.thumbnail}
-                alt={firstPost.thumbnailAlt}
-              />
-              <h2>{firstPost.name}</h2>
-            </li>
-          </Link>
-          {postA.map(post => (
-            <Link
-              key={post.id}
-              href="/blog/post/[id]"
-              as={`/blog/post/${post.id}`}
-            >
-              <li className="post postA">
+    return (
+      <React.Fragment>
+        <NextSeo
+          title="Blog do Guilherme"
+          description="Blog do Guilherme: um lugar de informação e conhecimento."
+          openGraph={{
+            title: 'Blog do Guilherme',
+            description:
+              'Blog do Guilherme: um lugar de informação e conhecimento.',
+            site_name: 'Blog do Guilherme',
+            locale: 'pt_BR',
+            images: [
+              {
+                url: '/blog.png',
+                alt: 'A minha foto de perfil no fundo preto ao lado escrito em branco: Blog do Guilherme.',
+                width: 500,
+                height: 334
+              }
+            ],
+            type: 'blog'
+          }}
+          twitter={{
+            site: '@gsbenevides2',
+            handle: '@gsbenevides2',
+            cardType: 'summary_large_image'
+          }}
+        />
+        <Header />
+        <WelcomeModal />
+        {firstPost ? (
+          <PageContainer>
+            <Link href="/blog/post/[id]" as={`/blog/post/${firstPost.id}`}>
+              <li className="firstPost">
                 <NextImage
-                  height="100"
-                  width="150"
+                  height=""
+                  width=""
                   className="thumb"
                   layout="responsive"
-                  src={post.thumbnail}
-                  alt={post.thumbnailAlt}
+                  src={firstPost.thumbnail}
+                  alt={firstPost.thumbnailAlt}
                 />
-                <h2>{post.name}</h2>
+                <h2>{firstPost.name}</h2>
               </li>
             </Link>
-          ))}
-          {morePosts.map(post => (
-            <Link
-              key={post.id}
-              href="/blog/post/[id]"
-              as={`/blog/post/${post.id}`}
-            >
-              <li className="post postMore">
-                <NextImage
-                  height="100"
-                  width="150"
-                  className="thumb"
-                  layout="responsive"
-                  src={post.thumbnail}
-                  alt={post.thumbnailAlt}
-                />
-                <h2>{post.name}</h2>
-              </li>
-            </Link>
-          ))}
-        </PageContainer>
-      ) : (
-        <Empty>
-          <img src={emptyImage} />
-          <h1>Ops não tem post nenhum aqui</h1>
-          <span>Aguarde teremos novidades</span>
-        </Empty>
-      )}
-    </React.Fragment>
-  )
-}
+            {postA.map(post => (
+              <Link
+                key={post.id}
+                href="/blog/post/[id]"
+                as={`/blog/post/${post.id}`}
+              >
+                <li className="post postA">
+                  <NextImage
+                    height="100"
+                    width="150"
+                    className="thumb"
+                    layout="responsive"
+                    src={post.thumbnail}
+                    alt={post.thumbnailAlt}
+                  />
+                  <h2>{post.name}</h2>
+                </li>
+              </Link>
+            ))}
+            {morePosts.map(post => (
+              <Link
+                key={post.id}
+                href="/blog/post/[id]"
+                as={`/blog/post/${post.id}`}
+              >
+                <li className="post postMore">
+                  <NextImage
+                    height="100"
+                    width="150"
+                    className="thumb"
+                    layout="responsive"
+                    src={post.thumbnail}
+                    alt={post.thumbnailAlt}
+                  />
+                  <h2>{post.name}</h2>
+                </li>
+              </Link>
+            ))}
+          </PageContainer>
+        ) : (
+          <Empty>
+            <img src={emptyImage} />
+            <h1>Ops não tem post nenhum aqui</h1>
+            <span>Aguarde teremos novidades</span>
+          </Empty>
+        )}
+      </React.Fragment>
+    )
+  }
 
 export default BlogIndexPage

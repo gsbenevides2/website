@@ -17,6 +17,18 @@ export const Container = styled.article`
       width: 100% !important;
       display: inline-block !important;
       height: 100% !important;
+      @media (min-width: 481px) {
+        width: 70% !important;
+        height: 70% !important;
+      }
+    }
+    @media (min-width: 481px) {
+      position: relative !important;
+      left: 50% !important;
+      display: block !important;
+      transform: translate(-50%) !important;
+      width: 70% !important;
+      height: 70% !important;
     }
   }
   h1,
@@ -27,11 +39,15 @@ export const Container = styled.article`
   h6 {
     margin-top: 15px;
   }
-  h1, h2, h3, h4, h5, h6 {
-    margin-top: 15px;
-  }
   .content {
-    text-align: justify;
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      text-align: left;
+    }
     blockquote {
       border-left: 3px solid ${props => props.theme.colors.white};
       margin: 0px 12px;
@@ -44,19 +60,41 @@ export const Container = styled.article`
     img {
       padding: 10px;
     }
-    img.next {
-      position: relative !important;
-      left: 50% !important;
-      display: block !important;
-      transform: translate(-50%) !important;
-      width: 100% !important;
-      height: 100% !important;
+    p {
+      width: 100%;
     }
-    div {
-      position: relative;
+    p,
+    li,
+    blockquote {
+      text-align: justify;
+    }
+    .image {
       display: block !important;
-      width: 100% !important;
-      height: 100% !important;
+      div {
+        position: relative !important;
+        display: flex !important;
+        width: 100% !important;
+        height: 100% !important;
+        @media (min-width: 481px) {
+          width: 70% !important;
+          height: 70% !important;
+          max-height: 80vh !important;
+        }
+        img.next {
+          position: relative !important;
+          left: 50% !important;
+          display: block !important;
+          transform: translate(-50%) !important;
+          width: auto !important;
+          height: auto !important;
+          min-height: auto !important;
+          max-width: auto !important;
+          min-width: auto !important;
+          @media (min-width: 481px) {
+            max-height: 80vh !important;
+          }
+        }
+      }
     }
     ul,
     ol {
@@ -67,11 +105,6 @@ export const Container = styled.article`
       &:hover {
         color: ${props => props.theme.colors.white};
       }
-    }
-  }
-  @media (min-width: 481px) {
-    img {
-      width: 70%;
     }
   }
 `
