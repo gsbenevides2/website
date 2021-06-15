@@ -29,32 +29,33 @@ export interface FormatedPost {
 export interface ServerSideProps {
   post: FormatedPost
 }
-export const getServerSideProps: GetServerSideProps<ServerSideProps> = async context => {
-  const { id } = context.params
-  const postData = await getPost(id as string)
+export const getServerSideProps: GetServerSideProps<ServerSideProps> =
+  async context => {
+    const { id } = context.params
+    const postData = await getPost(id as string)
 
-  if (!postData) {
+    if (!postData) {
+      return {
+        props: {},
+        notFound: true
+      }
+    }
+    const { views: viewsId, ...restOfPost } = postData
+    let { 'blog.viewerId': viewerId } = parseCookies(context)
+    if (!viewerId) {
+      viewerId = getUuid()
+      setCookie(context, 'blog.viewerId', viewerId)
+    }
+    const views = await viewerCounter(viewerId, viewsId, id as string)
     return {
-      props: {},
-      notFound: true
+      props: {
+        post: { ...restOfPost, views }
+      }
     }
   }
-  const { views: viewsId, ...restOfPost } = postData
-  let { 'blog.viewerId': viewerId } = parseCookies(context)
-  if (!viewerId) {
-    viewerId = getUuid()
-    setCookie(context, 'blog.viewerId', viewerId)
-  }
-  const views = await viewerCounter(viewerId, viewsId, id as string)
-  return {
-    props: {
-      post: { ...restOfPost, views }
-    }
-  }
-}
-const PostPage: React.FC<InferGetServerSidePropsType<
-  typeof getServerSideProps
->> = props => {
+const PostPage: React.FC<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = props => {
   if (props.post) {
     return (
       <React.Fragment>
@@ -87,14 +88,14 @@ const PostPage: React.FC<InferGetServerSidePropsType<
         <Header />
         <WelcomeModal />
         <Container>
-          <NextImage
-            width=""
-            height=""
-            className="thumb"
-            layout="responsive"
-            src={props.post.thumbnail}
-            alt={props.post.thumbnailAlt}
-          />
+          <div className="thumbcontainer">
+            <NextImage
+              className="thumb"
+              layout="fill"
+              src={props.post.thumbnail}
+              alt={props.post.thumbnailAlt}
+            />
+          </div>
           <h1>{props.post.name}</h1>
           <span>Por Guilherme da Silva Benevides</span>
           <br />

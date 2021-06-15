@@ -110,8 +110,10 @@ export const NotificationQuestionModal: React.FC<Props> = ({ open, close }) => {
   }, [])
   React.useEffect(() => {
     if (open) {
+      document.body.style.overflow = 'hidden'
       container.current.classList.add('show')
     } else {
+      document.body.style.overflow = 'auto'
       container.current.classList.remove('show')
     }
   }, [open])

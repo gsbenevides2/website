@@ -8,27 +8,29 @@ export const Container = styled.article`
   left: 50%;
   transform: translate(-50%);
   text-align: center;
-  div:not(.content) {
+  div.thumbcontainer {
     div {
-      display: none !important;
-    }
-    img.thumb {
-      position: relative !important;
-      width: 100% !important;
-      display: inline-block !important;
-      height: 100% !important;
-      @media (min-width: 481px) {
-        width: 70% !important;
-        height: 70% !important;
-      }
-    }
-    @media (min-width: 481px) {
       position: relative !important;
       left: 50% !important;
       display: block !important;
       transform: translate(-50%) !important;
-      width: 70% !important;
-      height: 70% !important;
+      img.thumb {
+        position: relative !important;
+        width: auto !important;
+        height: auto !important;
+        min-height: auto !important;
+        max-width: 100% !important;
+        min-width: auto !important;
+        display: block !important;
+        @media (min-width: 481px) {
+          width: 70% !important;
+          height: 70% !important;
+        }
+      }
+      @media (min-width: 481px) {
+        width: 70% !important;
+        height: 70% !important;
+      }
     }
   }
   h1,
@@ -75,6 +77,8 @@ export const Container = styled.article`
         display: flex !important;
         width: 100% !important;
         height: 100% !important;
+        left: 50% !important;
+        transform: translate(-50%) !important;
         @media (min-width: 481px) {
           width: 70% !important;
           height: 70% !important;
@@ -82,13 +86,11 @@ export const Container = styled.article`
         }
         img.next {
           position: relative !important;
-          left: 50% !important;
           display: block !important;
-          transform: translate(-50%) !important;
           width: auto !important;
           height: auto !important;
           min-height: auto !important;
-          max-width: auto !important;
+          max-width: 100% !important;
           min-width: auto !important;
           @media (min-width: 481px) {
             max-height: 80vh !important;
@@ -101,6 +103,7 @@ export const Container = styled.article`
       margin-left: 12px;
     }
     a {
+      word-wrap: break-word;
       color: ${props => props.theme.colors.white};
       &:hover {
         color: ${props => props.theme.colors.white};

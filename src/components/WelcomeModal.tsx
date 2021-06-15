@@ -69,14 +69,19 @@ export const WelcomeModal: React.FC = () => {
   const container = React.useRef<HTMLDivElement>(null)
   const close = React.useCallback(() => {
     setTimeout(() => {
+      document.body.style.overflow = 'auto'
       container.current.classList.remove('show')
     }, 2000)
   }, [container])
   React.useEffect(() => {
     const firstAccess = localStorage.getItem('firstAccess_v2')
     if (!firstAccess) {
+      document.body.style.overflow = 'hidden'
       container.current.classList.add('show')
       localStorage.setItem('firstAccess_v2', Date.now().toString())
+    }
+    return () => {
+      document.body.style.overflow = 'auto'
     }
   }, [])
   return (
@@ -89,10 +94,10 @@ export const WelcomeModal: React.FC = () => {
           src={WelcomeBlog}
         />
         <p>
-          Beleza! Meu nome é Guilherme e é um prazer imenso ter você aqui
-          comigo, seja muito bem vindo. Nesse espaço publicarei conteúdo sobre
-          minha vida, programação e tudo que eu achar relevante vai estar aqui.
-          Desejo uma otima leitura. Ao continuar você concorda com os termos{' '}
+          Olá! Meu nome é Guilherme e é um prazer imenso ter você aqui comigo,
+          seja muito bem vindo. Nesse espaço publicarei conteúdo sobre minha
+          vida, programação e tudo que eu achar relevante vai estar aqui. Desejo
+          uma otima leitura. Ao continuar você concorda com os termos{' '}
           <a href="/politica" target="_blank">
             aqui
           </a>
