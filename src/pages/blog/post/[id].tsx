@@ -99,8 +99,6 @@ const PostPage: React.FC<
           <h1>{props.post.name}</h1>
           <span>Por Guilherme da Silva Benevides</span>
           <br />
-          <span>{props.post.views} Visualizações</span>
-          <br />
           <span>{props.post.date}</span>
           <div className="content">
             <MarkdownView text={props.post.content} />
