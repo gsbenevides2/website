@@ -69,7 +69,7 @@ export const WelcomeModal: React.FC = () => {
   const container = React.useRef<HTMLDivElement>(null)
   const close = React.useCallback(() => {
     setTimeout(() => {
-      document.body.style.overflow = 'none'
+      document.body.style.overflow = 'auto'
       container.current.classList.remove('show')
     }, 2000)
   }, [container])
@@ -79,6 +79,9 @@ export const WelcomeModal: React.FC = () => {
       document.body.style.overflow = 'hidden'
       container.current.classList.add('show')
       localStorage.setItem('firstAccess_v2', Date.now().toString())
+    }
+    return () => {
+      document.body.style.overflow = 'auto'
     }
   }, [])
   return (

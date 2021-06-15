@@ -103,6 +103,7 @@ export const Container = styled.article`
       margin-left: 12px;
     }
     a {
+      word-wrap: break-word;
       color: ${props => props.theme.colors.white};
       &:hover {
         color: ${props => props.theme.colors.white};
