@@ -1,114 +1,169 @@
-import React from 'react'
+import { MdCopyAll } from "react-icons/md";
+import { PrismAsync as SyntaxHighlighter } from "react-syntax-highlighter";
+import cb from "react-syntax-highlighter/dist/cjs/styles/prism/cb";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
+import { serialize } from "next-mdx-remote/serialize";
+import { NextSeo } from "next-seo";
+import Image from "next/image";
+import { ParsedUrlQuery } from "querystring";
+import BlogHeader from "@/components/BlogHeader";
+import { Post, getFirstTenVisblePostsIds, getPost } from "@/services/firebase/client/posts";
+import styles from "./styles.module.css";
+import { JetBrains_Mono } from "next/font/google";
+import { useState } from "react";
+import { DefaultSeo } from "@/components/DefaultSeo";
+import { parseYYYYMMDDtoDDMMYYYY } from "@/utils/parseDateStringtoDateObj";
 
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
-import { NextSeo } from 'next-seo'
-import NextImage from 'next/image'
-import { parseCookies, setCookie } from 'nookies'
-import { v4 as getUuid } from 'uuid'
+const jetBrainsMono = JetBrains_Mono({
+  variable: "--jetBrainsMono",
+  subsets: ["latin"],
+});
 
-import Header from '../../../components/blog/Header'
-import LoadingPage from '../../../components/LoadingPage'
-import MarkdownView from '../../../components/MarkdownView'
-import { WelcomeModal } from '../../../components/WelcomeModal'
-import { viewerCounter } from '../../../services/viewerCounter'
-import { Container } from '../../../styles/pages/BlogPost'
-import { getPost } from '../../../utils/firebase/post'
-
-export interface FormatedPost {
-  id: string
-  name: string
-  date: string
-  thumbnail: string
-  metaTag: string
-  description: string
-  content: string
-  views: number
-  thumbnailAlt: string
+interface Props {
+  post: Post;
+  source: MDXRemoteSerializeResult<Record<string, unknown>>;
+}
+interface Params extends ParsedUrlQuery {
+  id: string;
 }
 
-export interface ServerSideProps {
-  post: FormatedPost
-}
-export const getServerSideProps: GetServerSideProps<ServerSideProps> =
-  async context => {
-    const { id } = context.params
-    const postData = await getPost(id as string)
-
-    if (!postData) {
-      return {
-        props: {},
-        notFound: true
-      }
-    }
-    const { views: viewsId, ...restOfPost } = postData
-    let { 'blog.viewerId': viewerId } = parseCookies(context)
-    if (!viewerId) {
-      viewerId = getUuid()
-      setCookie(context, 'blog.viewerId', viewerId)
-    }
-    const views = await viewerCounter(viewerId, viewsId, id as string)
-    return {
-      props: {
-        post: { ...restOfPost, views }
-      }
-    }
+export const getStaticPaths:GetStaticPaths = async () => {
+  const posts = await getFirstTenVisblePostsIds();
+  const paths = posts.map((id) => ({
+      params: {id}
+  }));
+  return {
+    paths,
+    fallback: "blocking"
   }
-const PostPage: React.FC<
-  InferGetServerSidePropsType<typeof getServerSideProps>
-> = props => {
-  if (props.post) {
+};
+
+export const getStaticProps: GetStaticProps<Props> = async (
+  context
+) => {
+  const { id } = context.params as Params;
+  const post = await getPost(id);
+  if(!post) return {notFound: true};
+  const source = await serialize(post.content);
+  
+  return {
+    props: {
+      post,
+      source,
+    },
+  };
+};
+
+export default function PostPage(props:InferGetStaticPropsType<typeof getStaticProps>){
+  const ResponsiveImage = (imageProps: React.HTMLProps<HTMLImageElement>) => {
+    const src = imageProps.src as string;
+    let url = src;
+    let blur = "";
+    if (src.startsWith("firebase://assets/")) {
+      const asset = props.post.assets.find((asset) => {
+        return asset.name === src.replace("firebase://assets/", "");
+      });
+      url = asset?.url || src;
+      blur = asset?.blur || "";
+    }
+
     return (
-      <React.Fragment>
-        <NextSeo
-          title={`${props.post.name} - Blog do Guilherme`}
-          description={props.post.description}
-          openGraph={{
-            title: `${props.post.name} - Blog do Guilherme`,
-            description: props.post.description,
-            site_name: 'Blog do Guilherme',
-            locale: 'pt_BR',
-            url: `https://gui.dev.br/blog/post/${props.post.id}`,
-            images: [
-              {
-                url: props.post.metaTag,
-                alt: props.post.thumbnailAlt,
-                width: 500,
-                height: 334
-              }
-            ],
-
-            type: 'blog'
-          }}
-          twitter={{
-            site: '@gsbenevides2',
-            handle: '@gsbenevides2',
-            cardType: 'summary_large_image'
-          }}
+      <span className={styles.imageResponsive}>
+        <Image
+          src={url}
+          layout="responsive"
+          width={300}
+          height={200}
+          className={styles.imageResponsive}
+          alt={imageProps.alt || "Imagem do Post"}
+          placeholder={blur ? "blur" : undefined}
+          blurDataURL={blur}
         />
-        <Header />
-        <WelcomeModal />
-        <Container>
-          <div className="thumbcontainer">
-            <NextImage
-              className="thumb"
-              layout="fill"
-              src={props.post.thumbnail}
-              alt={props.post.thumbnailAlt}
-            />
-          </div>
-          <h1>{props.post.name}</h1>
-          <span>Por Guilherme da Silva Benevides</span>
-          <br />
-          <span>{props.post.date}</span>
-          <div className="content">
-            <MarkdownView text={props.post.content} />
-          </div>
-        </Container>
-      </React.Fragment>
-    )
-  } else {
-    return <LoadingPage />
-  }
-}
+      </span>
+    );
+  };
+  const Link = (linkProps: React.HTMLProps<HTMLLinkElement>) => (
+    <a href={linkProps.href} rel="noopener noreferrer" target="_blank">
+      {linkProps.children}
+    </a>
+  );
 
-export default PostPage
+  interface CodeProps {
+    className: string;
+    children: string;
+  }
+
+  const Code = ({ className, children }: CodeProps) => {
+    const [copyMessage, setCopyMessage] = useState(
+      "Copiar para Area de Transferencia"
+    );
+    function copy() {
+      navigator.clipboard.writeText(children).then(() => {
+        setCopyMessage("Copiado");
+        setTimeout(() => {
+          setCopyMessage("Copiar para Area de Transferencia");
+        }, 3000);
+      });
+    }
+    return (
+      <div className={jetBrainsMono.variable}>
+        <SyntaxHighlighter
+          language={className.replace("language-", "")}
+          style={cb}
+          customStyle={{
+            borderRadius: "8px 8px 0px 0px",
+            margin: "1em 0em 0em 0em",
+            ...jetBrainsMono.style,
+          }}
+        >
+          {children}
+        </SyntaxHighlighter>
+        <div className={styles.copy} onClick={copy}>
+          <MdCopyAll />
+          <span>{copyMessage}</span>
+        </div>
+      </div>
+    );
+  };
+
+  const components = {
+    img: ResponsiveImage,
+    a: Link,
+    code: Code,
+  };
+
+  return (
+    <div className={styles.external}>
+      <DefaultSeo
+        title={`${props.post.name} - Blog do Guilherme`}
+        description={props.post.description}
+        image={{
+          url: props.post.metaTag,
+          alt: props.post.thumbnailAlt,
+          width: 500,
+          height: 334,
+        }}
+        site_name="Blog do Guilherme"
+        type="blog"
+        />
+      <BlogHeader />
+      <article className={styles.container}>
+        <Image
+          src={props.post.thumbnail.originalWebp}
+          width={300}
+          height={200}
+          placeholder="blur"
+          blurDataURL={props.post.thumbnail.blur}
+          alt={`Capa do Post: ${props.post.name}. Contendo: ${props.post.thumbnail.alt}`}
+        />
+        <h1>{props.post.name}</h1>
+        <span>{parseYYYYMMDDtoDDMMYYYY(props.post.date)}</span>
+        <div className={styles.postContent}>
+          {/* @ts-ignore */}
+          <MDXRemote {...props.source} components={components} />
+        </div>
+      </article>
+    </div>
+  );
+};

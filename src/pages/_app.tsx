@@ -1,31 +1,16 @@
-import React from 'react'
+import "./globals.css";
+import { Nunito } from "next/font/google";
+import { AppProps } from "next/app";
+import Script from "next/script";
+const nunito = Nunito({ subsets: ["latin"] });
 
-import { AppProps } from 'next/app'
-import Router from 'next/router'
-import NProgress from 'nprogress'
-import { ThemeProvider } from 'styled-components'
-
-import GlobalStyle from '../styles/global'
-import theme from '../styles/theme'
-
-import 'nprogress/nprogress.css'
-import { loadMessaging } from '../utils/firebase/messaging'
-
-Router.events.on('routeChangeStart', () => NProgress.start())
-Router.events.on('routeChangeComplete', () => NProgress.done())
-Router.events.on('routeChangeError', () => NProgress.done())
-
-const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
-  React.useEffect(() => {
-    console.log('a')
-    loadMessaging()
-  }, [])
+export default function MyApp(props: AppProps) {
   return (
-    <ThemeProvider theme={theme}>
-      <Component {...pageProps} />
-      <GlobalStyle />
-    </ThemeProvider>
-  )
+    <main className={nunito.className}>
+      <props.Component {...props.pageProps} />
+      <Script
+        src="https://cdnjs.cloudflare.com/ajax/libs/jimp/0.22.8/jimp.min.js"
+      />
+    </main>
+  );
 }
-
-export default MyApp

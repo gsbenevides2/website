@@ -1,0 +1,82 @@
+.container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  padding: 0rem 2rem;
+}
+
+.hideContainer {
+  opacity: 1;
+  transition: all 0.3s ease-in-out;
+}
+
+.hideContainer.hide {
+  opacity: 0;
+}
+
+.textArea {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  animation: salt 1s ease-in-out normal;
+  padding-bottom: 10rem;
+  gap: 2rem;
+}
+
+.textArea h1 {
+  text-align: center;
+  max-width: 800px;
+}
+
+@keyframes salt {
+  0% {
+    transform: scale(0);
+  }
+  80% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.textArea p {
+  font-size: 1.5rem;
+  text-align: center;
+  max-width: 800px;
+}
+.svgArea {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+  .textArea {
+    padding: 0;
+    gap: 1rem;
+    justify-content: end;
+  }
+  .textArea h1 {
+    font-size: 1.8rem;
+  }     
+  .textArea p {
+    font-size: 1.4rem;
+  }
+  .svgArea {
+    margin-top: 2rem;
+    max-width: 70vw;
+    align-items: start;
+  }
+}

@@ -1,20 +1,20 @@
 {
-    "name": "gui.dev.br",
-    "short_name": "gui.dev.br",
-    "icons": [
-        {
-            "src": "/android-chrome-192x192.png",
-            "sizes": "192x192",
-            "type": "image/png"
-        },
-        {
-            "src": "/android-chrome-512x512.png",
-            "sizes": "512x512",
-            "type": "image/png"
-        }
-    ],
-    "theme_color": "#474b4e",
-    "background_color": "#474b4e",
-    "display": "standalone",
-		"start_url": "/"
+  "name": "Site do Guilherme",
+  "short_name": "Site do Guilherme",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#7372a5",
+  "background_color": "#7372a5",
+  "display": "standalone",
+  "start_url": "/"
 }

@@ -1,0 +1,41 @@
+.container {
+		display: flex;
+		cursor: pointer;
+		outline: none;
+		border: none;
+		background: none;
+		padding: 0;
+		margin: 0;
+		text-align: left;
+		font-size: 1rem;
+		font-family: inherit;
+		line-height: inherit;
+		-webkit-tap-highlight-color: transparent;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+		-webkit-box-sizing: border-box;
+		box-sizing: border-box;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+		border-radius: 20%;
+		aspect-ratio: 1/1;
+		transition: background-color 0.2s ease-in-out;
+		align-items: center;
+		justify-content: center;
+		padding:1%;
+}
+
+.container *{
+	transition: color 0.2s ease-in-out;
+}
+
+.container:hover{
+	background-color: #fff;
+}
+/* Hover select all child	elements */
+.container:hover *{
+	color: #000;
+ }

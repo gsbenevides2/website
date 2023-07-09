@@ -1,0 +1,28 @@
+.container .header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap:10px;
+}
+.container input {
+    display: none;
+}
+.container .button {
+    font-size: 16px;
+}
+.asset{
+    padding-top:12px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap:10px;
+    font-size: 16px;
+}
+.asset .altText{
+    flex:1;
+}
+.asset .remove{
+    text-decoration: underline;
+    cursor: pointer;
+}
