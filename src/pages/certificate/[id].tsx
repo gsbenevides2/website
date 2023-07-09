@@ -1,5 +1,4 @@
 import { Button } from "@/components/Button";
-import { PdfViewer } from "@/components/PdfViewer";
 import {
   getCertification,
   listCertifications,
@@ -12,6 +11,7 @@ import Head from "next/head";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
 import { DefaultSeo } from "@/components/DefaultSeo";
+import dynamic from "next/dynamic";
 
 interface Certification {
   id: string;
@@ -68,7 +68,9 @@ export default function Page(
   props: InferGetStaticPropsType<typeof getStaticProps>
 ) {
   const { certificate } = props;
-
+  const PdfViewer= dynamic(() => import("@/components/PdfViewer"), {
+    ssr: false,
+  });
   const referenceButtonClick = useCallback(() => {
     if (!certificate) return;
     if (!certificate.externalReference) return;
