@@ -139,8 +139,8 @@ export default function PostPage(props:InferGetStaticPropsType<typeof getStaticP
         title={`${props.post.name} - Blog do Guilherme`}
         description={props.post.description}
         image={{
-          url: props.post.metaTag,
-          alt: props.post.thumbnailAlt,
+          url: props.post.thumbnail.metaTag,
+          alt: props.post.thumbnail.alt,
           width: 500,
           height: 334,
         }}

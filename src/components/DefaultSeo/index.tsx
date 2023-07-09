@@ -2,15 +2,15 @@ import { NextSeo } from "next-seo";
 import { OpenGraphMedia } from "next-seo/lib/types";
 
 interface Props {
-    title: string;
-    description: string;
-    image: OpenGraphMedia;
-    type: string;
-    site_name: string;
+  title: string;
+  description: string;
+  image: OpenGraphMedia;
+  type: string;
+  site_name: string;
 }
 
-export function DefaultSeo(props : Props) {
-    const { title, description, image, type, site_name } = props;
+export function DefaultSeo(props: Props) {
+  const { title, description, image, type, site_name } = props;
   return (
     <NextSeo
       title={title}
@@ -23,6 +23,20 @@ export function DefaultSeo(props : Props) {
         images: [image],
         type,
       }}
+      additionalMetaTags={[
+        {
+          name: "twitter:image",
+          content: image.url,
+        },
+        {
+          name: "twitter:title",
+          content: title,
+        },
+        {
+          name: "twitter:description",
+          content: description,
+        },
+      ]}
       twitter={{
         site: "@gsbenevides2",
         handle: "@gsbenevides2",
