@@ -14,11 +14,12 @@ type Props = DetailedHTMLProps<
 >;
 
 export const Button: React.FC<Props> = (props) => {
-  const { className, ...rest } = props;
+  const { className,type, ...rest } = props;
 
   return (
     <button
       {...rest}
+      type={type || "button"}
       className={[styles.button, className, nunito.className].join(" ")}
     />
   );

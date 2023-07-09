@@ -5,7 +5,7 @@ import {
 } from "@/services/firebase/client/certificates";
 import { useCallback } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
-import styles from "./styles.module.css";
+import styles from "../project/styles.module.css";
 import { parseDateObjcToDDMMYYYY } from "@/utils/parseDateStringtoDateObj";
 import Head from "next/head";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
@@ -99,7 +99,7 @@ export default function Page(
         <div className={styles.pdf}>
           <PdfViewer file={certificate.pdf} />
         </div>
-        <div className={styles.description}>
+        <div className={`${styles.description} ${styles.descriptionCertificate}`}>
           <div className={styles.descriptionDesktop}>
             <ReactMarkdown>{certificate.descriptionDesktop}</ReactMarkdown>
           </div>

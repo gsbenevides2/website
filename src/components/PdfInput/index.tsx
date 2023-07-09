@@ -1,11 +1,11 @@
 import FileInput, { FileInputProps } from "../FileInput";
-import { ChangeEventHandler, useCallback, useMemo, useState } from "react";
+import { ChangeEventHandler, memo, useCallback, useMemo, useState } from "react";
 import styles from "./styles.module.css";
 import dynamic from "next/dynamic";
 
 interface Props extends Omit<FileInputProps, "accept"> {}
 
-export function PdfInput(props: Props) {
+function PdfInputUnmemorized(props: Props) {
   const { state,  ...rest } = props;
   const fileUrl = useMemo(()=>state?.[0] ? URL.createObjectURL(state[0]) : undefined, [state])
   const PdfViewer= dynamic(() => import("@/components/PdfViewer"), {
@@ -18,3 +18,5 @@ export function PdfInput(props: Props) {
     </div>
   );
 }
+
+export const PdfInput = memo(PdfInputUnmemorized);
