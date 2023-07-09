@@ -6,7 +6,7 @@ const nextConfig = {
     images:{
         domains:['localhost', 'firebasestorage.googleapis.com']
     },
-    /*webpack:(config)=>{
+    webpack:(config)=>{
         config.plugins.push(
             new CopyPlugin({
                 patterns: [
@@ -15,7 +15,7 @@ const nextConfig = {
             })
         )
         return config
-    }*/
+    }   
 }
 
 module.exports = withPWA({
