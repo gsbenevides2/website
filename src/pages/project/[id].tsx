@@ -1,5 +1,5 @@
 import { Button } from "@/components/Button";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import styles from "./styles.module.css";
 import Head from "next/head";
@@ -60,10 +60,17 @@ export default function Page(
 ) {
   const { project } = props;
 
-  const githubButtonClick = useCallback(() => {
-    if (!project) return;
-    if (!project.github) return;
-    window.open(project.github, "_blank");
+  const githubButton = useMemo(() => {
+    if(!project) return null;
+    if(!project.github) return null;
+    const onClick = () => {
+      window.open(project.github, "_blank");
+    };
+    return (
+      <Button className={styles.viewMoreButton} onClick={onClick}>
+        Ver no Github
+      </Button>
+    );
   }, [project]);
 
   if (!project) return null;
@@ -99,9 +106,7 @@ export default function Page(
           <div className={styles.descriptionMobile}>
             <ReactMarkdown>{project.descriptionMobile}</ReactMarkdown>
           </div>
-          <Button className={styles.viewMoreButton} onClick={githubButtonClick}>
-            Ver no Github
-          </Button>
+          {githubButton}
         </div>
       </div>
     </div>

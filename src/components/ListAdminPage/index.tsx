@@ -32,7 +32,6 @@ interface Props {
   emptyListText: string;
   list: ListItem[] | undefined;
   listButtons: ListButton[];
-  adminOnly?: boolean;
   executeBeforeAuthenticated?: () => void;
 }
 
@@ -45,11 +44,8 @@ export default function ListAdminPage(props: Props) {
     await new Promise((resolve) => setTimeout(resolve, 500));
   }, [containerRef]);
 
-  useAdminAuthentication(async (user) => {
-    if (!user && props.adminOnly) {
-      await hidePage();
-      router.push("/admin");
-    } else if (props.executeBeforeAuthenticated) {
+  useAdminAuthentication(() => {
+    if (props.executeBeforeAuthenticated) {
       props.executeBeforeAuthenticated();
     }
   });

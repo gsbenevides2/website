@@ -8,7 +8,10 @@ import { TbEdit, TbTrash } from "react-icons/tb";
 import styles from "./styles.module.css";
 import { useAdminAuthentication } from "@/services/firebase/client/auth";
 import Loader from "@/components/Loader";
-import { deleteProject, listProjects } from "@/services/firebase/client/projects";
+import {
+  deleteProject,
+  listProjects,
+} from "@/services/firebase/client/projects";
 import { revalidateNextPages } from "@/services/api/revalidateNextPages";
 
 interface ProjectToList {
@@ -27,11 +30,7 @@ export default function Page() {
     setProjects(await listProjects());
   }, []);
 
-  useAdminAuthentication((user) => {
-    if (!user) {
-      router.push("/admin");
-    }
-  });
+  useAdminAuthentication(() => {});
 
   const handleAddProject = useCallback(async () => {
     containerRef.current?.classList.add(styles.hide);

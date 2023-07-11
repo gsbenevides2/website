@@ -3,7 +3,7 @@ import {
   getCertification,
   listCertifications,
 } from "@/services/firebase/client/certificates";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import styles from "../project/styles.module.css";
 import { parseDateObjcToDDMMYYYY } from "@/utils/parseDateStringtoDateObj";
@@ -71,10 +71,17 @@ export default function Page(
   const PdfViewer= dynamic(() => import("@/components/PdfViewer"), {
     ssr: false,
   });
-  const referenceButtonClick = useCallback(() => {
-    if (!certificate) return;
-    if (!certificate.externalReference) return;
-    window.open(certificate.externalReference, "_blank");
+  const referenceButton = useMemo(() => {
+    if (!certificate) return null;
+    if (!certificate.externalReference) return null;
+    const onClick = () => {
+      window.open(certificate.externalReference, "_blank");
+    };
+    return (
+      <Button className={styles.viewMoreButton} onClick={onClick}>
+        Saiba Mais sobre o Curso
+      </Button>
+    );
   }, [certificate]);
 
   if (!certificate) return null;
@@ -99,19 +106,14 @@ export default function Page(
         <div className={styles.pdf}>
           <PdfViewer file={certificate.pdf} />
         </div>
-        <div className={`${styles.description} ${styles.descriptionCertificate}`}>
+        <div className={styles.description}>
           <div className={styles.descriptionDesktop}>
             <ReactMarkdown>{certificate.descriptionDesktop}</ReactMarkdown>
           </div>
           <div className={styles.descriptionMobile}>
             <ReactMarkdown>{certificate.descriptionMobile}</ReactMarkdown>
           </div>
-          <Button
-            className={styles.viewMoreButton}
-            onClick={referenceButtonClick}
-          >
-            Saiba Mais sobre o Curso
-          </Button>
+          {referenceButton}
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@ import {
 } from "firebase/auth";
 import Firebase from "./config";
 import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 export async function logIn() {
   const auth = Firebase.getAuth();
@@ -27,16 +28,21 @@ export async function logOut() {
 export async function useAdminAuthentication(
   callback: (user: User | null) => void
 ) {
+  const router = useRouter();
   useEffect(() => {
     const auth = Firebase.getAuth();
     const listenner = auth.onAuthStateChanged((user) => {
-      if (user !== null && user?.email !== "gsbenevides2@gmail.com") return;
+      if (user !== null && user?.email !== "gsbenevides2@gmail.com") {
+        logOut().then(() => {
+          router.push("/admin");
+        });
+      }
       callback(user);
     });
     return () => {
       listenner();
     };
-  }, [callback]);
+  }, [callback, router]);
 }
 
 export async function retriveIdToken() {

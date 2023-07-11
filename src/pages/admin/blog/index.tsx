@@ -100,7 +100,6 @@ export default function Page() {
       addButtonText="Novo Post"
       emptyListText="Nenhum post cadastrado"
       addButtonHideOnClicked
-      adminOnly
       title="Gerenciador de Posts do Blog"
       executeBeforeAuthenticated={loadPosts}
     />

@@ -129,11 +129,7 @@ export default function Page() {
   const [content, setContent] = useState("");
   const [assents, setAssents] = useState<Asset[]>([]);
 
-  useAdminAuthentication((user) => {
-    if (!user) {
-      router.push("/admin");
-    }
-  });
+  useAdminAuthentication(() => {});
 
   const formSubmit: FormEventHandler<HTMLFormElement> = useCallback(
     async (e) => {

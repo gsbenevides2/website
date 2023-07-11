@@ -37,11 +37,7 @@ export default function Page() {
   const [image, setImage] = useState<File[]>([]);
   const [keywords, setKeywords] = useState("");
 
-  useAdminAuthentication((user) => {
-    if (!user) {
-      router.push("/admin");
-    }
-  });
+  useAdminAuthentication(() => {});
 
   const formSubmit: FormEventHandler<HTMLFormElement> = useCallback(
     async (e) => {

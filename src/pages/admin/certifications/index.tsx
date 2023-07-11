@@ -32,11 +32,7 @@ export default function Page() {
     setCerts(await listCertifications());
   }, []);
 
-  useAdminAuthentication((user) => {
-    if (!user) {
-      router.push("/admin");
-    }
-  });
+  useAdminAuthentication(()=>{});
 
   const handleAddCert = useCallback(async () => {
     containerRef.current?.classList.add(styles.hide);
