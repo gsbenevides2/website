@@ -9,13 +9,35 @@ import { NextSeo } from "next-seo";
 import { DefaultSeo } from "@/components/DefaultSeo";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 
+function calculeSemester() {
+  const today = new Date();
+  const transitionsDate = [
+    new Date(2021, 11, 12),
+    new Date(2022, 5, 30),
+    new Date(2022, 11, 12),
+    new Date(2023, 5, 30),
+    new Date(2023, 11, 12),
+    new Date(2024, 5, 30),
+    new Date(2024, 11, 12),
+    new Date(2025, 5, 30),
+    new Date(2025, 11, 12),
+    new Date(2026, 5, 30),
+  ];
+
+  for (let i = 0; i < transitionsDate.length; i++) {
+    const transitionDate = transitionsDate[i];
+    if (today < transitionDate) {
+      return i + 1;
+    }
+  }
+  return transitionsDate.length + 1;
+}
+
 export const getStaticProps: GetStaticProps = async () => {
   return {
     props: {
       age: moment().diff(moment("2003-05-30"), "years", false),
-      semesters: (moment().diff(moment("2020-08-01"), "months", false) / 6)
-        .toString()
-        .split(".")[0],
+      semesters: calculeSemester(),
     },
     revalidate: 60,
   };
