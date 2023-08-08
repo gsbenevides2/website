@@ -101,6 +101,7 @@ export default function Page(
               title="YouTube video player"
               frameBorder="0"
               className={styles.iframe}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
             />
           ) : (
             <Image
