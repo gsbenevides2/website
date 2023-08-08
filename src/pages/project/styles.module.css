@@ -6,6 +6,10 @@
   animation: fadeIn 1s ease-in-out forwards;
   padding: 20px;
 }
+.iframe {
+  min-width: 30vw;
+  height: 300px;
+}
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -39,6 +43,7 @@
 .area1 .image {
   position: relative;
   max-width: 30vw;
+  min-width: 300px;
 }
 .area1 .image img {
   position: static !important;
@@ -88,6 +93,10 @@
   }
   .image,
   .pdf {
+    min-width: 90vw !important;
+    max-width: 90vw !important;
+  }
+  .iframe {
     min-width: 90vw !important;
     max-width: 90vw !important;
   }

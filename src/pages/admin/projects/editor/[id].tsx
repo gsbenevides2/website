@@ -32,6 +32,7 @@ export default function Page() {
 
   const [name, setName] = useState("");
   const [github, setGithub] = useState("");
+  const [youtube, setYoutube] = useState("");
   const [descriptionDesktop, setDescriptionDesktop] = useState("");
   const [descriptionMobile, setDescriptionMobile] = useState("");
   const [image, setImage] = useState<File[]>([]);
@@ -61,6 +62,7 @@ export default function Page() {
         id: projectId,
         name: name,
         github: github,
+        youtube: youtube,
         descriptionDesktop: descriptionDesktop,
         descriptionMobile: descriptionMobile,
         image: image[0],
@@ -81,6 +83,7 @@ export default function Page() {
       descriptionDesktop,
       descriptionMobile,
       github,
+      youtube,
       keywords,
       name,
       image,
@@ -106,6 +109,7 @@ export default function Page() {
       const project = await getProject(projectId);
       setName(project.name);
       if (project.github) setGithub(project.github);
+      if (project.youtube) setYoutube(project.youtube);
       setDescriptionDesktop(project.descriptionDesktop);
       setDescriptionMobile(project.descriptionMobile);
       setKeywords(project.keywords.join(","));
@@ -157,6 +161,13 @@ export default function Page() {
               state={github}
               setState={setGithub}
               id="github"
+            />
+            <Input
+              label="Link do vídeo no Youtube:"
+              placeholder="Digite o link para o vídeo no Youtube"
+              state={youtube}
+              setState={setYoutube}
+              id="youtube"
             />
             <Textarea
               label="Descrição Desktop: (Markdown)"

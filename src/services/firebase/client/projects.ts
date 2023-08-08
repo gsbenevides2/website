@@ -1,9 +1,4 @@
-import {
-  getBlob,
-  getDownloadURL,
-  ref,
-  uploadBytes,
-} from "firebase/storage";
+import { getBlob, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import {
   CollectionReference,
   collection,
@@ -21,6 +16,7 @@ interface Project {
   id: string;
   name: string;
   github?: string;
+  youtube?: string;
   descriptionDesktop: string;
   descriptionMobile: string;
   image: string;
@@ -71,6 +67,7 @@ export async function addOrUpdateProject(project: ProjectToAddOrUpdate) {
   await setDoc(projectDoc, {
     name: project.name,
     github: project.github,
+    youtube: project.youtube,
     descriptionDesktop: project.descriptionDesktop,
     descriptionMobile: project.descriptionMobile,
     image: imageDownloadUrl,
@@ -100,16 +97,18 @@ export async function getProject(projectId: string): Promise<Project> {
   const projectRef = doc(getProjectsCollection(), projectId);
   const project = await getDoc(projectRef);
   const projectData = project.data();
-  if (!projectData) throw new MyError("project-not-found", `Projeto não encontrado. O projeto com id: ${projectId} não foi encontrado no Firebase Firestore!`);
+  if (!projectData)
+    throw new MyError(
+      "project-not-found",
+      `Projeto não encontrado. O projeto com id: ${projectId} não foi encontrado no Firebase Firestore!`
+    );
   return {
     id: project.id,
     ...projectData,
   };
 }
 
-export async function getProjectImageFile(
-  projectId: string
-): Promise<File> {
+export async function getProjectImageFile(projectId: string): Promise<File> {
   const fileName = `${projectId}.pdf`;
   const storage = Firebase.getStorage();
   const projectsRef = ref(storage, `projects`);

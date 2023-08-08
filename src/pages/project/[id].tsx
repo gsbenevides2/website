@@ -8,11 +8,13 @@ import Image from "next/image";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
 import { DefaultSeo } from "@/components/DefaultSeo";
+import { getIframeYoutubeUrl } from "@/utils/getYoutubeIframeUrl";
 
 interface Project {
   id: string;
   name: string;
   github?: string;
+  youtube?: string;
   descriptionDesktop: string;
   descriptionMobile: string;
   image: string;
@@ -46,7 +48,7 @@ export const getStaticProps: GetStaticProps<Props, Params> = async (
   if (project == null)
     return {
       notFound: true,
-    }
+    };
   return {
     props: {
       project,
@@ -61,8 +63,8 @@ export default function Page(
   const { project } = props;
 
   const githubButton = useMemo(() => {
-    if(!project) return null;
-    if(!project.github) return null;
+    if (!project) return null;
+    if (!project.github) return null;
     const onClick = () => {
       window.open(project.github, "_blank");
     };
@@ -91,13 +93,24 @@ export default function Page(
       <h2>{project.name}</h2>
       <div className={styles.area1}>
         <div className={styles.image}>
-          <Image
-            src={project.image}
-            alt="Image do projeto"
-            fill
-            placeholder="blur"
-            blurDataURL={project.imageBlur}
-          />
+          {project.youtube ? (
+            <iframe
+              width="100%"
+              height="100%"
+              src={getIframeYoutubeUrl(project.youtube)}
+              title="YouTube video player"
+              frameBorder="0"
+              className={styles.iframe}
+            />
+          ) : (
+            <Image
+              src={project.image}
+              alt="Image do projeto"
+              fill
+              placeholder="blur"
+              blurDataURL={project.imageBlur}
+            />
+          )}
         </div>
         <div className={styles.description}>
           <div className={styles.descriptionDesktop}>
