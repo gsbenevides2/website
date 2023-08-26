@@ -42,7 +42,7 @@ export default function Contacts() {
           </li>
           <li className={styles.linkedin}>
             <a
-              href="https://linkedin.com/gsbenevides2"
+              href="https://linkedin.com/in/gsbenevides2"
               className="linkedin"
               target="_blank"
               rel="noreferrer"
@@ -76,7 +76,7 @@ export default function Contacts() {
         <div>
           <ul className={styles.other}>
             <li>
-              <a href="malito:gsbenevides2@gmail.com">
+              <a href="mailto:contato@gui.dev.br">
                 <TbMail />
                 Enviar um email
               </a>
