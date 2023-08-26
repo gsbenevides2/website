@@ -1,24 +1,31 @@
-import React from 'react'
+import SVG404 from "@/components/404SVG";
+import styles from "./404And500styles.module.css";
+import { Button } from "@/components/Button";
+import { DefaultSeo } from "@/components/DefaultSeo";
+import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
+import SVGOffline from "@/components/OfflineSVG";
 
-import { ErrorPage } from '../components/ErrorPage'
-
-const Page: React.FC = () => {
+export default function Page404() {
   return (
-    <ErrorPage
-      options={{
-        header: {
-          title: 'Sem internet',
-          description: 'Ops parece que voçê está sem internet.',
-          url: '/404.png',
-          alt:
-            'A minha foto de perfil no fundo preto ao lado em branco escrito: Página Não Encontrada.'
-        },
-        page: {
-          h1: 'Sem internet!',
-          p: 'Ops parece que voçê está sem internet.'
-        }
-      }}
-    />
-  )
+    <div className={styles.container}>
+      <DefaultSeo
+        description="Ops! Parece que você está offline. Aproveite essa pausa para relaxar e voltar em breve para explorar tudo o que preparamos para você. Até logo! 👋"
+        title="Offline: Uma pausa para recarregar ⚡️"
+        image={getOpenMediaImageForNextSeo("Offline")}
+        site_name="Site do Guilherme"
+        type="website"
+      />
+      <div className={styles.textArea}>
+        <h1>Offline: Uma pausa para recarregar ⚡️</h1>
+        <p>
+          Ops! Seu dispositivo está offline no momento. Aproveite essa pausa
+          para relaxar e voltar em breve para explorar tudo o que preparamos
+          para você. Até logo! 👋
+        </p>
+      </div>
+      <div className={styles.svgArea}>
+        <SVGOffline />
+      </div>
+    </div>
+  );
 }
-export default Page

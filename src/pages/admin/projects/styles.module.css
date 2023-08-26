@@ -1,0 +1,77 @@
+.container {
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+  animation: fadeIn 1s ease-in-out forwards;
+}
+.containerInside {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  align-items: center;
+  transition: all 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.container button {
+  margin-top: 8px;
+  max-width: 400px;
+}
+.container h1 {
+  text-align: center;
+}
+.projectList {
+  width: 100%;
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px;
+}
+.projectList > span {
+  margin-top: 8px;
+  align-self: center;
+}
+.projectList > h2 {
+  text-align: center;
+}
+
+.projectList li {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+.projectList .textArea {
+  flex: 1;
+}
+.projectList .iconButtonsArea {
+  display: grid;
+  align-items: center;
+}
+
+.hide .containerInside {
+  opacity: 0;
+}
+
+@media (max-width: 768px) {
+  .projectList {
+    padding-top: 12px;
+  }
+  .projectList li img {
+    display: none;
+  }
+  .projectList li h2 {
+    font-size: 1.2rem;
+  }
+  .projectList li h3 {
+    font-size: 1rem;
+  }
+}
+

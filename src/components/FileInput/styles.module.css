@@ -1,0 +1,13 @@
+.container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap:10px;
+    font-size: 16x;
+}
+.container input {
+    display: none;
+}
+.container .button {
+    font-size: 16px;
+}

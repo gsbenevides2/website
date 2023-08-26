@@ -1,161 +1,87 @@
-import React from 'react'
+import { GetStaticProps, InferGetStaticPropsType } from "next";
+import { NextSeo } from "next-seo";
+import Image from "next/image";
+import BlogHeader from "@/components/BlogHeader";
+import {  getVisiblePosts, Post } from "@/services/firebase/client/posts";
+import styles from "./styles.module.css";
+import { useRouter } from "next/router";
+import { useCallback, useRef } from "react";
+import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
+import { DefaultSeo } from "@/components/DefaultSeo";
+import { parseYYYYMMDDtoDDMMYYYY } from "@/utils/parseDateStringtoDateObj";
 
-import { GetStaticProps, InferGetStaticPropsType } from 'next'
-import { NextSeo } from 'next-seo'
-import NextImage from 'next/image'
-import Link from 'next/link'
-
-import emptyImage from '../../assets/empty.png'
-import Header from '../../components/blog/Header'
-import { WelcomeModal } from '../../components/WelcomeModal'
-import { Empty, PageContainer } from '../../styles/pages/BlogHome'
-import { getInitialPosts, getNextPosts } from '../../utils/firebase/post'
-
-interface Post {
-  name: string
-  id: string
-  thumbnail: string
-  thumbnailAlt: string
-}
 interface Props {
-  posts: Post[]
+  posts: Post[];
 }
+interface PostProps {
+  post: Post;
+  onClick?: (id: string) => void;
+}
+
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const posts = await getInitialPosts()
+  const posts = await getVisiblePosts();
   return {
     props: { posts },
-    revalidate: 10
-  }
+    revalidate: 60 * 60, // 1 hour
+  };
+};
+
+function Post({ post, onClick }: PostProps) {
+  return (
+    <li className={styles.post} onClick={() => onClick && onClick(post.id)}>
+      <Image
+        src={post.thumbnail.list}
+        width={500}
+        height={334}
+        placeholder="blur"
+        layout="responsive"
+        blurDataURL={post.thumbnail.blur}
+        alt={`Capa do Post: ${post.name}. Contendo: ${post.thumbnail.alt}`}
+      />
+
+      <div className={styles.postData}>
+        <span className={styles.postTitle}>{post.name}</span>
+        <span className={styles.postDate}>{parseYYYYMMDDtoDDMMYYYY(post.date)}</span>
+      </div>
+    </li>
+  );
 }
 
-const BlogIndexPage: React.FC<InferGetStaticPropsType<typeof getStaticProps>> =
-  props => {
-    const [posts, setPosts] = React.useState(props.posts)
-    const [loadingMore, setLoadingMore] = React.useState(false)
-    const [end, setEnd] = React.useState(props.posts.length < 10)
-    const firstPost = posts[0]
-    const postA = posts.slice(1, 4)
-    const morePosts = posts.slice(4)
-    const scrollCallback = React.useCallback(() => {
-      const endOfPage =
-        window.innerHeight + window.scrollY >= document.body.offsetHeight
+export default function Blog(
+  props: InferGetStaticPropsType<typeof getStaticProps>
+) {
+  const { posts } = props;
+  const containerRef = useRef<HTMLUListElement>(null);
+  const router = useRouter();
 
-      async function loadMorePosts() {
-        const morePosts = await getNextPosts(posts[posts.length - 1].id)
-        if (morePosts.length < 10) {
-          setEnd(true)
-        }
-        setPosts([...posts, ...morePosts])
-      }
+  const postClick = useCallback(
+    async (id: string) => {
+      if (!containerRef.current) return;
+      containerRef.current.classList.add(styles.hide);
+      await new Promise((resolve) => setTimeout(resolve, 400));
+      router.push(`/blog/post/${id}`);
+    },
+    [containerRef, router]
+  );
 
-      if (endOfPage && !loadingMore && !end) {
-        setLoadingMore(true)
-        loadMorePosts()
-          .then(() => {
-            setLoadingMore(false)
-          })
-          .catch(() => {
-            setLoadingMore(false)
-          })
-      }
-    }, [posts, loadingMore, end])
+  return (
+    <div>
+      <DefaultSeo
+        title="Blog do Guilherme"
+        description="Blog do Guilherme: um lugar de informação e conhecimento."
+        image={getOpenMediaImageForNextSeo("Blog do Guilherme")}
+        type="blog"
+        site_name="Blog do Guilherme"
+      />
 
-    React.useEffect(() => {
-      window.addEventListener('scroll', scrollCallback)
-    }, [])
-
-    return (
-      <React.Fragment>
-        <NextSeo
-          title="Blog do Guilherme"
-          description="Blog do Guilherme: um lugar de informação e conhecimento."
-          openGraph={{
-            title: 'Blog do Guilherme',
-            description:
-              'Blog do Guilherme: um lugar de informação e conhecimento.',
-            site_name: 'Blog do Guilherme',
-            locale: 'pt_BR',
-            images: [
-              {
-                url: '/blog.png',
-                alt: 'A minha foto de perfil no fundo preto ao lado escrito em branco: Blog do Guilherme.',
-                width: 500,
-                height: 334
-              }
-            ],
-            type: 'blog'
-          }}
-          twitter={{
-            site: '@gsbenevides2',
-            handle: '@gsbenevides2',
-            cardType: 'summary_large_image'
-          }}
-        />
-        <Header />
-        <WelcomeModal />
-        {firstPost ? (
-          <PageContainer>
-            <Link href="/blog/post/[id]" as={`/blog/post/${firstPost.id}`}>
-              <li className="firstPost">
-                <NextImage
-                  height=""
-                  width=""
-                  className="thumb"
-                  layout="responsive"
-                  src={firstPost.thumbnail}
-                  alt={firstPost.thumbnailAlt}
-                />
-                <h2>{firstPost.name}</h2>
-              </li>
-            </Link>
-            {postA.map(post => (
-              <Link
-                key={post.id}
-                href="/blog/post/[id]"
-                as={`/blog/post/${post.id}`}
-              >
-                <li className="post postA">
-                  <NextImage
-                    height="100"
-                    width="150"
-                    className="thumb"
-                    layout="responsive"
-                    src={post.thumbnail}
-                    alt={post.thumbnailAlt}
-                  />
-                  <h2>{post.name}</h2>
-                </li>
-              </Link>
-            ))}
-            {morePosts.map(post => (
-              <Link
-                key={post.id}
-                href="/blog/post/[id]"
-                as={`/blog/post/${post.id}`}
-              >
-                <li className="post postMore">
-                  <NextImage
-                    height="100"
-                    width="150"
-                    className="thumb"
-                    layout="responsive"
-                    src={post.thumbnail}
-                    alt={post.thumbnailAlt}
-                  />
-                  <h2>{post.name}</h2>
-                </li>
-              </Link>
-            ))}
-          </PageContainer>
-        ) : (
-          <Empty>
-            <img src={emptyImage} />
-            <h1>Ops não tem post nenhum aqui</h1>
-            <span>Aguarde teremos novidades</span>
-          </Empty>
-        )}
-      </React.Fragment>
-    )
-  }
-
-export default BlogIndexPage
+      <BlogHeader />
+      <div className={styles.container}>
+        <ul className={styles.postsList} ref={containerRef}>
+          {posts.map((post) => (
+            <Post post={post} key={post.id} onClick={postClick} />
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}

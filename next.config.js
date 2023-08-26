@@ -1,34 +1,24 @@
-const withImages = require('next-images')
-const withPWA = require('next-pwa')
+const CopyPlugin = require('copy-webpack-plugin');
+const withPWA  =require('next-pwa')
 
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-	enabled: process.env.ANALYZE === 'true'
-})
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+    images:{
+        domains:['localhost', 'firebasestorage.googleapis.com']
+    },
+    webpack:(config)=>{
+        config.plugins.push(
+            new CopyPlugin({
+                patterns: [
+                    {from: "node_modules/pdfjs-dist/build", to: "../public/pdfjs/"}
+                ]
+            })
+        )
+        return config
+    }   
+}
 
-const domains = [
-	'firebasestorage.googleapis.com',
-	'gsbenevides2-development.herokuapp.com',
-	'gsbenevides2.herokuapp.com'
-]
-if (process.env.BACKEND_URL) domains.push(process.env.BACKEND_URL)
-
-module.exports =
-	withBundleAnalyzer(
-		withPWA(
-			withImages({
-				images: {
-					domains
-				},
-				future: {
-					webpack5: true
-				},
-				pwa: {
-					dest: 'public',
-					disable: process.env.NODE_ENV !== 'production',
-					importScripts: ['./firebase-messaging-sw.js']
-				},
-				esModule: true
-			})
-		)
-	)
-
+module.exports = withPWA({
+    dest: 'public',
+    disable: process.env.NODE_ENV === 'development',
+})(nextConfig)
