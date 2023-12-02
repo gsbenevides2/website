@@ -1,6 +1,9 @@
 {
   "name": "functions",
   "version": "0.0.1",
+  "engines": {
+    "node": "18"
+  },
   "scripts": {
     "lint": "eslint --ext .js,.ts .",
     "build": "tsc",
@@ -10,9 +13,6 @@
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
-  },
-  "engines": {
-    "node": "18"
   },
   "main": "lib/index.js",
   "dependencies": {
