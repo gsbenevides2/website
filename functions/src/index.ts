@@ -1,8 +1,14 @@
 import * as logger from "firebase-functions/logger";
 import {onDocumentDeleted} from "firebase-functions/v2/firestore";
 import * as admin from "firebase-admin";
+import { setGlobalOptions } from "firebase-functions/v2/options";
 
 admin.initializeApp();
+
+setGlobalOptions({
+  maxInstances: 1,
+});
+
 
 /**
  * Deletes a storage folder.
