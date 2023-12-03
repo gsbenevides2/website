@@ -1,0 +1,81 @@
+.container {
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+  animation: fadeIn 1s ease-in-out forwards;
+}
+.containerInside {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  align-items: center;
+  transition: all 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.container button {
+  margin-top: 8px;
+  max-width: 400px;
+}
+.container h1 {
+  text-align: center;
+}
+.linkList {
+  width: 100%;
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px;
+}
+.linkList > span {
+  margin-top: 8px;
+  align-self: center;
+}
+.linkList > h2 {
+  text-align: center;
+}
+
+.linkList li {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+.linkList .textArea {
+  flex: 1;
+}
+
+.linkList .textArea h1,
+.linkList .textArea h2{
+  cursor: pointer;
+}
+.linkList .iconButtonsArea {
+  display: grid;
+  align-items: center;
+}
+
+.hide .containerInside {
+  opacity: 0;
+}
+
+@media (max-width: 768px) {
+.linkList {
+	padding-top: 12px;
+}
+  .linkList li img {
+    display: none;
+  }
+  .linkList li h2 {
+	font-size: 1.2rem;
+  }
+  .linkList li h3 {
+	font-size: 1rem;
+  }
+}
