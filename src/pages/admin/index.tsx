@@ -40,7 +40,15 @@ export default function Home() {
   });
 
   const loginButtonClick = useCallback(async () => {
-    await logIn();
+    try {
+      await logIn();
+    } catch (e: any) {
+      if (e?.message === "Usuário não autorizado") {
+        alert("Você não tem permissão para acessar o painel de administração!")
+      } else {
+        console.log(e);
+      }
+    }
   }, []);
 
   const logOutButtonClick = useCallback(() => {
@@ -57,6 +65,7 @@ export default function Home() {
     router,
     "/admin/certifications"
   );
+  const linksButtonClick = useRedirect(containerRef, router, "/admin/links");
   const blogButtonClick = useRedirect(containerRef, router, "/admin/blog");
 
   useEffect(() => {
@@ -102,6 +111,9 @@ export default function Home() {
             </Button>
             <Button className={styles.button} onClick={blogButtonClick}>
               Blog
+            </Button>
+            <Button className={styles.button} onClick={linksButtonClick}>
+              Links
             </Button>
             <Button className={styles.button} onClick={logOutButtonClick}>
               Sair
