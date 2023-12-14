@@ -12,7 +12,7 @@ import {
   getStorage,
 } from "firebase/storage";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
-
+import {getMessaging, Messaging} from 'firebase/messaging'
 const firebaseConfig = JSON.parse(process.env.NEXT_PUBLIC_FIREBASE_CREDENTIALS)
 
 export default class Firebase {
@@ -20,6 +20,7 @@ export default class Firebase {
   static auth: Auth | undefined;
   static firestore: Firestore | undefined;
   static storage: FirebaseStorage | undefined;
+  static messaging: Messaging | undefined;
 
   static getFirestore() {
     if (Firebase.firestore) return Firebase.firestore;
@@ -67,5 +68,13 @@ export default class Firebase {
       connectFunctionsEmulator(functions, "127.0.0.1", 5001);
     Firebase.app = app;
     return app;
+  }
+
+  static getMessaging(){
+    if(Firebase.messaging) return Firebase.messaging;
+    const app = Firebase.getApp();
+    const messaging = getMessaging(app);
+    Firebase.messaging = messaging;
+    return messaging;
   }
 }

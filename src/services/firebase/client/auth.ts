@@ -8,15 +8,22 @@ import Firebase from "./config";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 
-export async function logIn() {
+export async function adminLogIn() {
+  const adminEmail = "gsbenevides2@gmail.com";
+  const result = await logIn(adminEmail);
+  if (result.email !== adminEmail) throw new Error("Usuário não autorizado");
+  return result;
+}
+
+export async function logIn(email?: string) {
   const auth = Firebase.getAuth();
   const provider = new GoogleAuthProvider();
-  provider.setCustomParameters({
-    login_hint: "gsbenevides2@gmail.com",
-  });
+  if (email) {
+    provider.setCustomParameters({
+      login_hint: email,
+    });
+  }
   const result = await signInWithPopup(auth, provider);
-  if (result.user.email !== "gsbenevides2@gmail.com")
-    throw new Error("Usuário não autorizado");
   return result.user;
 }
 

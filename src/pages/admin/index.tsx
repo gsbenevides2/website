@@ -4,7 +4,7 @@ import { RefObject, useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Head from "next/head";
 import {
-  logIn,
+  adminLogIn,
   useAdminAuthentication,
   logOut,
 } from "@/services/firebase/client/auth";
@@ -41,7 +41,7 @@ export default function Home() {
 
   const loginButtonClick = useCallback(async () => {
     try {
-      await logIn();
+      await adminLogIn();
     } catch (e: any) {
       if (e?.message === "Usuário não autorizado") {
         alert("Você não tem permissão para acessar o painel de administração!")
