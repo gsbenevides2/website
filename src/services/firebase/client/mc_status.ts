@@ -43,3 +43,17 @@ export async function getLatestStatus(): Promise<Status | null> {
     date: document.data().date.toDate(),
   };
 }
+
+export async function getLastStatusList(): Promise<Status[]> {
+  const statusCollection = getStatusCollection();
+  const q = query(statusCollection, orderBy("date", "desc"), limit(100));
+  const documents = await getDocs(q);
+  const statusList: Status[] = documents.docs.map((document) => {
+    return {
+      id: document.id,
+      ...document.data(),
+      date: document.data().date.toDate(),
+    };
+  });
+  return statusList;
+}

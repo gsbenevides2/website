@@ -1,12 +1,9 @@
 import {
-  Timestamp,
+  arrayRemove,
   arrayUnion,
   collection,
   doc,
-  getDocs,
-  limit,
-  orderBy,
-  query,
+  getDoc,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
@@ -31,5 +28,20 @@ export async function saveToken(userId: string, token: string) {
   await setDoc(doc,{},{merge:true})
   await updateDoc(doc, {
     tokens: arrayUnion(token),
+  });
+}
+
+export async function vertifySavedToken(userId:string, token:string){
+  const doc = getSubsDoc(userId);
+  const docSnap = await getDoc(doc);
+  const data = docSnap.data();
+  if(!data) return false;
+  return data.tokens.includes(token);
+}
+
+export async function removeToken(userId: string, token: string) {
+  const doc = getSubsDoc(userId);
+  await updateDoc(doc, {
+    tokens: arrayRemove(token),
   });
 }

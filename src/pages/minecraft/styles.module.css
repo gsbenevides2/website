@@ -3,7 +3,6 @@
   height: 100vh;
   image-rendering: auto;
   background: #303030 url("/panorama.png") repeat-x 0 0;
-  background-size: 300%;
   background-position: center;
   animation: MinecraftBackground 800s linear infinite;
   padding: 12px;
@@ -105,10 +104,11 @@
   position: relative;
   flex-direction: column;
 
-  min-width: 400px;
+  min-width: min(400px, calc(100vw - 80px));
   max-width: 400px;
   padding: 0px 5px 5px 5px;
 }
 .statusModal .dataContainer {
   width: 100%;
+  padding-bottom: 10px;
 }
