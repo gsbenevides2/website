@@ -67,7 +67,7 @@ async function sendStatusNotificationToUsers(status:Status) {
     const userTokens = user.data().tokens;
     tokens.push(...userTokens);
   });
-  console.log(tokens);
+  if(tokens.length === 0) return;
   await admin.messaging().sendEachForMulticast({
     tokens,
     notification: {
@@ -78,6 +78,12 @@ async function sendStatusNotificationToUsers(status:Status) {
       notification: {
         body: status.message,
         title: "Status do Servidor: " + status.type,
+        actions: [
+          {
+            action: "open",
+            title: "Abrir",
+          },
+        ]
       },
     },
   });
