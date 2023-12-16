@@ -23,12 +23,13 @@ import {
   saveToken,
   vertifySavedToken,
 } from "@/services/firebase/client/mc_subscribers";
-import { downloadCSV } from "./utils";
+import { downloadCSV } from "../../utils/downloadCSV";
 import {
   deleteNotificationToken,
   getNotificationToken,
   saveNotificationTokenInLocal,
 } from "@/services/localStorage";
+
 const minecraftFont = localFont({
   src: [
     {
