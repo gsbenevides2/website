@@ -4,7 +4,7 @@ import * as admin from "firebase-admin";
 import {setGlobalOptions} from "firebase-functions/v2/options";
 import {onRequest} from "firebase-functions/v2/https";
 import {FieldValue} from "firebase-admin/firestore";
-
+import {ping} from "bedrock-protocol";
 admin.initializeApp();
 
 setGlobalOptions({
@@ -54,20 +54,20 @@ interface Status {
 }
 
 /**
-  * Sends a notification to all users subscribed to the server status.
-  * @param {Status} status - The status to send.
-  * @return {Promise<void>}
-  */
-async function sendStatusNotificationToUsers(status:Status) {
+ * Sends a notification to all users subscribed to the server status.
+ * @param {Status} status - The status to send.
+ * @return {Promise<void>}
+ */
+async function sendStatusNotificationToUsers(status: Status) {
   const db = admin.firestore();
   const usersRef = db.collection("mc_push_subscriptions");
   const users = await usersRef.get();
-  const tokens:string[] = [];
+  const tokens: string[] = [];
   users.forEach((user) => {
     const userTokens = user.data().tokens;
     tokens.push(...userTokens);
   });
-  if(tokens.length === 0) return;
+  if (tokens.length === 0) return;
   await admin.messaging().sendEachForMulticast({
     tokens,
     notification: {
@@ -83,7 +83,7 @@ async function sendStatusNotificationToUsers(status:Status) {
             action: "open",
             title: "Abrir",
           },
-        ]
+        ],
       },
     },
   });
@@ -125,3 +125,15 @@ export const saveStatus = onRequest(
     res.status(200).send(statusRef.id);
   }
 );
+
+export const fetchServerStatus = onRequest(async (_req, res) => {
+  try {
+    const data = await ping({
+      host: "google.gui.dev.br",
+      port: 19132,
+    });
+    res.status(200).send(data);
+  } catch (e) {
+    res.status(500).end();
+  }
+});
