@@ -7,16 +7,26 @@ import {
   TbMusic,
 } from "react-icons/tb";
 import { MdPix } from "react-icons/md";
+import {SiMojangstudios} from 'react-icons/si'
 import styles from "./styles.module.css";
 import { DefaultSeo } from "@/components/DefaultSeo";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
+import { useRouter } from "next/router";
 
 export default function Contacts() {
+  const router = useRouter();
+  
   const copyPix = () => {
     navigator.clipboard.writeText("pix@gui.dev.br").then(() => {
       alert("PIX copiado para a área de transferência");
     });
   };
+
+  const goToMinecraft = () => {
+    router.push("/minecraft");
+  }
+
+
   return (
     <div className={styles.container}>
       <DefaultSeo
@@ -94,6 +104,14 @@ export default function Contacts() {
               >
                 <TbMusic />
                 Gosta de música? Ouça minha playlist no YouTube Music
+              </a>
+            </li>
+            <li>
+              <a
+                onClick={goToMinecraft}
+              >
+                <SiMojangstudios />
+                Gosta de Minecraft? Jogue comigo!
               </a>
             </li>
           </ul>

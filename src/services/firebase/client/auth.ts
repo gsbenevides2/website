@@ -5,18 +5,25 @@ import {
   signOut,
 } from "firebase/auth";
 import Firebase from "./config";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 
-export async function logIn() {
+export async function adminLogIn() {
+  const adminEmail = "gsbenevides2@gmail.com";
+  const result = await logIn(adminEmail);
+  if (result.email !== adminEmail) throw new Error("Usuário não autorizado");
+  return result;
+}
+
+export async function logIn(email?: string) {
   const auth = Firebase.getAuth();
   const provider = new GoogleAuthProvider();
-  provider.setCustomParameters({
-    login_hint: "gsbenevides2@gmail.com",
-  });
+  if (email) {
+    provider.setCustomParameters({
+      login_hint: email,
+    });
+  }
   const result = await signInWithPopup(auth, provider);
-  if (result.user.email !== "gsbenevides2@gmail.com")
-    throw new Error("Usuário não autorizado");
   return result.user;
 }
 
@@ -25,24 +32,41 @@ export async function logOut() {
   await signOut(auth);
 }
 
-export async function useAdminAuthentication(
+
+
+export async function useAuthentication(
   callback: (user: User | null) => void
-) {
-  const router = useRouter();
+){
   useEffect(() => {
     const auth = Firebase.getAuth();
     const listenner = auth.onAuthStateChanged((user) => {
-      if (user !== null && user?.email !== "gsbenevides2@gmail.com") {
-        logOut().then(() => {
-          router.push("/admin");
-        });
-      }
       callback(user);
     });
     return () => {
       listenner();
     };
-  }, [callback, router]);
+  }, [callback]);
+}
+
+export async function useAdminAuthentication(
+  callback: (user: User | null) => void
+) {
+  const router = useRouter();
+  const authCallback = useCallback((user: User | null) => {
+    if (user !== null && user?.email !== "gsbenevides2@gmail.com") {
+      logOut().then(() => {
+        router.push("/admin");
+      });
+      callback(user);
+    }
+  },[router, callback])
+
+  useAuthentication(authCallback);
+}
+
+export async function getLoggedUser() {
+  const auth = Firebase.getAuth();
+  return auth.currentUser;
 }
 
 export async function retriveIdToken() {
