@@ -2,7 +2,7 @@ import * as Papa from "papaparse";
 import MinecraftButton from "./button";
 import localFont from "next/font/local";
 import styles from "./styles.module.css";
-import React, { use, useEffect } from "react";
+import React, { useEffect } from "react";
 import Window from "./window";
 import {
   Status,
@@ -10,8 +10,8 @@ import {
   getLatestStatus,
 } from "@/services/firebase/client/mc_status";
 import {
-  getFcmTokenWithoutPerms,
   getMessagingToken,
+  revokeMessagingToken,
 } from "@/services/firebase/client/cloudMessaging";
 import {
   getLoggedUser,
@@ -24,6 +24,11 @@ import {
   vertifySavedToken,
 } from "@/services/firebase/client/mc_subscribers";
 import { downloadCSV } from "./utils";
+import {
+  deleteNotificationToken,
+  getNotificationToken,
+  saveNotificationTokenInLocal,
+} from "@/services/localStorage";
 const minecraftFont = localFont({
   src: [
     {
@@ -51,9 +56,10 @@ const minecraftFont = localFont({
 });
 
 interface ServerData {
-  playersOnline: number;
-  playersMax: number;
-  version: string;
+  players: {
+    max: string;
+    online: string;
+  };
 }
 
 function MinecraftPage() {
@@ -93,20 +99,25 @@ function MinecraftPage() {
     if (!user) return alert("Não foi possível ativar as notificações");
     saveToken(user.uid, fcmToken);
     setNotification(true);
+    saveNotificationTokenInLocal(fcmToken);
   }, []);
 
   const loadData = React.useCallback(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     const user = await getLoggedUser();
-    const fcmToken = await getFcmTokenWithoutPerms();
-    if (user && fcmToken) {
-      vertifySavedToken(user.uid, fcmToken).then(setNotification);
-    }
+    if (!user) return setNotification(false);
+    const token = getNotificationToken();
+    if (!token) return setNotification(false);
+    const thisUser = await vertifySavedToken(user.uid, token);
+    setNotification(thisUser);
   }, []);
 
   const disableNotification = React.useCallback(async () => {
     const user = await getLoggedUser();
-    const fcmToken = await getFcmTokenWithoutPerms();
+    const fcmToken = getNotificationToken();
     if (user && fcmToken) {
+      await revokeMessagingToken();
+      deleteNotificationToken();
       removeToken(user.uid, fcmToken).then(() => setNotification(false));
     }
   }, []);
@@ -141,14 +152,12 @@ function MinecraftPage() {
               {serverData && (
                 <>
                   <p>
-                    Jogadores online: {serverData.playersOnline}/
-                    {serverData.playersMax}
+                    Jogadores online: {serverData.players.online}/
+                    {serverData.players.max}
                   </p>
-                  <p>Versão: {serverData.version}</p>
                 </>
               )}
             </div>
-            <br></br>
             <h4>Status do Servidor:</h4>
             <div className={styles.dataContainer}>
               {loading ? (
@@ -161,24 +170,21 @@ function MinecraftPage() {
                 />
               )}
             </div>
-            <br />
-            {notification ? (
-              <MinecraftButton small onClick={disableNotification}>
-                Desativar notificações de status
+            <div className={styles.buttonContainers}>
+              {notification ? (
+                <MinecraftButton small onClick={disableNotification}>
+                  Desativar notificações de status
+                </MinecraftButton>
+              ) : (
+                <MinecraftButton small onClick={activeNotification}>
+                  Receber notificações de status
+                </MinecraftButton>
+              )}
+              <MinecraftButton small onClick={downloadLogs}>
+                Baixar logs
               </MinecraftButton>
-            ) : (
-              <MinecraftButton small onClick={activeNotification}>
-                Receber notificações de status
-              </MinecraftButton>
-            )}
-            <br />
-            <br />
-            <MinecraftButton small onClick={downloadLogs}>
-              Baixar logs
-            </MinecraftButton>
-            <br />
-            <br />
-            <p align="center">
+            </div>
+            <p className={styles.centerText}>
               Peça permissão para o Guilherme para jogar no servidor!
             </p>
           </div>

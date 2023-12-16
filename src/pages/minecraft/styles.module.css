@@ -112,3 +112,12 @@
   width: 100%;
   padding-bottom: 10px;
 }
+
+.centerText {
+  text-align: center;
+}
+.buttonContainers {
+  display: flex;
+  flex-direction: column;
+  padding: 3px 0px;
+}
