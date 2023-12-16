@@ -16,7 +16,6 @@
   },
   "main": "lib/index.js",
   "dependencies": {
-    "bedrock-protocol": "^3.33.0",
     "firebase-admin": "^11.8.0",
     "firebase-functions": "^4.3.1"
   },

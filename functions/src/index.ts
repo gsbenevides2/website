@@ -4,7 +4,6 @@ import * as admin from "firebase-admin";
 import {setGlobalOptions} from "firebase-functions/v2/options";
 import {onRequest} from "firebase-functions/v2/https";
 import {FieldValue} from "firebase-admin/firestore";
-import {ping} from "bedrock-protocol";
 admin.initializeApp();
 
 setGlobalOptions({
@@ -58,7 +57,7 @@ interface Status {
  * @param {Status} status - The status to send.
  * @return {Promise<void>}
  */
-async function sendStatusNotificationToUsers(status: Status) {
+async function sendStatusNotificationToUsers(status: Status): Promise<void> {
   const db = admin.firestore();
   const usersRef = db.collection("mc_push_subscriptions");
   const users = await usersRef.get();
@@ -125,15 +124,3 @@ export const saveStatus = onRequest(
     res.status(200).send(statusRef.id);
   }
 );
-
-export const fetchServerStatus = onRequest(async (_req, res) => {
-  try {
-    const data = await ping({
-      host: "google.gui.dev.br",
-      port: 19132,
-    });
-    res.status(200).send(data);
-  } catch (e) {
-    res.status(500).end();
-  }
-});
