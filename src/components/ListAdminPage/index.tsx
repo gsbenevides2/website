@@ -3,9 +3,12 @@ import IconButton from "@/components/IconButon";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import styles from "./styles.module.css";
-import { useAdminAuthentication } from "@/services/firebase/client/auth";
+import {
+  AuthState,
+  useAdminAuthentication,
+} from "@/services/firebase/client/auth";
 import Loader from "@/components/Loader";
 import { IconType } from "react-icons";
 
@@ -38,17 +41,19 @@ interface Props {
 export default function ListAdminPage(props: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-
+  const { state } = useAdminAuthentication();
   const hidePage = useCallback(async () => {
     containerRef.current?.classList.add(styles.hide);
     await new Promise((resolve) => setTimeout(resolve, 500));
   }, [containerRef]);
 
-  useAdminAuthentication(() => {
-    if (props.executeBeforeAuthenticated) {
-      props.executeBeforeAuthenticated();
+  useEffect(() => {
+    if (state === AuthState.Authenticated) {
+      props.executeBeforeAuthenticated?.();
+    } else if (state === AuthState.Unauthenticated) {
+      router.push("/admin");
     }
-  });
+  }, [state, props, router]);
 
   const handleAddClick = useCallback(async () => {
     if (props.addButtonHideOnClicked) await hidePage();
