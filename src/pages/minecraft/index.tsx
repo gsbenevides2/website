@@ -14,6 +14,7 @@ import {
   revokeMessagingToken,
 } from "@/services/firebase/client/cloudMessaging";
 import {
+  AuthState,
   getLoggedUser,
   logIn,
   useAuthentication,
@@ -29,6 +30,7 @@ import {
   getNotificationToken,
   saveNotificationTokenInLocal,
 } from "@/services/localStorage";
+import { User } from "firebase/auth";
 
 const minecraftFont = localFont({
   src: [
@@ -66,8 +68,9 @@ interface ServerData {
 function MinecraftPage() {
   const [status, setServerStatus] = React.useState<Status | null>(null);
   const [loading, setLoading] = React.useState(true);
-  const [notification, setNotification] = React.useState(false);
+  const [notification, setNotification] = React.useState<boolean>();
   const [serverData, setServerData] = React.useState<ServerData>();
+  const { state, user } = useAuthentication();
 
   React.useEffect(() => {
     getLatestStatus()
@@ -103,15 +106,20 @@ function MinecraftPage() {
     saveNotificationTokenInLocal(fcmToken);
   }, []);
 
-  const loadData = React.useCallback(async () => {
-    await new Promise((resolve) => setTimeout(resolve, 5000));
-    const user = await getLoggedUser();
-    if (!user) return setNotification(false);
+  const loadData = React.useCallback(async (user: User) => {
     const token = getNotificationToken();
     if (!token) return setNotification(false);
     const thisUser = await vertifySavedToken(user.uid, token);
     setNotification(thisUser);
   }, []);
+
+  React.useEffect(() => {
+    if (state === AuthState.Authenticated && user) {
+      loadData(user);
+    } else if (state === AuthState.Unauthenticated) {
+      setNotification(false);
+    }
+  }, [state, loadData, user]);
 
   const disableNotification = React.useCallback(async () => {
     const user = await getLoggedUser();
@@ -128,7 +136,6 @@ function MinecraftPage() {
     const csv = Papa.unparse(logs);
     downloadCSV(csv, "logs.csv");
   }, []);
-  useAuthentication(loadData);
 
   const retriveServerData = React.useCallback(async () => {
     const data = await fetch("/api/minecraft");
@@ -172,14 +179,18 @@ function MinecraftPage() {
               )}
             </div>
             <div className={styles.buttonContainers}>
-              {notification ? (
-                <MinecraftButton small onClick={disableNotification}>
-                  Desativar notificações de status
-                </MinecraftButton>
+              {notification !== undefined ? (
+                notification ? (
+                  <MinecraftButton small onClick={disableNotification}>
+                    Desativar notificações de status
+                  </MinecraftButton>
+                ) : (
+                  <MinecraftButton small onClick={activeNotification}>
+                    Receber notificações de status
+                  </MinecraftButton>
+                )
               ) : (
-                <MinecraftButton small onClick={activeNotification}>
-                  Receber notificações de status
-                </MinecraftButton>
+                <></>
               )}
               <MinecraftButton small onClick={downloadLogs}>
                 Baixar logs

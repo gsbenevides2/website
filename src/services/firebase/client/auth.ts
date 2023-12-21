@@ -3,13 +3,19 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   signOut,
+  onAuthStateChanged,
 } from "firebase/auth";
 import Firebase from "./config";
-import { useCallback, useEffect } from "react";
-import { useRouter } from "next/router";
+import React from "react";
+
+const adminEmail = "gsbenevides2@gmail.com";
+export enum AuthState {
+  Loading,
+  Authenticated,
+  Unauthenticated,
+}
 
 export async function adminLogIn() {
-  const adminEmail = "gsbenevides2@gmail.com";
   const result = await logIn(adminEmail);
   if (result.email !== adminEmail) throw new Error("Usuário não autorizado");
   return result;
@@ -32,36 +38,37 @@ export async function logOut() {
   await signOut(auth);
 }
 
-
-
-export async function useAuthentication(
-  callback: (user: User | null) => void
-){
-  useEffect(() => {
+export function useAuthentication() {
+  const [state, setState] = React.useState(AuthState.Loading);
+  const [user, setUser] = React.useState<User | null>(null);
+  React.useEffect(() => {
     const auth = Firebase.getAuth();
     const listenner = auth.onAuthStateChanged((user) => {
-      callback(user);
+      setState(user ? AuthState.Authenticated : AuthState.Unauthenticated);
+      setUser(user);
     });
     return () => {
       listenner();
     };
-  }, [callback]);
+  }, []);
+  return { state, user };
 }
 
-export async function useAdminAuthentication(
-  callback: (user: User | null) => void
-) {
-  const router = useRouter();
-  const authCallback = useCallback((user: User | null) => {
-    if (user !== null && user?.email !== "gsbenevides2@gmail.com") {
-      logOut().then(() => {
-        router.push("/admin");
-      });
-      callback(user);
-    }
-  },[router, callback])
-
-  useAuthentication(authCallback);
+export function useAdminAuthentication() {
+  const [state, setState] = React.useState(AuthState.Loading);
+  const [user, setUser] = React.useState<User | null>(null);
+  React.useEffect(() => {
+    const auth = Firebase.getAuth();
+    const listenner = onAuthStateChanged(auth, (user) => {
+      if (user?.email === adminEmail) setState(AuthState.Authenticated);
+      else setState(AuthState.Unauthenticated);
+      setUser(user);
+    });
+    return () => {
+      listenner();
+    };
+  }, []);
+  return { state, user };
 }
 
 export async function getLoggedUser() {
