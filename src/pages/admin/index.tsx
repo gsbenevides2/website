@@ -8,7 +8,7 @@ import {
   useAdminAuthentication,
   logOut,
 } from "@/services/firebase/client/auth";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 const useRedirect = (
   containerRef: RefObject<HTMLDivElement>,
@@ -44,7 +44,7 @@ export default function Home() {
       await adminLogIn();
     } catch (e: any) {
       if (e?.message === "Usuário não autorizado") {
-        alert("Você não tem permissão para acessar o painel de administração!")
+        alert("Você não tem permissão para acessar o painel de administração!");
       } else {
         console.log(e);
       }
