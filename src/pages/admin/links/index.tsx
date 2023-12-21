@@ -6,18 +6,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TbTrash } from "react-icons/tb";
 import styles from "./styles.module.css";
 import { useAdminAuthentication } from "@/services/firebase/client/auth";
-import {
-  deleteLink,
-  listLinks,
-} from "@/services/firebase/client/links";
+import { deleteLink, listLinks } from "@/services/firebase/client/links";
 import Loader from "@/components/Loader";
 
 interface LinkToList {
   id: string;
   url: string;
-
 }
-
 
 export default function Page() {
   const router = useRouter();
@@ -28,7 +23,7 @@ export default function Page() {
     setLinks(await listLinks());
   }, []);
 
-  useAdminAuthentication(() => { });
+  useAdminAuthentication(() => {});
 
   const handleAddLink = useCallback(async () => {
     containerRef.current?.classList.add(styles.hide);
@@ -61,14 +56,11 @@ export default function Page() {
 
     return links.map((link) => (
       <li key={link.id}>
-
         <div className={styles.textArea}>
-          <h2
-            onClick={() => handleToOpenLink(`/l/${link.id}`)}
-          >/l/{link.id}</h2>
-          <h3
-            onClick={() => handleToOpenLink(link.url)}
-          >{link.url}</h3>
+          <h2 onClick={() => handleToOpenLink(`/l/${link.id}`)}>
+            /l/{link.id}
+          </h2>
+          <h3 onClick={() => handleToOpenLink(link.url)}>{link.url}</h3>
         </div>
         <div className={styles.iconButtonsArea}>
           <IconButton
@@ -79,7 +71,7 @@ export default function Page() {
         </div>
       </li>
     ));
-  }, [links, handleDeleteLink]);
+  }, [links, handleToOpenLink, handleDeleteLink]);
 
   return (
     <div className={styles.container} ref={containerRef}>
