@@ -38,7 +38,7 @@ export async function logOut() {
   await signOut(auth);
 }
 
-export function useAuthentication() {
+export async function useAuthentication() {
   const [state, setState] = React.useState(AuthState.Loading);
   const [user, setUser] = React.useState<User | null>(null);
   React.useEffect(() => {

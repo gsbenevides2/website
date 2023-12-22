@@ -129,8 +129,6 @@ export default function Page() {
   const [content, setContent] = useState("");
   const [assents, setAssents] = useState<Asset[]>([]);
 
-  useAdminAuthentication(() => {});
-
   const formSubmit: FormEventHandler<HTMLFormElement> = useCallback(
     async (e) => {
       e.preventDefault();
@@ -201,7 +199,7 @@ export default function Page() {
     loader.current.classList.add(styles.update);
     loader.current.classList.add(styles.show);
     await new Promise((resolve) => setTimeout(resolve, 500));
-    
+
     try {
       const post = await getPost(postId);
       if (!post) throw new MyError("Post não encontrado");

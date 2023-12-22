@@ -16,9 +16,9 @@ interface ListItem {
   id: string;
   title: string;
   description?: string;
-  image: string;
-  blurImage: string;
-  altImage: string;
+  image?: string;
+  blurImage?: string;
+  altImage?: string;
 }
 
 interface ListButton {
@@ -77,14 +77,17 @@ export default function ListAdminPage(props: Props) {
 
     return props.list.map((item) => (
       <li key={item.id}>
-        <Image
-          src={item.image}
-          width={150}
-          height={100}
-          alt={item.altImage}
-          placeholder="blur"
-          blurDataURL={item.blurImage}
-        />
+        {item.image && (
+          <Image
+            src={item.image}
+            width={150}
+            height={100}
+            alt={item.altImage ?? ""}
+            placeholder="blur"
+            blurDataURL={item.blurImage}
+          />
+        )}
+
         <div className={styles.textArea}>
           <h2>{item.title}</h2>
           {item.description && <p>{item.description}</p>}

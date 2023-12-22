@@ -1,17 +1,10 @@
-import Input from "@/components/Input";
-import Textarea from "@/components/TextArea";
+import InputCustom from "@/components/Input";
+import TextareaCustom from "@/components/TextArea";
 import Head from "next/head";
-import {
-  FormEventHandler,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./styles.module.css";
 import { Button } from "@/components/Button";
 import { useRouter } from "next/router";
-import { useAdminAuthentication } from "@/services/firebase/client/auth";
 import { ImageInput } from "@/components/ImageInput";
 import {
   addOrUpdateProject,
@@ -22,106 +15,84 @@ import MyError from "@/utils/MyError";
 import { fileToBase64, generateBlur } from "@/utils/imageManager";
 import { revalidateNextPages } from "@/services/api/revalidateNextPages";
 import Loader from "@/components/Loader";
+import {
+  Form,
+  Input,
+  StatelessInput,
+  Textarea,
+  useFormContext,
+} from "@/components/Form";
+import { FormSubmitEvent } from "@/components/Form/types";
+import {
+  AuthState,
+  useAdminAuthentication,
+} from "@/services/firebase/client/auth";
+import classNames from "classnames";
+
+interface FormValues {
+  name: string;
+  github?: URL;
+  youtube?: URL;
+  descriptionDesktop: string;
+  descriptionMobile: string;
+  image: File[];
+  keywords: string;
+}
 
 export default function Page() {
   const router = useRouter();
   const projectId =
     router.query.id === "new" ? undefined : (router.query.id as string);
+  const [isLoading, setIsLoading] = useState(true);
   const hidder = useRef<HTMLDivElement>(null);
   const loader = useRef<HTMLDivElement>(null);
+  const { state: authState } = useAdminAuthentication();
 
-  const [name, setName] = useState("");
-  const [github, setGithub] = useState("");
-  const [youtube, setYoutube] = useState("");
-  const [descriptionDesktop, setDescriptionDesktop] = useState("");
-  const [descriptionMobile, setDescriptionMobile] = useState("");
-  const [image, setImage] = useState<File[]>([]);
-  const [keywords, setKeywords] = useState("");
+  const formContext = useFormContext();
 
-  useAdminAuthentication(() => {});
-
-  const formSubmit: FormEventHandler<HTMLFormElement> = useCallback(
+  const formSubmit: FormSubmitEvent<FormValues> = useCallback(
     async (e) => {
-      e.preventDefault();
-      if (!hidder.current) return;
-      if (!loader.current) return;
-      if (!image[0]) {
+      if (!e.image[0]) {
         alert("Selecione uma Imagem");
         return;
       }
 
-      hidder.current.classList.add(styles.hide);
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      window.scrollTo(0, 0);
-      document.body.style.overflow = "hidden";
-      loader.current.classList.add(styles.update);
-      loader.current.classList.add(styles.show);
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
+      setIsLoading(true);
       const responseProjectId = await addOrUpdateProject({
         id: projectId,
-        name: name,
-        github: github,
-        youtube: youtube,
-        descriptionDesktop: descriptionDesktop,
-        descriptionMobile: descriptionMobile,
-        image: image[0],
-        keywords: keywords.split(",").map((e) => e.trim()),
-        imageBlur: await generateBlur(await fileToBase64(image[0])),
+        name: e.name,
+        github: e.github?.toString() ?? "",
+        youtube: e.youtube?.toString() ?? "",
+        descriptionDesktop: e.descriptionDesktop,
+        descriptionMobile: e.descriptionMobile,
+        image: e.image[0],
+        keywords: e.keywords.split(",").map((e) => e.trim()),
+        imageBlur: await generateBlur(await fileToBase64(e.image[0])),
       });
       await revalidateNextPages("projects", responseProjectId);
 
-      hidder.current.classList.remove(styles.hide);
-      loader.current.classList.remove(styles.update);
-      loader.current.classList.remove(styles.show);
-      document.body.style.overflow = "auto";
-
       router.push("/admin/projects");
     },
-    [
-      projectId,
-      descriptionDesktop,
-      descriptionMobile,
-      github,
-      youtube,
-      keywords,
-      name,
-      image,
-      router,
-      hidder,
-      loader,
-    ]
+    [projectId, router]
   );
 
   const loadDocData = useCallback(async () => {
-    if (!projectId) return;
-    if (!loader.current) return;
-    if (!hidder.current) return;
-    hidder.current.classList.add(styles.hide);
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    window.scrollTo(0, 0);
-    document.body.style.overflow = "hidden";
-    loader.current.classList.add(styles.update);
-    loader.current.classList.add(styles.show);
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    if (!projectId) return setIsLoading(false);
 
     try {
       const project = await getProject(projectId);
-      setName(project.name);
-      if (project.github) setGithub(project.github);
-      if (project.youtube) setYoutube(project.youtube);
-      setDescriptionDesktop(project.descriptionDesktop);
-      setDescriptionMobile(project.descriptionMobile);
-      setKeywords(project.keywords.join(","));
       const imageFile = await getProjectImageFile(projectId);
-      setImage([imageFile]);
-
-      hidder.current.classList.remove(styles.hide);
-      loader.current.classList.remove(styles.update);
-      loader.current.classList.remove(styles.show);
-      document.body.style.overflow = "auto";
+      formContext.changeMultipleInputValues({
+        name: project.name,
+        github: project.github,
+        youtube: project.youtube,
+        descriptionDesktop: project.descriptionDesktop,
+        descriptionMobile: project.descriptionMobile,
+        keywords: project.keywords.join(","),
+        image: [imageFile],
+      });
+      setIsLoading(false);
     } catch (e) {
-      document.body.style.overflow = "auto";
       if (e instanceof MyError) {
         alert(e.message);
       } else {
@@ -132,80 +103,137 @@ export default function Page() {
       }
       router.push("/admin/projects");
     }
-  }, [projectId, router, hidder, loader]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectId, router]);
 
   useEffect(() => {
-    loadDocData();
-  }, [loadDocData]);
+    if (authState === AuthState.Authenticated) {
+      loadDocData();
+    } else if (authState === AuthState.Unauthenticated) {
+      router.push("/admin");
+    }
+  }, [authState, loadDocData, router]);
+
+  useEffect(() => {
+    console.log(isLoading);
+    async function showLoading() {
+      if (!loader.current) return;
+      if (!hidder.current) return;
+      hidder.current.classList.add(styles.hide);
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "smooth",
+      });
+      document.body.style.overflow = "hidden";
+      loader.current.classList.add(styles.update);
+      loader.current.classList.add(styles.show);
+    }
+    async function hideLoading() {
+      if (!loader.current) return;
+      if (!hidder.current) return;
+      hidder.current.classList.remove(styles.hide);
+      loader.current.classList.remove(styles.update);
+      loader.current.classList.remove(styles.show);
+      document.body.style.overflow = "auto";
+    }
+    if (isLoading) showLoading();
+    else hideLoading();
+  }, [isLoading]);
 
   return (
     <>
-      <div className={styles.hidder} ref={hidder}>
+      <div className={classNames(styles.hidder, styles.hide)} ref={hidder}>
         <div className={styles.container}>
           <Head>
             <title>{projectId ? "Editar" : "Adicionar"} Projeto</title>
           </Head>
           <h1>{projectId ? "Editar" : "Adicionar"} Projeto</h1>
-          <form className={styles.form} onSubmit={formSubmit}>
+          <Form
+            className={styles.form}
+            submit={formSubmit}
+            contextLoader={formContext.contextLoader}
+          >
             <Input
-              label="Nome do Projeto:"
-              placeholder="Digite o Nome do Projeto"
-              required
-              state={name}
-              setState={setName}
               id="name"
+              name="name"
+              placeholder="Digite o nome do projeto"
+              required
+              customComponent={({ ref, ...props }) => (
+                <InputCustom {...props} label="Nome do Projeto:" />
+              )}
             />
             <Input
-              label="Link para Github:"
-              placeholder="Digite o link para o Github do projeto"
-              state={github}
-              setState={setGithub}
               id="github"
+              name="github"
+              type="url"
+              placeholder="Digite o link do github"
+              customComponent={({ ref, ...props }) => (
+                <InputCustom {...props} label="Link do Github:" />
+              )}
             />
             <Input
-              label="Link do vídeo no Youtube:"
-              placeholder="Digite o link para o vídeo no Youtube"
-              state={youtube}
-              setState={setYoutube}
               id="youtube"
+              name="youtube"
+              type="url"
+              placeholder="Digite o link do youtube"
+              customComponent={({ ref, ...props }) => (
+                <InputCustom {...props} label="Link do Youtube:" />
+              )}
             />
             <Textarea
-              label="Descrição Desktop: (Markdown)"
-              placeholder="Descrição Desktop (Markdown)"
-              required
-              className={styles.textarea}
-              state={descriptionDesktop}
-              setState={setDescriptionDesktop}
               id="descriptionDesktop"
+              name="descriptionDesktop"
+              placeholder="Digite a descrição do projeto para desktop"
+              required
+              customComponent={({ ref, ...props }) => (
+                <TextareaCustom
+                  {...props}
+                  className={styles.textarea}
+                  label="Descrição para Desktop:"
+                />
+              )}
             />
             <Textarea
-              label="Descrição Mobile: (Markdown)"
-              placeholder="Descrição Mobile (Markdown)"
-              required
-              className={styles.textarea}
-              state={descriptionMobile}
-              setState={setDescriptionMobile}
               id="descriptionMobile"
+              name="descriptionMobile"
+              placeholder="Digite a descrição do projeto para mobile"
+              required
+              customComponent={({ ref, ...props }) => (
+                <TextareaCustom
+                  {...props}
+                  className={styles.textarea}
+                  label="Descrição para Mobile:"
+                />
+              )}
             />
-            <ImageInput
-              label="Selecione uma Image do Projeto"
-              state={image}
-              setState={setImage}
+            <StatelessInput
+              name="image"
+              customComponent={(props) => (
+                <ImageInput {...props} label="Imagem do Projeto:" />
+              )}
             />
             <Textarea
-              label="Palavras Chave:"
-              className={styles.textarea}
-              placeholder="Digite as palavras chave separadas por vírgula"
-              required
-              state={keywords}
-              setState={setKeywords}
               id="keywords"
+              name="keywords"
+              placeholder="Digite as palavras chaves separadas por virgula"
+              required
+              customComponent={({ ref, ...props }) => (
+                <TextareaCustom
+                  {...props}
+                  className={styles.textarea}
+                  label="Palavras Chaves:"
+                />
+              )}
             />
             <Button type="submit">Salvar Projeto</Button>
-          </form>
+          </Form>
         </div>
       </div>
-      <div className={styles.loader} ref={loader}>
+      <div
+        className={classNames(styles.loader, styles.update, styles.show)}
+        ref={loader}
+      >
         <Loader />
         <span>Estamos fazendo algumas operações aguarde</span>
       </div>

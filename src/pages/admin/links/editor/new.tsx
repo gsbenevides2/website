@@ -1,89 +1,116 @@
-import Input from "@/components/Input";
+import InputCustom from "@/components/Input";
 import Head from "next/head";
-import {
-  FormEventHandler,
-  useCallback,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./styles.module.css";
 import { Button } from "@/components/Button";
 import { useRouter } from "next/router";
-import {
-  addOrUpdateLink,
-} from "@/services/firebase/client/links";
-import { useAdminAuthentication } from "@/services/firebase/client/auth";
+import { addOrUpdateLink } from "@/services/firebase/client/links";
 import Loader from "@/components/Loader";
+import { Form, Input } from "@/components/Form";
+import { FormSubmitEvent } from "@/components/Form/types";
+import {
+  AuthState,
+  useAdminAuthentication,
+} from "@/services/firebase/client/auth";
+import classNames from "classnames";
+
+interface FormValues {
+  id: string;
+  url: URL;
+}
 
 export default function Page() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
   const hidder = useRef<HTMLDivElement>(null);
   const loader = useRef<HTMLDivElement>(null);
+  const { state: authState } = useAdminAuthentication();
 
-  const [id, setId] = useState("");
-  const [url, setUrl] = useState("");
-
-  useAdminAuthentication(() => { });
-
-  const formSubmit: FormEventHandler<HTMLFormElement> = useCallback(
+  const formSubmit: FormSubmitEvent<FormValues> = useCallback(
     async (e) => {
-      e.preventDefault();
-      if (!hidder.current) return;
-      if (!loader.current) return;
+      setIsLoading(true);
+      const values = e;
 
-      hidder.current.classList.add(styles.hide);
       await new Promise((resolve) => setTimeout(resolve, 500));
       window.scrollTo(0, 0);
-      document.body.style.overflow = "hidden";
-      loader.current.classList.add(styles.update);
-      loader.current.classList.add(styles.show);
       await new Promise((resolve) => setTimeout(resolve, 500));
 
       await addOrUpdateLink({
-        id,
-        url,
+        id: values.id,
+        url: values.url.toString(),
       });
 
+      setIsLoading(false);
+      router.push("/admin/links");
+    },
+    [router]
+  );
+
+  useEffect(() => {
+    if (authState === AuthState.Unauthenticated) {
+      setIsLoading(false);
+      router.push("/admin");
+    } else if (authState === AuthState.Authenticated) {
+      setIsLoading(false);
+    }
+  }, [authState, router]);
+
+  useEffect(() => {
+    if (!hidder.current) return;
+    if (!loader.current) return;
+    if (isLoading) {
+      hidder.current.classList.add(styles.hide);
+      loader.current.classList.add(styles.update);
+      loader.current.classList.add(styles.show);
+      document.body.style.overflow = "hidden";
+    } else {
       hidder.current.classList.remove(styles.hide);
       loader.current.classList.remove(styles.update);
       loader.current.classList.remove(styles.show);
       document.body.style.overflow = "auto";
-
-      router.push("/admin/links");
-    },
-    [id, url, router]
-  );;
+    }
+  }, [isLoading, hidder, loader]);
 
   return (
     <>
-      <div className={styles.hidder} ref={hidder}>
+      <div className={classNames(styles.hidder, styles.hide)} ref={hidder}>
         <div className={styles.container}>
           <Head>
             <title>Adicionar Link</title>
           </Head>
           <h1>Adicionar Link</h1>
-          <form className={styles.form} onSubmit={formSubmit}>
+          <Form className={styles.form} submit={formSubmit}>
             <Input
-              label="Id do link:"
+              id="id"
+              name="id"
+              type="text"
               placeholder="Digite o id/encurtamento do link"
               required
-              state={id}
-              setState={setId}
-              id="id"
+              customComponent={({ ref, ...props }) => (
+                <InputCustom
+                  {...props}
+                  label="Digite o id/encurtamento do link"
+                />
+              )}
             />
             <Input
-              label="Url:"
-              placeholder="Digite a URL do Link de destino:"
+              id="url"
+              name="url"
+              type="url"
+              placeholder="Digite a url do link"
               required
-              state={url}
-              setState={setUrl}
-              id="institution"
+              customComponent={({ ref, ...props }) => (
+                <InputCustom {...props} label="Digite a url do link" />
+              )}
             />
             <Button type="submit">Salvar Link</Button>
-          </form>
+          </Form>
         </div>
       </div>
-      <div className={styles.loader} ref={loader}>
+      <div
+        className={classNames(styles.loader, styles.show, styles.update)}
+        ref={loader}
+      >
         <Loader />
         <span>Estamos fazendo algumas operações aguarde</span>
       </div>
