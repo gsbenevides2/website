@@ -52,7 +52,8 @@ export default function Home() {
       if (e?.message === "Usuário não autorizado") {
         alert("Você não tem permissão para acessar o painel de administração!");
       } else {
-        console.log(e);
+        alert("Ocorreu um erro ao tentar fazer login! Veja o console.")
+        console.error(e);
       }
     }
   }, []);

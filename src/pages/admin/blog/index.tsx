@@ -43,8 +43,8 @@ export default function Page() {
           })
         );
       } catch (err) {
-        alert("Erro ao atualizar visibilidade do post");
-        console.log(err);
+        alert("Erro ao atualizar visibilidade do post. Veja o console.");
+        console.error(err);
       }
     },
     [posts]

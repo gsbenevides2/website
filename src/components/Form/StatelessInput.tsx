@@ -8,14 +8,16 @@ interface CustomInputProps<T> {
 interface StatelessInputProps<T> {
   name: string;
   customComponent: (props: CustomInputProps<T>) => JSX.Element;
+  initialState?: any;
 }
 
 export default function StatelessInput<T>(props: StatelessInputProps<T>) {
   const context = React.useContext(FormContext);
-  const [stateA, setStateA] = React.useState<any>(null);
-  const state = React.useRef<any>(null);
+  const [stateA, setStateA] = React.useState<any>(props.initialState);
+  const state = React.useRef<any>(props.initialState);
 
   const setState = (value: any) => {
+    if (value instanceof Function) value = value(state.current);
     state.current = value;
     setStateA(value);
   };

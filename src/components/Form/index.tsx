@@ -69,13 +69,13 @@ export function Form<T>(props: FormProps<T>) {
         ...fetchInputsFromForm<T>(event.currentTarget, notStateInputsNames),
       };
 
-      console.log("stateInputs", stateInputs);
+      
 
       stateInputs.forEach((input) => {
+      
         const key = input.name as keyof T;
         const value = input.retriveStateValue?.() as T[keyof T];
-        console.log("key", key);
-        console.log("value", value);
+  
         values[key] = value;
       });
 
@@ -103,10 +103,10 @@ export const useFormContext = () => {
   const changeInputValue = useCallback((name: string, value: string) => {
     const context = contextRef.current;
     if (!context) return;
-    console.log("context", context);
+
     if (!context.formNode?.current) return;
     const findedInput = context.inputs.find((input) => input.name === name);
-    console.log("findedInput", findedInput);
+   
     if (!findedInput) return;
 
     if (findedInput.changeStateValue) {
@@ -121,7 +121,7 @@ export const useFormContext = () => {
 
   const changeMultipleInputValues = useCallback(
     (values: any) => {
-      console.log("values", values);
+    
       const keys = Object.keys(values);
       keys.forEach((key) => {
         changeInputValue(key, values[key]);
@@ -131,7 +131,7 @@ export const useFormContext = () => {
   );
 
   const contextLoader = useCallback((contextReceived: FormContextData) => {
-    console.log("contextReceived", contextReceived);
+
     contextRef.current = contextReceived;
   }, []);
   return { changeInputValue, changeMultipleInputValues, contextLoader };

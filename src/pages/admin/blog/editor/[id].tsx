@@ -1,24 +1,21 @@
-import Input from "@/components/Input";
-import Textarea from "@/components/TextArea";
+import InputCustom from "@/components/Input";
+import TextareaCustom from "@/components/TextArea";
 import Head from "next/head";
-import {
-  FormEventHandler,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./styles.module.css";
 import { Button } from "@/components/Button";
 import { useRouter } from "next/router";
-import { useAdminAuthentication } from "@/services/firebase/client/auth";
-import { parseYYYYMMDDtoDateObjc } from "@/utils/parseDateStringtoDateObj";
 import MyError from "@/utils/MyError";
-import TextArea from "@/components/TextArea";
 import { ImageInput } from "@/components/ImageInput";
 import AssetsInput from "@/components/AssetsInput";
 import Loader from "@/components/Loader";
-
+import {
+  Form,
+  Input,
+  StatelessInput,
+  Textarea,
+  useFormContext,
+} from "@/components/Form";
 import {
   base64ToFile,
   convertImageToWebP,
@@ -29,6 +26,13 @@ import {
   resizeImage,
 } from "@/utils/imageManager";
 import { createOrUpdatePost, getPost } from "@/services/firebase/client/posts";
+import { FormSubmitEvent } from "@/components/Form/types";
+import {
+  AuthState,
+  useAdminAuthentication,
+} from "@/services/firebase/client/auth";
+import { wait } from "@/utils/wait";
+import classNames from "classnames";
 
 interface Asset {
   altText: string;
@@ -38,10 +42,8 @@ interface Asset {
 async function verifyThumbnails(original: File): Promise<boolean> {
   const base64 = await fileToBase64(original);
   const fileType = getMimeType(base64);
-  console.log(fileType);
   if (fileType !== "image/png") return false;
   const sizes = await getSizeOfImage(base64);
-  console.log(sizes);
   if (sizes.width !== 1000) return false;
   if (sizes.height !== 667) return false;
   return true;
@@ -114,6 +116,16 @@ async function downloadFile(
   return file;
 }
 
+interface FormValues {
+  altThumbnail: string;
+  assets: Asset[];
+  content: string;
+  date: Date;
+  description: string;
+  image: File[];
+  name: string;
+}
+
 export default function Page() {
   const router = useRouter();
   const postId =
@@ -121,19 +133,21 @@ export default function Page() {
   const hidder = useRef<HTMLDivElement>(null);
   const loader = useRef<HTMLDivElement>(null);
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
-  const [thumbnail, setThumbnail] = useState<File[]>([]);
-  const [thumbnailAltText, setThumbnailAltText] = useState("");
-  const [content, setContent] = useState("");
-  const [assents, setAssents] = useState<Asset[]>([]);
-
-  const formSubmit: FormEventHandler<HTMLFormElement> = useCallback(
+  const [isLoading, setIsLoading] = useState(true);
+  const { state: authState } = useAdminAuthentication();
+  const formContext = useFormContext();
+  const formSubmit: FormSubmitEvent<FormValues> = useCallback(
     async (e) => {
-      e.preventDefault();
-      if (!hidder.current) return;
-      if (!loader.current) return;
+      setIsLoading(true);
+      const {
+        altThumbnail,
+        assets,
+        content,
+        date,
+        description,
+        image: thumbnail,
+        name,
+      } = e;
       if (!thumbnail[0]) {
         alert("Selecione uma imagem para thumbnail");
         return;
@@ -143,78 +157,41 @@ export default function Page() {
         return;
       }
 
-      hidder.current.classList.add(styles.hide);
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      window.scrollTo(0, 0);
-      document.body.style.overflow = "hidden";
-      loader.current.classList.add(styles.update);
-      loader.current.classList.add(styles.show);
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
       const generatedThumbnails = await generateBlogThumbnails(thumbnail[0]);
-      console.log(generatedThumbnails);
-      const generatedAssets = await generateAssets(assents);
-      console.log(generatedAssets);
+
+      const generatedAssets = await generateAssets(assets);
 
       await createOrUpdatePost({
         id: postId,
         name,
         description,
-        date: parseYYYYMMDDtoDateObjc(date),
+        date,
         content,
         thumbnail: {
           ...generatedThumbnails,
-          alt: thumbnailAltText,
+          alt: altThumbnail,
         },
         assets: generatedAssets,
       });
+      setIsLoading(false);
 
-      hidder.current.classList.remove(styles.hide);
-      loader.current.classList.remove(styles.update);
-      loader.current.classList.remove(styles.show);
-      document.body.style.overflow = "auto";
       router.push("/admin/blog");
     },
-    [
-      thumbnail,
-      assents,
-      postId,
-      name,
-      description,
-      date,
-      content,
-      thumbnailAltText,
-      router,
-    ]
+    [postId, router]
   );
 
   const loadDocData = useCallback(async () => {
-    if (!postId) return;
-    if (!loader.current) return;
-    if (!hidder.current) return;
-    hidder.current.classList.add(styles.hide);
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    window.scrollTo(0, 0);
-    document.body.style.overflow = "hidden";
-    loader.current.classList.add(styles.update);
-    loader.current.classList.add(styles.show);
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    if (!postId) return setIsLoading(false);
 
     try {
       const post = await getPost(postId);
       if (!post) throw new MyError("Post não encontrado");
-      setName(post.name);
-      setDescription(post.description);
-      console.log(post.date);
-      setDate(post.date);
-      setContent(post.content);
+
       const thumbnail = await downloadFile(
         post.thumbnail.originalPng,
         "thumbnail.png",
         "image/png"
       );
-      setThumbnail([thumbnail]);
-      setThumbnailAltText(post.thumbnail.alt);
       const assets: Asset[] = [];
       for (const asset of post.assets) {
         const file = await downloadFile(asset.url, asset.name, asset.type);
@@ -223,11 +200,15 @@ export default function Page() {
           file,
         });
       }
-      setAssents(assets);
-      hidder.current.classList.remove(styles.hide);
-      loader.current.classList.remove(styles.update);
-      loader.current.classList.remove(styles.show);
-      document.body.style.overflow = "auto";
+      formContext.changeMultipleInputValues({
+        name: post.name,
+        description: post.description,
+        date: post.date,
+        content: post.content,
+        altThumbnail: post.thumbnail.alt,
+        assets: assets,
+        image: [thumbnail],
+      });
     } catch (e) {
       if (e instanceof MyError) {
         alert(e.message);
@@ -237,79 +218,129 @@ export default function Page() {
         );
         console.error(e);
       }
-      document.body.style.overflow = "auto";
+      await wait(1000);
       router.push("/admin/blog");
+    } finally {
+      setIsLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postId, router]);
 
   useEffect(() => {
-    loadDocData();
-  }, [loadDocData]);
+    function showLoading() {
+      if (!loader.current || !hidder.current) return;
+      hidder.current.classList.add(styles.hide);
+      window.scrollTo(0, 0);
+      document.body.style.overflow = "hidden";
+      loader.current.classList.add(styles.update);
+      loader.current.classList.add(styles.show);
+    }
+    function hideLoading() {
+      if (!loader.current || !hidder.current) return;
+      hidder.current.classList.remove(styles.hide);
+      loader.current.classList.remove(styles.update);
+      loader.current.classList.remove(styles.show);
+      document.body.style.overflow = "auto";
+    }
+    if (isLoading) showLoading();
+    else hideLoading();
+  }, [loader, hidder, isLoading]);
+
+  useEffect(() => {
+    if (authState === AuthState.Authenticated) {
+      loadDocData();
+    } else if (authState === AuthState.Unauthenticated) {
+      router.push("/admin");
+    }
+  }, [authState, loadDocData, router]);
 
   return (
     <>
-      <div className={styles.hidder} ref={hidder}>
+      <div className={classNames(styles.hidder, styles.hide)} ref={hidder}>
         <div className={styles.container}>
           <Head>
             <title>{postId ? "Editar" : "Adicionar"} Post</title>
           </Head>
           <h1>{postId ? "Editar" : "Adicionar"} Post</h1>
-          <form className={styles.form} onSubmit={formSubmit}>
+          <Form
+            className={styles.form}
+            submit={formSubmit}
+            contextLoader={formContext.contextLoader}
+          >
             <Input
-              label="Nome do Post:"
               placeholder="Digite o Nome do Post"
               required
-              state={name}
-              setState={setName}
               id="name"
-            />
-            <TextArea
-              label="Descrição:"
-              placeholder="Digite uma descrição para o Post:"
-              required
-              state={description}
-              setState={setDescription}
-              className={styles.textarea}
-              id="description"
-            />
-            <Input
-              label="Data do Post:"
-              type="date"
-              required
-              state={date}
-              setState={setDate}
-              id="date"
-            />
-            <ImageInput
-              label="Selecione a thumbnail do post"
-              required
-              setState={setThumbnail}
-              state={thumbnail}
-            />
-            <TextArea
-              label="Texto Alternativo da Thumbnail:"
-              placeholder="Digite o texto alternativo da thumbnail"
-              state={thumbnailAltText}
-              setState={setThumbnailAltText}
-              className={styles.textarea}
-              id="altThumbnail"
-              required
+              name="name"
+              customComponent={({ ref, ...props }) => (
+                <InputCustom {...props} label="Nome do Post:" />
+              )}
             />
             <Textarea
-              label="Conteudo: (Markdown)"
+              placeholder="Digite uma descrição para o Post:"
+              required
+              id="description"
+              name="description"
+              customComponent={({ ref, ...props }) => (
+                <TextareaCustom {...props} label="Descrição:" />
+              )}
+            />
+            <Input
+              type="date"
+              required
+              name="date"
+              id="date"
+              customComponent={({ ref, ...props }) => (
+                <InputCustom {...props} label="Data do Post:" />
+              )}
+            />
+            <StatelessInput
+              name="image"
+              customComponent={(props) => (
+                <ImageInput
+                  {...props}
+                  label="Selecione a thumbnail do post"
+                  required
+                />
+              )}
+            />
+
+            <Textarea
+              placeholder="Digite o texto alternativo da thumbnail"
+              className={styles.textarea}
+              id="altThumbnail"
+              name="altThumbnail"
+              required
+              customComponent={({ ref, ...props }) => (
+                <TextareaCustom
+                  {...props}
+                  label="Texto Alternativo da Thumbnail:"
+                />
+              )}
+            />
+            <Textarea
               placeholder="Digite o conteudo do post em Markdown"
               required
               className={styles.textAreaContent}
-              state={content}
-              setState={setContent}
               id="content"
+              name="content"
+              customComponent={({ ref, ...props }) => (
+                <TextareaCustom {...props} label="Conteudo: (Markdown)" />
+              )}
             />
-            <AssetsInput setState={setAssents} state={assents} />
+            <StatelessInput
+              name="assets"
+              initialState={[]}
+              customComponent={AssetsInput}
+            />
             <Button type="submit">Salvar Post</Button>
-          </form>
+          </Form>
         </div>
       </div>
-      <div className={styles.loader} ref={loader}>
+      <div
+        className={classNames(styles.loader, styles.update, styles.show)}
+        ref={loader}
+      >
         <Loader />
         <span>Estamos fazendo algumas operações aguarde</span>
       </div>

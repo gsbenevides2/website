@@ -115,7 +115,7 @@ export default function Page() {
   }, [authState, loadDocData, router]);
 
   useEffect(() => {
-    console.log(isLoading);
+   
     async function showLoading() {
       if (!loader.current) return;
       if (!hidder.current) return;

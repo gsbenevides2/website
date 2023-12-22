@@ -30,7 +30,7 @@ export function fetchInputsFromForm<T>(
 ): T {
   const values: T = {} as T;
   for (const input of inputs) {
-    console.log(form.elements);
+  
     const element = form.elements.namedItem(input);
     if (element instanceof HTMLInputElement) {
       const key = element.name as keyof T;
