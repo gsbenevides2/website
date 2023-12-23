@@ -4,8 +4,6 @@ import Firebase from "./config";
 export async function getMessagingToken() {
   const messaging = Firebase.getMessaging();
   const permission = await Notification.requestPermission();
-  console.log(permission);
-  console.log("Opa 2");
   if (permission !== "granted")
     return alert("Permissão de notificação negada ou bloqueada");
   const token = await getToken(messaging, {

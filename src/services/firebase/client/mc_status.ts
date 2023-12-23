@@ -36,7 +36,6 @@ export async function getLatestStatus(): Promise<Status | null> {
   const documents = await getDocs(q);
   if (documents.empty) return null;
   const document = documents.docs[0];
-  console.log(document.data());
   return {
     id: document.id,
     ...document.data(),

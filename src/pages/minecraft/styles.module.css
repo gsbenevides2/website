@@ -2,7 +2,7 @@
   width: 100vw;
   height: 100vh;
   image-rendering: auto;
-  background: #303030 url("/panorama.png") repeat-x 0 0;
+  background: #303030 url("/panorama.webp") repeat-x 0 0;
   background-position: center;
   animation: MinecraftBackground 800s linear infinite;
   padding: 12px;

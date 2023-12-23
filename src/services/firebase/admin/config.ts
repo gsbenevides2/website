@@ -13,7 +13,7 @@ export default class Firebase {
 
   static getApp() {
     if (Firebase.app) return Firebase.app;
-    console.log(process.env);
+   
     const app =
       getApps().length > 0
         ? getApps()[0]
@@ -21,7 +21,7 @@ export default class Firebase {
             projectId: "gui-dev-br",
             credential: cert(firebaseConfig),
           });
-          console.log(app.options)
+
     Firebase.app = app;
     return app;
   }

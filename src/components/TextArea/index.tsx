@@ -49,27 +49,36 @@ export default function TextArea<T>(props: TextAreaProps<T>) {
     [setState, propOnChange]
   );
 
-  const onInput:FormEventHandler<HTMLTextAreaElement> = useCallback((e)=>{
+  const onInput: FormEventHandler<HTMLTextAreaElement> = useCallback(
+    (e) => {
       if (propOnInput) propOnInput(e);
       e.currentTarget.style.height = "auto";
-      e.currentTarget.style.height = e.currentTarget.scrollHeight +8 + "px";
-  },[propOnInput])
+      e.currentTarget.style.height = e.currentTarget.scrollHeight + 8 + "px";
+    },
+    [propOnInput]
+  );
 
   useEffect(() => {
     if (propRef) propRef(ref.current);
   }, [propRef]);
 
   useEffect(() => {
-    if (ref.current) {
-      ref.current.value = String(state)
-      ref.current.style.height = ref.current.scrollHeight +8 + "px";
-    };
+    if (ref.current && state) {
+      ref.current.value = String(state);
+      ref.current.style.height = ref.current.scrollHeight + 8 + "px";
+    }
   }, [state, ref]);
 
   return (
     <div className={nunito.variable}>
       <label htmlFor={props.id}>{label}</label>
-      <textarea {...rest} className={className} onChange={onChange} onInput={onInput} ref={ref}  />
+      <textarea
+        {...rest}
+        className={className}
+        onChange={onChange}
+        onInput={onInput}
+        ref={ref}
+      />
     </div>
   );
 }

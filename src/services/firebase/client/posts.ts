@@ -135,7 +135,6 @@ export async function getPost(id: string) {
     }
     return transformPostInDbToPost(docData);
   } catch (e) {
-    console.log(e);
     return null;
   }
 }
@@ -148,7 +147,6 @@ export async function updatePostVisible(id: string, newVisible: boolean) {
     await updateDoc(postDocumento, { visible: newVisible });
     return true;
   } catch (e) {
-    console.log(e);
     return false;
   }
 }

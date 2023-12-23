@@ -69,7 +69,6 @@ export async function getPost(id: string) {
       }
       return transformPostInDbToPost(docData);
     } catch (e) {
-      console.log(e);
       return null;
     }
   }

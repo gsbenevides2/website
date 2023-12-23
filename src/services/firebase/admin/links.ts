@@ -33,7 +33,7 @@ export async function getLink(id: string) {
         url: docData.url,
       }
     } catch (e) {
-      console.log(e);
+
       return null;
     }
   }

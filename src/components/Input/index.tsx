@@ -51,7 +51,7 @@ export default function Input<T>(props: InputProps<T>) {
   }, [propRef]);
 
   useEffect(() => {
-    if (ref.current) ref.current.value = String(state);
+    if (ref.current && state) ref.current.value = String(state);
   }, [state, ref]);
 
   return (
