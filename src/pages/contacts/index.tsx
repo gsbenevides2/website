@@ -7,25 +7,18 @@ import {
   TbMusic,
 } from "react-icons/tb";
 import { MdPix } from "react-icons/md";
-import {SiMojangstudios} from 'react-icons/si'
-import styles from "./styles.module.css";
+import { SiMojangstudios } from "react-icons/si";
+import styles from "./styles.module.scss";
 import { DefaultSeo } from "@/components/DefaultSeo";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
-import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function Contacts() {
-  const router = useRouter();
-  
   const copyPix = () => {
     navigator.clipboard.writeText("pix@gui.dev.br").then(() => {
       alert("PIX copiado para a área de transferência");
     });
   };
-
-  const goToMinecraft = () => {
-    router.push("/minecraft");
-  }
-
 
   return (
     <div className={styles.container}>
@@ -92,10 +85,10 @@ export default function Contacts() {
               </a>
             </li>
             <li>
-              <a onClick={copyPix}>
+              <Link href="/pix">
                 <MdPix />
-                Enviar um PIX: pix@gui.dev.br
-              </a>
+                Enviar um PIX
+              </Link>
             </li>
             <li>
               <a
@@ -107,12 +100,10 @@ export default function Contacts() {
               </a>
             </li>
             <li>
-              <a
-                onClick={goToMinecraft}
-              >
+              <Link href="/minecraft">
                 <SiMojangstudios />
                 Gosta de Minecraft? Jogue comigo!
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
