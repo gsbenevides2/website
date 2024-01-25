@@ -1,0 +1,19 @@
+{
+  "name": "firebase_website",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:gsbenevides2/website.git",
+  "author": "Guilherme da Silva Benevides <gsbenevides2@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "setup": "firebase login",
+    "startEmulators": "firebase emulators:start",
+    "deploy": "firebase deploy",
+    "deployFunctions": "firebase deploy --only functions",
+    "deployFirestore": "firebase deploy --only firestore",
+    "deployStorage": "firebase deploy --only storage"
+  },
+  "dependencies": {
+    "firebase-tools": "^13.1.0"
+  }
+}
