@@ -3,7 +3,7 @@ import {onDocumentDeleted} from "firebase-functions/v2/firestore";
 import * as admin from "firebase-admin";
 import {setGlobalOptions} from "firebase-functions/v2/options";
 import {deleteStorageFolder} from "./utils";
-import {onRequest} from "firebase-functions/v1/https";
+import {onRequest} from "firebase-functions/v2/https";
 import {linksMiddleware} from "./links";
 admin.initializeApp();
 
