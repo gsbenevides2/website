@@ -79,7 +79,7 @@ export default function Page() {
       addButtonText="Novo Certificado"
       emptyListText="Nenhum certificado cadastrado"
       addButtonHideOnClicked
-      title="Gerenciador de Certificações do Blog"
+      title="Gerenciador de Certificações"
       executeBeforeAuthenticated={loadCerts}
     />
   );

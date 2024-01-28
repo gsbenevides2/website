@@ -28,70 +28,72 @@
     &:visited {
       color: inherit;
     }
-  }
-}
-.post {
-  margin: 6px;
-  transition: 0.2s;
-  cursor: pointer;
-}
-.post img {
-  transition: 0.2s;
-}
-.post:hover {
-  background-color: #3a2c38;
-  border-radius: 6px;
-}
-.post:hover img {
-  transform: scale(0.9);
-  border-radius: 12px;
-}
+    .post {
+      margin: 6px;
+      transition: 0.2s;
+      cursor: pointer;
+      img {
+        transition: 0.2s;
+      }
+      &:hover {
+        background-color: #3a2c38;
+        border-radius: 6px;
+        img {
+          transform: scale(0.9);
+          border-radius: 12px;
+        }
+      }
+      .postData {
+        overflow: hidden;
+      }
+      .postTitle {
+        width: 100%;
+        font-size: 1.5rem;
+        font-weight: 400;
+        display: block;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        word-wrap: break-word;
+      }
+    }
+    &:nth-child(1) {
+      grid-row: 1/4;
+      .post .postData {
+        padding: 6px;
+      }
+    }
+    &:nth-child(n + 2) {
+      grid-column: 2/4;
+      .post {
+        display: flex;
+        height: 77px;
+        > span,
+        img {
+          min-height: 75px;
+          height: 100%;
+          max-height: 75px;
+          min-width: 111px;
+          width: 100%;
+          max-width: 111px;
+        }
+        .postData {
+          margin-left: 6px;
+        }
+      }
+    }
+    &:nth-child(n + 5) {
+      grid-column: 1/4;
+    }
 
-.post:nth-child(1) {
-  grid-row: 1/4;
-}
-.post:nth-child(1) .postData {
-  padding: 6px;
-}
-.post:nth-child(n + 2) {
-  display: flex;
-  grid-column: 2/4;
-  height: 77px;
-}
-.post:nth-child(n + 2) > span,
-.post:nth-child(n + 2) img {
-  min-height: 75px;
-  height: 100%;
-  max-height: 75px;
-  min-width: 111px;
-  width: 100%;
-  max-width: 111px;
-}
-.post:nth-child(n + 2) > .postData {
-  margin-left: 6px;
-}
-.post:nth-child(n + 5) {
-  grid-column: 1/4;
-}
-.postData {
-  overflow: hidden;
-}
-.postTitle {
-  width: 100%;
-  font-size: 1.5rem;
-  font-weight: 400;
-  display: block;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  word-wrap: break-word;
-}
-@media only screen and (max-width: 600px) {
-  .post:nth-child(1) {
-    align-self: center;
-    grid-column: 1/4;
-  }
-  .post:nth-child(n + 2) {
-    grid-column: 1/4;
+    @media only screen and (max-width: 600px) {
+      &:nth-child(1) {
+        align-self: center;
+        grid-column: 1/4;
+      }
+      &:nth-child(n + 2) {
+        grid-column: 1/4;
+      }
+    }
   }
 }
