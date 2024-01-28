@@ -1,4 +1,4 @@
-import { Button } from "@/components/Button";
+import { Button, ButtonAnchor } from "@/components/Button";
 import {
   getCertification,
   listCertifications,
@@ -68,19 +68,20 @@ export default function Page(
   props: InferGetStaticPropsType<typeof getStaticProps>
 ) {
   const { certificate } = props;
-  const PdfViewer= dynamic(() => import("@/components/PdfViewer"), {
+  const PdfViewer = dynamic(() => import("@/components/PdfViewer"), {
     ssr: false,
   });
   const referenceButton = useMemo(() => {
     if (!certificate) return null;
     if (!certificate.externalReference) return null;
-    const onClick = () => {
-      window.open(certificate.externalReference, "_blank");
-    };
     return (
-      <Button className={styles.viewMoreButton} onClick={onClick}>
+      <ButtonAnchor
+        href={certificate.externalReference}
+        target="_blank"
+        className={styles.viewMoreButton}
+      >
         Saiba Mais sobre o Curso
-      </Button>
+      </ButtonAnchor>
     );
   }, [certificate]);
 

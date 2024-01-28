@@ -1,8 +1,7 @@
-import { Button } from "@/components/Button";
-import { useCallback, useMemo } from "react";
+import { ButtonAnchor } from "@/components/Button";
+import { useMemo } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import styles from "./styles.module.css";
-import Head from "next/head";
 import { getProject, listProjects } from "@/services/firebase/client/projects";
 import Image from "next/image";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
@@ -65,13 +64,14 @@ export default function Page(
   const githubButton = useMemo(() => {
     if (!project) return null;
     if (!project.github) return null;
-    const onClick = () => {
-      window.open(project.github, "_blank");
-    };
     return (
-      <Button className={styles.viewMoreButton} onClick={onClick}>
+      <ButtonAnchor
+        className={styles.viewMoreButton}
+        href={project.github}
+        target="_blank"
+      >
         Ver no Github
-      </Button>
+      </ButtonAnchor>
     );
   }, [project]);
 

@@ -68,7 +68,7 @@ export default function Page() {
       listButtons={[
         {
           icon: () => TbEdit,
-          onClick: (id) => `/admin/blog/editor/${id}`,
+          onClick: (id) => `/admin/certifications/editor/${id}`,
           hideOnClicked: true,
         },
         {

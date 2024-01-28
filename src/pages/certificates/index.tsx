@@ -1,12 +1,20 @@
 import Input from "@/components/Input";
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  MouseEventHandler,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import styles from "./styles.module.css";
 import { listCertifications } from "@/services/firebase/client/certificates";
 import { useRouter } from "next/router";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { DefaultSeo } from "@/components/DefaultSeo";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
+import Link from "next/link";
 
 interface Certificate {
   id: string;
@@ -40,24 +48,28 @@ export default function Page(
   const router = useRouter();
   const hidder = useRef<HTMLDivElement>(null);
 
-  const handleClickCertificate = useCallback(
-    async (certificateId: string) => {
-      hidder.current?.classList.add(styles.hide);
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      router.push(`/certificate/${certificateId}`);
-    },
-    [router]
-  );
+  const handleClickCertificate: MouseEventHandler<HTMLAnchorElement> =
+    useCallback(
+      async (event) => {
+        const href = event.currentTarget.href;
+        event.preventDefault();
+        hidder.current?.classList.add(styles.hide);
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        router.push(href);
+      },
+      [router]
+    );
+
+  const visibleCertificates = filteredCertificates || certificates;
 
   const memorizedComponent = useMemo(() => {
-    if (filteredCertificates)
-      return filteredCertificates.map((certificate) => (
-        <li
-          key={certificate.id}
-          onClick={() => {
-            handleClickCertificate(certificate.id);
-          }}
-        >
+    return visibleCertificates.map((certificate) => (
+      <Link
+        href={`/certificate/${certificate.id}`}
+        key={certificate.id}
+        onClick={handleClickCertificate}
+      >
+        <li>
           <Image
             src={certificate.pdfThumbnail}
             width={300}
@@ -68,27 +80,9 @@ export default function Page(
           />
           <div>{certificate.name}</div>
         </li>
-      ));
-    else
-      return certificates.map((certificate) => (
-        <li
-          key={certificate.id}
-          onClick={() => {
-            handleClickCertificate(certificate.id);
-          }}
-        >
-          <Image
-            src={certificate.pdfThumbnail}
-            width={300}
-            height={200}
-            alt={`Certificado de conclusão do curso de ${certificate.name}`}
-            placeholder="blur"
-            blurDataURL={certificate.pdfThumbnailBlur}
-          />
-          <div>{certificate.name}</div>
-        </li>
-      ));
-  }, [certificates, filteredCertificates, handleClickCertificate]);
+      </Link>
+    ));
+  }, [visibleCertificates, handleClickCertificate]);
 
   useEffect(() => {
     if (searchTerm === "") return setFilteredCertificates(undefined);

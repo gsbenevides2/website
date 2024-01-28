@@ -38,3 +38,14 @@ export const ButtonSSRLink = (props: PropsSSRLink) => {
     />
   );
 };
+
+type PropsAnchor = React.HTMLProps<HTMLAnchorElement>;
+export const ButtonAnchor = (props: PropsAnchor) => {
+  const { className, ...rest } = props;
+  return (
+    <a
+      {...rest}
+      className={classNames(styles.button, className, nunito.className)}
+    />
+  );
+};

@@ -22,6 +22,13 @@
   grid-template-columns: repeat(3, 1fr);
   margin-top: 12px;
   transition: all 0.5s ease-in-out;
+  a {
+    text-decoration: none;
+    color: inherit;
+    &:visited {
+      color: inherit;
+    }
+  }
 }
 .post {
   margin: 6px;

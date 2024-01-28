@@ -1,15 +1,8 @@
-import {
-  Dispatch,
-  SetStateAction,
-  use,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import FileInput, { FileInputProps } from "../FileInput";
+import { Dispatch, SetStateAction, useCallback, useMemo } from "react";
+import { FileInputProps } from "../FileInput";
 import { Button } from "../Button";
 import styles from "./styles.module.css";
+import { downloadFile } from "@/utils/downloadFile";
 
 interface Asset {
   altText: string;
@@ -19,6 +12,7 @@ interface Asset {
 interface AssetsInputProps extends Omit<FileInputProps, "state" | "setState"> {
   state: Asset[];
   setState: Dispatch<SetStateAction<Asset[]>>;
+  allowDownload?: boolean;
 }
 
 export default function AssetsInput(props: AssetsInputProps) {
@@ -47,6 +41,12 @@ export default function AssetsInput(props: AssetsInputProps) {
     input.click();
   }, [setState]);
 
+  const downloadAsset = useCallback((asset: Asset) => {
+    const fileName = asset.file.name;
+    const url = URL.createObjectURL(asset.file);
+    downloadFile(url, fileName);
+  }, []);
+
   const assetsContent = useMemo(() => {
     return state.map((asset, index) => (
       <div key={index} className={styles.asset}>
@@ -55,6 +55,16 @@ export default function AssetsInput(props: AssetsInputProps) {
           <br />
           <span>Texto Alternativo: {asset.altText}</span>
         </div>
+        {props.allowDownload && (
+          <div
+            className={styles.remove}
+            onClick={() => {
+              downloadAsset(asset);
+            }}
+          >
+            Baixar
+          </div>
+        )}
         <div
           className={styles.remove}
           onClick={() => {
@@ -65,7 +75,7 @@ export default function AssetsInput(props: AssetsInputProps) {
         </div>
       </div>
     ));
-  }, [state, assetRemove]);
+  }, [state, props.allowDownload, downloadAsset, assetRemove]);
 
   return (
     <div className={styles.container}>

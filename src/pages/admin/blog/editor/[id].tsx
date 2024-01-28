@@ -200,6 +200,7 @@ export default function Page() {
           file,
         });
       }
+      console.log(post);
       formContext.changeMultipleInputValues({
         name: post.name,
         description: post.description,
@@ -301,6 +302,7 @@ export default function Page() {
                   {...props}
                   label="Selecione a thumbnail do post"
                   required
+                  allowDownload
                 />
               )}
             />
@@ -331,7 +333,9 @@ export default function Page() {
             <StatelessInput
               name="assets"
               initialState={[]}
-              customComponent={AssetsInput}
+              customComponent={(props) => (
+                <AssetsInput {...props} allowDownload />
+              )}
             />
             <Button type="submit">Salvar Post</Button>
           </Form>

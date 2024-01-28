@@ -44,12 +44,13 @@ export default function Page() {
 
     try {
       const cert = await getCertification(certId);
+      console.log(cert);
 
       const certFile = await getCertificateFile(certId);
       formContext.changeMultipleInputValues({
         name: cert.name,
         institution: cert.institution,
-        date: cert.date,
+        date: cert.date.toISOString().split("T")[0],
         externalReference: cert.externalReference,
         descriptionDesktop: cert.descriptionDesktop,
         descriptionMobile: cert.descriptionMobile,
@@ -231,7 +232,11 @@ export default function Page() {
             <StatelessInput
               name="pdf"
               customComponent={(props) => (
-                <PdfInput {...props} label="Selecione o PDF do Certificado" />
+                <PdfInput
+                  {...props}
+                  label="Selecione o PDF do Certificado"
+                  allowDownload
+                />
               )}
             />
             <Textarea
