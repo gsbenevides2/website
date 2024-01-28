@@ -1,14 +1,16 @@
-import { Document, pdfjs,  Page } from "react-pdf";
+import { Document, pdfjs, Page } from "react-pdf";
 import styles from "./styles.module.css";
 import { useCallback, useState } from "react";
 import { OnDocumentLoadSuccess } from "react-pdf/dist/cjs/shared/types";
 import IconButton from "../IconButon";
-import { TbChevronLeft, TbChevronRight } from "react-icons/tb";
+import { TbChevronLeft, TbChevronRight, TbDownload } from "react-icons/tb";
+import { downloadFile } from "@/utils/downloadFile";
 
-interface Props {
+export interface Props {
   file?: string;
+  fileName?: string;
+  allowDownload?: boolean;
 }
-
 export default function PdfViewer(props: Props) {
   const [numPages, setNumPages] = useState<number>();
   const [pageNumber, setPageNumber] = useState(1);
@@ -29,6 +31,12 @@ export default function PdfViewer(props: Props) {
 
   pdfjs.GlobalWorkerOptions.workerSrc = "/pdfjs/pdf.worker.min.js";
 
+  const downloadPdf = useCallback(() => {
+    if (!props.file) return;
+    const fileName = props.fileName ?? "file.pdf";
+    downloadFile(props.file, fileName);
+  }, [props.file, props.fileName]);
+
   if (!props.file) return <></>;
 
   return (
@@ -47,6 +55,14 @@ export default function PdfViewer(props: Props) {
           onClick={() => changePage(1)}
           className={styles.button}
         />
+        {props.allowDownload && (
+          <IconButton
+            icon={TbDownload}
+            size={16}
+            onClick={downloadPdf}
+            className={styles.button}
+          />
+        )}
       </div>
       <Document file={props.file} noData="" onLoadSuccess={onLoadSuccess}>
         <Page

@@ -1,13 +1,20 @@
 import Input from "@/components/Input";
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  MouseEventHandler,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import styles from "./styles.module.css";
-import Head from "next/head";
 import { useRouter } from "next/router";
 import { listProjects } from "@/services/firebase/client/projects";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 import { DefaultSeo } from "@/components/DefaultSeo";
+import Link from "next/link";
 
 interface Project {
   id: string;
@@ -40,24 +47,27 @@ export default function Page(
   const router = useRouter();
   const hidder = useRef<HTMLDivElement>(null);
 
-  const handleClickProject = useCallback(
-    async (projectId: string) => {
+  const handleClickProject: MouseEventHandler<HTMLAnchorElement> = useCallback(
+    async (event) => {
+      const href = event.currentTarget.href;
+      event.preventDefault();
       hidder.current?.classList.add(styles.hide);
       await new Promise((resolve) => setTimeout(resolve, 500));
-      router.push(`/project/${projectId}`);
+      router.push(href);
     },
     [router]
   );
 
+  const projectsToShow = filteredProjects || projects;
+
   const memorizedComponent = useMemo(() => {
-    if (filteredProjects)
-      return filteredProjects.map((project) => (
-        <li
-          key={project.id}
-          onClick={() => {
-            handleClickProject(project.id);
-          }}
-        >
+    return projectsToShow.map((project) => (
+      <Link
+        href={`/project/${project.id}`}
+        key={project.id}
+        onClick={handleClickProject}
+      >
+        <li>
           <Image
             src={project.image}
             width={300}
@@ -68,27 +78,9 @@ export default function Page(
           />
           <div>{project.name}</div>
         </li>
-      ));
-    else
-      return projects.map((project) => (
-        <li
-          key={project.id}
-          onClick={() => {
-            handleClickProject(project.id);
-          }}
-        >
-          <Image
-            src={project.image}
-            width={300}
-            height={200}
-            alt={`Imagem do projeto ${project.name}`}
-            placeholder="blur"
-            blurDataURL={project.imageBlur}
-          />
-          <div>{project.name}</div>
-        </li>
-      ));
-  }, [projects, filteredProjects, handleClickProject]);
+      </Link>
+    ));
+  }, [projectsToShow, handleClickProject]);
 
   useEffect(() => {
     if (searchTerm === "") return setFilteredProjects(undefined);

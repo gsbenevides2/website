@@ -1,6 +1,9 @@
 import { ChangeEventHandler, useCallback, useEffect, useState } from "react";
 import { Button } from "../Button";
 import styles from "./styles.module.css";
+import IconButton from "../IconButon";
+import { TbDownload } from "react-icons/tb";
+import { downloadFile } from "@/utils/downloadFile";
 
 export interface FileInputProps {
   onChange?: ChangeEventHandler<HTMLInputElement>;
@@ -9,6 +12,7 @@ export interface FileInputProps {
   state?: File[];
   setState?: (value: File[]) => void;
   required?: boolean;
+  allowDownload?: boolean;
 }
 
 export default function FileInput(props: FileInputProps) {
@@ -45,6 +49,13 @@ export default function FileInput(props: FileInputProps) {
     input.onchange = onChange;
     input.click();
   }, [accept, onChange, required]);
+  const download = useCallback(() => {
+    if (state == null || state.length === 0) return;
+    const file = state[0];
+    const filename = file.name;
+    const url = URL.createObjectURL(file);
+    downloadFile(url, filename);
+  }, [state]);
 
   useEffect(() => {
     if (state == null || state.length === 0)
@@ -59,6 +70,14 @@ export default function FileInput(props: FileInputProps) {
         Escolher Arquivo
       </Button>
       <span>{label}</span>
+      {props.allowDownload && (
+        <IconButton
+          icon={TbDownload}
+          size={16}
+          onClick={download}
+          className={styles.button}
+        />
+      )}
     </div>
   );
 }

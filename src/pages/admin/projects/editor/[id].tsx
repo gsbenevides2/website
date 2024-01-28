@@ -115,7 +115,6 @@ export default function Page() {
   }, [authState, loadDocData, router]);
 
   useEffect(() => {
-   
     async function showLoading() {
       if (!loader.current) return;
       if (!hidder.current) return;
@@ -210,7 +209,11 @@ export default function Page() {
             <StatelessInput
               name="image"
               customComponent={(props) => (
-                <ImageInput {...props} label="Imagem do Projeto:" />
+                <ImageInput
+                  {...props}
+                  label="Imagem do Projeto:"
+                  allowDownload
+                />
               )}
             />
             <Textarea

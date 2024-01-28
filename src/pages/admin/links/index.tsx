@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { TbTrash, TbCopy } from "react-icons/tb";
 import { deleteLink, listLinks } from "@/services/firebase/client/links";
 import ListAdminPage from "@/components/ListAdminPage";
+import { copyTextToClipboard } from "@/utils/copyTextToClipboard";
 
 interface LinkToList {
   id: string;
@@ -27,7 +28,7 @@ export default function Page() {
   const handleCopyLink = useCallback(async (id: string) => {
     const link = new URL(window.location.href);
     link.pathname = `/l/${id}`;
-    await navigator.clipboard.writeText(link.toString());
+    await copyTextToClipboard(link.toString());
     alert("Link copiado para a área de transferência");
   }, []);
 

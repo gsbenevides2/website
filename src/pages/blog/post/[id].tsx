@@ -8,12 +8,17 @@ import { NextSeo } from "next-seo";
 import Image from "next/image";
 import { ParsedUrlQuery } from "querystring";
 import BlogHeader from "@/components/BlogHeader";
-import { Post, getFirstTenVisblePostsIds, getPost } from "@/services/firebase/client/posts";
+import {
+  Post,
+  getFirstTenVisblePostsIds,
+  getPost,
+} from "@/services/firebase/client/posts";
 import styles from "./styles.module.css";
 import { JetBrains_Mono } from "next/font/google";
 import { useState } from "react";
 import { DefaultSeo } from "@/components/DefaultSeo";
 import { parseYYYYMMDDtoDDMMYYYY } from "@/utils/parseDateStringtoDateObj";
+import { copyTextToClipboard } from "@/utils/copyTextToClipboard";
 
 const jetBrainsMono = JetBrains_Mono({
   variable: "--jetBrainsMono",
@@ -28,25 +33,23 @@ interface Params extends ParsedUrlQuery {
   id: string;
 }
 
-export const getStaticPaths:GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getFirstTenVisblePostsIds();
   const paths = posts.map((id) => ({
-      params: {id}
+    params: { id },
   }));
   return {
     paths,
-    fallback: "blocking"
-  }
+    fallback: "blocking",
+  };
 };
 
-export const getStaticProps: GetStaticProps<Props> = async (
-  context
-) => {
+export const getStaticProps: GetStaticProps<Props> = async (context) => {
   const { id } = context.params as Params;
   const post = await getPost(id);
-  if(!post) return {notFound: true};
+  if (!post) return { notFound: true };
   const source = await serialize(post.content);
-  
+
   return {
     props: {
       post,
@@ -55,7 +58,9 @@ export const getStaticProps: GetStaticProps<Props> = async (
   };
 };
 
-export default function PostPage(props:InferGetStaticPropsType<typeof getStaticProps>){
+export default function PostPage(
+  props: InferGetStaticPropsType<typeof getStaticProps>
+) {
   const ResponsiveImage = (imageProps: React.HTMLProps<HTMLImageElement>) => {
     const src = imageProps.src as string;
     let url = src;
@@ -99,7 +104,7 @@ export default function PostPage(props:InferGetStaticPropsType<typeof getStaticP
       "Copiar para Area de Transferencia"
     );
     function copy() {
-      navigator.clipboard.writeText(children).then(() => {
+      copyTextToClipboard(children).then(() => {
         setCopyMessage("Copiado");
         setTimeout(() => {
           setCopyMessage("Copiar para Area de Transferencia");
@@ -146,7 +151,7 @@ export default function PostPage(props:InferGetStaticPropsType<typeof getStaticP
         }}
         site_name="Blog do Guilherme"
         type="blog"
-        />
+      />
       <BlogHeader />
       <article className={styles.container}>
         <Image
@@ -166,4 +171,4 @@ export default function PostPage(props:InferGetStaticPropsType<typeof getStaticP
       </article>
     </div>
   );
-};
+}

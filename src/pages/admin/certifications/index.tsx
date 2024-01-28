@@ -68,7 +68,7 @@ export default function Page() {
       listButtons={[
         {
           icon: () => TbEdit,
-          onClick: (id) => `/admin/blog/editor/${id}`,
+          onClick: (id) => `/admin/certifications/editor/${id}`,
           hideOnClicked: true,
         },
         {
@@ -79,7 +79,7 @@ export default function Page() {
       addButtonText="Novo Certificado"
       emptyListText="Nenhum certificado cadastrado"
       addButtonHideOnClicked
-      title="Gerenciador de Certificações do Blog"
+      title="Gerenciador de Certificações"
       executeBeforeAuthenticated={loadCerts}
     />
   );

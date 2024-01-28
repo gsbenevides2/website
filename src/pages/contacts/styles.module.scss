@@ -1,0 +1,115 @@
+@keyframes fade {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex-direction: column;
+  padding: 24px;
+  opacity: 0;
+  animation: fade 0.5s ease-in-out forwards;
+  .firstArea {
+    max-width: 1200px;
+    width: 100%;
+    h1 {
+      text-align: center;
+    }
+    .social {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      list-style: none;
+      padding: 0px;
+      margin-top: 12px;
+      font-size: 1.2rem;
+      gap: 12px;
+      li {
+        width: 120px;
+        height: 120px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.3s ease-in-out;
+        border-radius: 10px;
+        a {
+          display: flex;
+          padding: 0px;
+          flex-direction: column;
+          align-items: center;
+          text-decoration: none;
+          svg {
+            width: 50px;
+            height: 50px;
+            margin: 10px;
+            transition: all 0.3s ease-in-out;
+          }
+        }
+        &:hover {
+          background-color: #f5f5f5;
+          a svg {
+            transform: scale(1.2);
+          }
+        }
+        $socials: (
+          "twitter": #1da1f2,
+          "linkedin": #0077b5,
+          "github": #333,
+          "instagram": #e1306c,
+          "x": #333,
+        );
+        @each $social, $color in $socials {
+          &.#{$social}:hover {
+            a {
+              svg {
+                stroke: $color !important;
+              }
+              p {
+                color: $color !important;
+              }
+            }
+          }
+        }
+      }
+    }
+    .other {
+      padding-top: 12px;
+      list-style: none;
+      font-size: 1.2rem;
+      max-width: fit-content;
+      li {
+        padding: 4px 0px;
+        cursor: pointer;
+        a {
+          display: flex;
+          gap: 12px;
+          align-items: center;
+          text-decoration: none;
+          svg {
+            min-width: 30px;
+            min-height: 30px;
+          }
+        }
+        &:after {
+          display: block;
+          content: "";
+          border-bottom: 1px solid #f1f1f1;
+          transform: scaleX(0);
+          transition: transform 250ms ease-in-out;
+        }
+        &:hover:after {
+          transform: scaleX(1);
+        }
+      }
+    }
+  }
+}

@@ -1,21 +1,24 @@
-import styles from "./index.module.css";
-import { Button } from "@/components/Button";
+import styles from "./index.module.scss";
+import { ButtonSSRLink } from "@/components/Button";
 import { useRouter } from "next/navigation";
-import Head from "next/head";
-import { useCallback, useEffect, useRef } from "react";
+import { MouseEventHandler, useCallback, useEffect, useRef } from "react";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 import { DefaultSeo } from "@/components/DefaultSeo";
 
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-
-  const goToNext = useCallback(async () => {
-    if (!containerRef.current) return;
-    containerRef.current.classList.add(styles.hide);
-    await new Promise((resolve) => setTimeout(resolve, 400));
-    router.push("/about");
-  }, [containerRef, router]);
+  const goToNext: MouseEventHandler<HTMLAnchorElement> = useCallback(
+    async (event) => {
+      event.preventDefault();
+      const { currentTarget } = event;
+      if (!containerRef.current) return;
+      containerRef.current.classList.add(styles.hide);
+      await new Promise((resolve) => setTimeout(resolve, 400));
+      router.push(currentTarget.href);
+    },
+    [containerRef, router]
+  );
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -41,9 +44,13 @@ export default function Home() {
           <br />
           Seja bem vindo!
         </h1>
-        <Button className={styles.button} onClick={goToNext}>
+        <ButtonSSRLink
+          href="/about"
+          className={styles.button}
+          onClick={goToNext}
+        >
           Venha me conhecer mais
-        </Button>
+        </ButtonSSRLink>
       </div>
       <div className={styles.secondArea}>
         <div className={styles.image} />

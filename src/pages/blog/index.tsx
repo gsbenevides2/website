@@ -1,21 +1,21 @@
 import { GetStaticProps, InferGetStaticPropsType } from "next";
-import { NextSeo } from "next-seo";
 import Image from "next/image";
 import BlogHeader from "@/components/BlogHeader";
-import {  getVisiblePosts, Post } from "@/services/firebase/client/posts";
-import styles from "./styles.module.css";
+import { getVisiblePosts, Post } from "@/services/firebase/client/posts";
+import styles from "./styles.module.scss";
 import { useRouter } from "next/router";
-import { useCallback, useRef } from "react";
+import { MouseEventHandler, useCallback, useRef } from "react";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 import { DefaultSeo } from "@/components/DefaultSeo";
 import { parseYYYYMMDDtoDDMMYYYY } from "@/utils/parseDateStringtoDateObj";
+import Link from "next/link";
 
 interface Props {
   posts: Post[];
 }
 interface PostProps {
   post: Post;
-  onClick?: (id: string) => void;
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
 }
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
@@ -28,22 +28,28 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 
 function Post({ post, onClick }: PostProps) {
   return (
-    <li className={styles.post} onClick={() => onClick && onClick(post.id)}>
-      <Image
-        src={post.thumbnail.list}
-        width={500}
-        height={334}
-        placeholder="blur"
-        layout="responsive"
-        blurDataURL={post.thumbnail.blur}
-        alt={`Capa do Post: ${post.name}. Contendo: ${post.thumbnail.alt}`}
-      />
+    <Link href={`/blog/post/${post.id}`} onClick={onClick}>
+      <article>
+        <li className={styles.post}>
+          <Image
+            src={post.thumbnail.list}
+            width={500}
+            height={334}
+            placeholder="blur"
+            layout="responsive"
+            blurDataURL={post.thumbnail.blur}
+            alt={`Capa do Post: ${post.name}. Contendo: ${post.thumbnail.alt}`}
+          />
 
-      <div className={styles.postData}>
-        <span className={styles.postTitle}>{post.name}</span>
-        <span className={styles.postDate}>{parseYYYYMMDDtoDDMMYYYY(post.date)}</span>
-      </div>
-    </li>
+          <div className={styles.postData}>
+            <h5 className={styles.postTitle}>{post.name}</h5>
+            <p className={styles.postDate}>
+              {parseYYYYMMDDtoDDMMYYYY(post.date)}
+            </p>
+          </div>
+        </li>
+      </article>
+    </Link>
   );
 }
 
@@ -54,12 +60,14 @@ export default function Blog(
   const containerRef = useRef<HTMLUListElement>(null);
   const router = useRouter();
 
-  const postClick = useCallback(
-    async (id: string) => {
+  const postClick: MouseEventHandler<HTMLAnchorElement> = useCallback(
+    async (event) => {
+      const href = event.currentTarget.href;
+      event.preventDefault();
       if (!containerRef.current) return;
       containerRef.current.classList.add(styles.hide);
       await new Promise((resolve) => setTimeout(resolve, 400));
-      router.push(`/blog/post/${id}`);
+      router.push(href);
     },
     [containerRef, router]
   );
