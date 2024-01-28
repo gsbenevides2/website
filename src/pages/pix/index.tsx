@@ -1,11 +1,35 @@
+import { copyTextToClipboard } from "@/utils/copyTextToClipboard";
 import styles from "./styles.module.scss";
 import { DefaultSeo } from "@/components/DefaultSeo";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
+import { useCallback } from "react";
 import QRCode from "react-qr-code";
+import { useAlert } from "react-alert";
 
 export default function Pix() {
+  const PIX_EMAIL = "pix@gui.dev.br";
   const PIX_QR_CODE =
     "00020126360014br.gov.bcb.pix0114pix@gui.dev.br5204000053039865802BR5924Guilherme da Silva Benev6008Brasilia62080504mpda6304F8FA";
+  const alert = useAlert();
+  const copyQrCode = useCallback(async () => {
+    copyTextToClipboard(PIX_QR_CODE)
+      .then(() => {
+        alert.success("Código copiado para a área de transferência");
+      })
+      .catch(() => {
+        alert.error("Não foi possível copiar o código");
+      });
+  }, [alert]);
+  const copyPixEmail = useCallback(async () => {
+    copyTextToClipboard(PIX_EMAIL)
+      .then(() => {
+        alert.success("E-mail copiado para a área de transferência");
+      })
+      .catch(() => {
+        alert.error("Não foi possível copiar o e-mail");
+      });
+  }, [alert]);
+
   return (
     <div className={styles.container}>
       <DefaultSeo
@@ -18,12 +42,14 @@ export default function Pix() {
       <h1>PIX</h1>
       <div className={styles.content}>
         <div className={styles.qrCode}>
-          <QRCode value={PIX_QR_CODE} bgColor="transparent" fgColor="white" />
+          <button onClick={copyQrCode}>
+            <QRCode value={PIX_QR_CODE} bgColor="transparent" fgColor="white" />
+          </button>
         </div>
         <div className={styles.textArea}>
           <p>
             <b>Chave PIX: </b>
-            <a>pix@gui.dev.br</a>
+            <a onClick={copyPixEmail}>{PIX_EMAIL}</a>
             <br />
             <b>Nome: </b>Guilherme da Silva Benevides
             <br />

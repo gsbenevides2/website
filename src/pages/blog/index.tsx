@@ -29,24 +29,26 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 function Post({ post, onClick }: PostProps) {
   return (
     <Link href={`/blog/post/${post.id}`} onClick={onClick}>
-      <li className={styles.post}>
-        <Image
-          src={post.thumbnail.list}
-          width={500}
-          height={334}
-          placeholder="blur"
-          layout="responsive"
-          blurDataURL={post.thumbnail.blur}
-          alt={`Capa do Post: ${post.name}. Contendo: ${post.thumbnail.alt}`}
-        />
+      <article>
+        <li className={styles.post}>
+          <Image
+            src={post.thumbnail.list}
+            width={500}
+            height={334}
+            placeholder="blur"
+            layout="responsive"
+            blurDataURL={post.thumbnail.blur}
+            alt={`Capa do Post: ${post.name}. Contendo: ${post.thumbnail.alt}`}
+          />
 
-        <div className={styles.postData}>
-          <span className={styles.postTitle}>{post.name}</span>
-          <span className={styles.postDate}>
-            {parseYYYYMMDDtoDDMMYYYY(post.date)}
-          </span>
-        </div>
-      </li>
+          <div className={styles.postData}>
+            <h5 className={styles.postTitle}>{post.name}</h5>
+            <p className={styles.postDate}>
+              {parseYYYYMMDDtoDDMMYYYY(post.date)}
+            </p>
+          </div>
+        </li>
+      </article>
     </Link>
   );
 }

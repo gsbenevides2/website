@@ -30,6 +30,8 @@
     "next-seo": "^6.1.0",
     "papaparse": "^5.4.1",
     "react": "^18.2.0",
+    "react-alert": "^7.0.3",
+    "react-alert-template-basic": "^1.0.2",
     "react-dom": "^18.2.0",
     "react-icons": "^4.9.0",
     "react-markdown": "^8.0.7",
@@ -43,6 +45,7 @@
   "devDependencies": {
     "@types/cookies": "^0.7.7",
     "@types/papaparse": "^5.3.14",
+    "@types/react-alert": "^7.0.6",
     "@types/react-syntax-highlighter": "^15.5.7",
     "sass": "^1.70.0"
   }

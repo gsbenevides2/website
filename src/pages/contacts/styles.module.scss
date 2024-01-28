@@ -65,6 +65,7 @@
           "linkedin": #0077b5,
           "github": #333,
           "instagram": #e1306c,
+          "x": #333,
         );
         @each $social, $color in $socials {
           &.#{$social}:hover {
@@ -72,7 +73,7 @@
               svg {
                 stroke: $color !important;
               }
-              span {
+              p {
                 color: $color !important;
               }
             }

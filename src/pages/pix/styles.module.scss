@@ -25,7 +25,18 @@
       width: 50%;
       padding-right: 5vw;
       justify-content: flex-end;
-      cursor: pointer;
+      button {
+        cursor: pointer;
+        background-color: transparent;
+        outline: none;
+        border: none;
+        padding: 0;
+        margin: 0;
+        transition: all 0.3s ease-in-out;
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
     }
     .textArea {
       display: flex;

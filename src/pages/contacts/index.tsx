@@ -3,6 +3,7 @@ import {
   TbBrandInstagram,
   TbBrandLinkedin,
   TbBrandTwitter,
+  TbBrandX,
   TbMail,
   TbMusic,
 } from "react-icons/tb";
@@ -12,6 +13,40 @@ import styles from "./styles.module.scss";
 import { DefaultSeo } from "@/components/DefaultSeo";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 import Link from "next/link";
+
+interface SocialMedia {
+  name: string;
+  style: string;
+  url: string;
+  icon: JSX.Element;
+}
+
+const socialMedias: SocialMedia[] = [
+  {
+    name: "X",
+    style: styles.x,
+    url: "https://x.com/gsbenevides2",
+    icon: <TbBrandX />,
+  },
+  {
+    name: "Linkedin",
+    style: styles.linkedin,
+    url: "https://linkedin.com/in/gsbenevides2",
+    icon: <TbBrandLinkedin />,
+  },
+  {
+    name: "Github",
+    style: styles.github,
+    url: "https://github.com/gsbenevides2",
+    icon: <TbBrandGithub />,
+  },
+  {
+    name: "Instagram",
+    style: styles.instagram,
+    url: "https://instagram.com/gsbenevides2",
+    icon: <TbBrandInstagram />,
+  },
+];
 
 export default function Contacts() {
   const copyPix = () => {
@@ -32,49 +67,19 @@ export default function Contacts() {
       <div className={styles.firstArea}>
         <h1>Contatos</h1>
         <ul className={styles.social}>
-          <li className={styles.twitter}>
-            <a
-              href="https://twitter.com/gsbenevides2"
-              target="_blank"
-              rel="noreferrer"
-              className="twitter"
-            >
-              <TbBrandTwitter />
-              <span>Twitter</span>
-            </a>
-          </li>
-          <li className={styles.linkedin}>
-            <a
-              href="https://linkedin.com/in/gsbenevides2"
-              className="linkedin"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <TbBrandLinkedin />
-              <span>Linkedin</span>
-            </a>
-          </li>
-          <li className={styles.github}>
-            <a
-              href="https://github.com/gsbenevides2"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <TbBrandGithub />
-              <span>Github</span>
-            </a>
-          </li>
-          <li className={styles.instagram}>
-            <a
-              href="https://instagram.com/gsbenevides2"
-              className="instagram"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <TbBrandInstagram />
-              <span>Instagram</span>
-            </a>
-          </li>
+          {socialMedias.map((socialMedia) => (
+            <li className={socialMedia.style} key={socialMedia.name}>
+              <a
+                href={socialMedia.url}
+                target="_blank"
+                rel="noreferrer"
+                className={socialMedia.name}
+              >
+                {socialMedia.icon}
+                <p>{socialMedia.name}</p>
+              </a>
+            </li>
+          ))}
         </ul>
         <div>
           <ul className={styles.other}>
