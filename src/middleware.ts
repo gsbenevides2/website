@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
     const redUrl =
       process.env.NODE_ENV === "development"
         ? "http://localhost:5001/gui-dev-br/us-central1/links"
-        : "htttps://links.functions.gui.dev.br";
+        : "https://links.functions.gui.dev.br";
     const origem =
       process.env.NODE_ENV === "development"
         ? "http://localhost:3000"
