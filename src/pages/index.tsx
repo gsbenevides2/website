@@ -4,8 +4,41 @@ import { useRouter } from "next/navigation";
 import { MouseEventHandler, useCallback, useEffect, useRef } from "react";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 import { DefaultSeo } from "@/components/DefaultSeo";
+import { EntrySkeletonType } from "contentful";
+import { GetStaticProps } from "next";
+import { getContentfulClient } from "@/services/contentful";
 
-export default function Home() {
+interface HomePageSkeletonType extends EntrySkeletonType {
+  contentType: "homePage";
+  fields: CMS;
+}
+
+interface CMS {
+  buttonText: string;
+  title: string;
+}
+interface Props {
+  cms: CMS;
+}
+
+export const getStaticProps: GetStaticProps<Props> = async (context) => {
+  const client = getContentfulClient(context.draftMode || false);
+
+  const entries = await client.getEntries<HomePageSkeletonType>({
+    content_type: "homePage",
+  });
+
+  const cms = entries.items[0].fields;
+
+  return {
+    props: {
+      cms,
+    },
+  };
+};
+
+export default function Home(props: Props) {
+  console.log(props);
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const goToNext: MouseEventHandler<HTMLAnchorElement> = useCallback(
@@ -37,19 +70,13 @@ export default function Home() {
         type="website"
       />
       <div className={styles.firstArea}>
-        <h1 className={styles.title}>
-          Olá 👋
-          <br />
-          Eu sou Guilherme.
-          <br />
-          Seja bem vindo!
-        </h1>
+        <h1 className={styles.title}>{props.cms.title}</h1>
         <ButtonSSRLink
           href="/about"
           className={styles.button}
           onClick={goToNext}
         >
-          Venha me conhecer mais
+          {props.cms.buttonText}
         </ButtonSSRLink>
       </div>
       <div className={styles.secondArea}>
