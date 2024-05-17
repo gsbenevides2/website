@@ -25,6 +25,7 @@
       text-indent: 2rem;
       transition: all 0.3s ease-in-out;
       text-align: justify;
+      white-space: pre-wrap;
       &.textDesktop {
         font-size: 1.2rem;
         line-height: 1.9;
