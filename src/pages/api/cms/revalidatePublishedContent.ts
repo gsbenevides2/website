@@ -12,4 +12,5 @@ export default async function handler(
 
   await res.revalidate("/");
   await res.revalidate("/about");
+  res.status(200).json({ message: "Content revalidated" });
 }

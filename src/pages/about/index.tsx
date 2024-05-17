@@ -22,7 +22,7 @@ interface Props {
 }
 
 export const getStaticProps: GetStaticProps<Props> = async (context) => {
-  const isPreview = context.draftMode || true;
+  const isPreview = context.draftMode || false;
   const cms = await getCMSDataForAboutPage(isPreview);
   return {
     props: {
