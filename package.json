@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@contentful/live-preview": "^3.3.7",
     "@minescope/mineping": "^1.2.2",
     "@types/node": "20.3.1",
     "@types/react": "18.2.13",
@@ -17,6 +18,7 @@
     "@vercel/og": "^0.5.8",
     "@vercel/speed-insights": "^1.0.8",
     "classnames": "^2.3.2",
+    "contentful": "^10.11.0",
     "cookies": "^0.8.0",
     "copy-webpack-plugin": "^11.0.0",
     "eslint": "8.43.0",

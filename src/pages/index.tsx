@@ -4,8 +4,30 @@ import { useRouter } from "next/navigation";
 import { MouseEventHandler, useCallback, useEffect, useRef } from "react";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 import { DefaultSeo } from "@/components/DefaultSeo";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
+import {
+  HomeCMSData,
+  getCMSDataForHomePage,
+  useCMSDataForHomePage,
+} from "@/services/cms/home";
 
-export default function Home() {
+interface Props {
+  cms: HomeCMSData;
+}
+export const getStaticProps: GetStaticProps<Props> = async (context) => {
+  const isPreview = context.draftMode || false;
+
+  return {
+    props: {
+      cms: await getCMSDataForHomePage(isPreview),
+    },
+  };
+};
+
+type ComponentProps = InferGetStaticPropsType<typeof getStaticProps>;
+
+export default function Home(props: ComponentProps) {
+  const cms = useCMSDataForHomePage(props.cms);
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const goToNext: MouseEventHandler<HTMLAnchorElement> = useCallback(
@@ -37,19 +59,21 @@ export default function Home() {
         type="website"
       />
       <div className={styles.firstArea}>
-        <h1 className={styles.title}>
-          Olá 👋
-          <br />
-          Eu sou Guilherme.
-          <br />
-          Seja bem vindo!
+        <h1
+          className={styles.title}
+          {...cms.props.title}
+          suppressHydrationWarning
+        >
+          {cms.entry.fields.title}
         </h1>
         <ButtonSSRLink
           href="/about"
           className={styles.button}
           onClick={goToNext}
+          {...cms.props.buttonText}
+          suppressHydrationWarning
         >
-          Venha me conhecer mais
+          {cms.entry.fields.buttonText}
         </ButtonSSRLink>
       </div>
       <div className={styles.secondArea}>
