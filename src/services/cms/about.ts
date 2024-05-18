@@ -23,19 +23,20 @@ export type AboutCMSProps = {
 
 export type AboutUseCMSData = {
   entry: AboutEntry;
+  fields: AboutFields;
   props: AboutCMSProps;
 };
 
 export type AboutCMSData = CMSData<AboutCMSEntry>;
 
-export const HOME_PAGE_CONTENT_TYPE = "about";
+export const ABOUT_PAGE_CONTENT_TYPE = "about";
 
 export const getCMSDataForAboutPage = async (
   preview: boolean
 ): Promise<AboutCMSData> => {
   const client = getCMSClient(preview);
   const entries = await client.getEntries<AboutCMSEntry>({
-    content_type: HOME_PAGE_CONTENT_TYPE,
+    content_type: ABOUT_PAGE_CONTENT_TYPE,
   });
   return {
     entries,
@@ -83,6 +84,7 @@ export const useCMSDataForAboutPage = (
 
   return {
     entry,
+    fields: entry.fields,
     props,
   };
 };

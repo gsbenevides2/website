@@ -88,10 +88,10 @@ export default function About(
     },
     [router]
   );
-  const textDesktop = (cms.entry.fields.textDesktop as string)
+  const textDesktop = cms.fields.textDesktop
     .replaceAll("{age}", age.toString())
     .replaceAll("{semesters}", semesters.toString());
-  const textMobile = (cms.entry.fields.textMobile as string)
+  const textMobile = cms.fields.textMobile
     .replaceAll("{age}", age.toString())
     .replaceAll("{semesters}", semesters.toString());
 

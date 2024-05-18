@@ -21,6 +21,7 @@ export type HomeCMSProps = {
 
 export type HomeUseCMSData = {
   entry: HomeEntry;
+  fields: HomeFields;
   props: HomeCMSProps;
 };
 
@@ -78,6 +79,7 @@ export const useCMSDataForHomePage = (cmsData: HomeCMSData): HomeUseCMSData => {
 
   return {
     entry,
+    fields: entry.fields,
     props,
   };
 };

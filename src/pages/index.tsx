@@ -64,7 +64,7 @@ export default function Home(props: ComponentProps) {
           {...cms.props.title}
           suppressHydrationWarning
         >
-          {cms.entry.fields.title}
+          {cms.fields.title}
         </h1>
         <ButtonSSRLink
           href="/about"
@@ -73,7 +73,7 @@ export default function Home(props: ComponentProps) {
           {...cms.props.buttonText}
           suppressHydrationWarning
         >
-          {cms.entry.fields.buttonText}
+          {cms.fields.buttonText}
         </ButtonSSRLink>
       </div>
       <div className={styles.secondArea}>

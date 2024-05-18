@@ -13,47 +13,70 @@ import styles from "./styles.module.scss";
 import { DefaultSeo } from "@/components/DefaultSeo";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 import Link from "next/link";
+import {
+  ContactsCMSData,
+  getCMSDataForContactsPage,
+  useCMSDataForContactsPage,
+} from "@/services/cms/contacts";
+import { GetStaticProps } from "next";
+import { InspectorModeTags } from "@contentful/live-preview/dist/inspectorMode/types";
+
+interface Props {
+  cms: ContactsCMSData;
+}
 
 interface SocialMedia {
   name: string;
   style: string;
-  url: string;
+  url: string | null;
+  props?: InspectorModeTags | {};
   icon: JSX.Element;
 }
 
-const socialMedias: SocialMedia[] = [
-  {
-    name: "X",
-    style: styles.x,
-    url: "https://x.com/gsbenevides2",
-    icon: <TbBrandX />,
-  },
-  {
-    name: "Linkedin",
-    style: styles.linkedin,
-    url: "https://linkedin.com/in/gsbenevides2",
-    icon: <TbBrandLinkedin />,
-  },
-  {
-    name: "Github",
-    style: styles.github,
-    url: "https://github.com/gsbenevides2",
-    icon: <TbBrandGithub />,
-  },
-  {
-    name: "Instagram",
-    style: styles.instagram,
-    url: "https://instagram.com/gsbenevides2",
-    icon: <TbBrandInstagram />,
-  },
-];
-
-export default function Contacts() {
-  const copyPix = () => {
-    navigator.clipboard.writeText("pix@gui.dev.br").then(() => {
-      alert("PIX copiado para a área de transferência");
-    });
+export const getStaticProps: GetStaticProps<Props> = async (context) => {
+  const { draftMode } = context;
+  return {
+    props: {
+      cms: await getCMSDataForContactsPage(draftMode ?? true),
+    },
   };
+};
+
+export default function Contacts(props: Props) {
+  const cms = useCMSDataForContactsPage(props.cms);
+  const socialMedias: SocialMedia[] = [
+    {
+      name: "X",
+      style: styles.x,
+      url: cms.fields.twitter,
+      props: cms.props.twitter,
+      icon: <TbBrandX />,
+    },
+    {
+      name: "Linkedin",
+      style: styles.linkedin,
+      url: cms.fields.linkedin,
+      props: cms.props.linkedin,
+      icon: <TbBrandLinkedin />,
+    },
+    {
+      name: "Github",
+      style: styles.github,
+      url: cms.fields.github,
+      props: cms.props.github,
+      icon: <TbBrandGithub />,
+    },
+    {
+      name: "Instagram",
+      style: styles.instagram,
+      url: cms.fields.instagram,
+      props: cms.props.instagram,
+      icon: <TbBrandInstagram />,
+    },
+  ];
+  const filteredSocialMedias = socialMedias.filter((socialMedia) =>
+    Boolean(socialMedia.url)
+  );
 
   return (
     <div className={styles.container}>
@@ -67,10 +90,14 @@ export default function Contacts() {
       <div className={styles.firstArea}>
         <h1>Contatos</h1>
         <ul className={styles.social}>
-          {socialMedias.map((socialMedia) => (
-            <li className={socialMedia.style} key={socialMedia.name}>
+          {filteredSocialMedias.map((socialMedia) => (
+            <li
+              className={socialMedia.style}
+              key={socialMedia.name}
+              {...socialMedia.props}
+            >
               <a
-                href={socialMedia.url}
+                href={socialMedia.url ?? ""}
                 target="_blank"
                 rel="noreferrer"
                 className={socialMedia.name}
@@ -83,33 +110,38 @@ export default function Contacts() {
         </ul>
         <div>
           <ul className={styles.other}>
-            <li>
-              <a href="mailto:contato@gui.dev.br">
-                <TbMail />
-                Enviar um email
-              </a>
-            </li>
-            <li>
-              <Link href="/pix">
-                <MdPix />
-                Enviar um PIX
-              </Link>
-            </li>
-            <li>
-              <a
-                href="https://www.youtube.com/playlist?list=PL7UWbfsHKcRPTRUWgPwyBh-ZxHhFD0kYy"
-                target="_blank"
-              >
-                <TbMusic />
-                Gosta de música? Ouça minha playlist no YouTube Music
-              </a>
-            </li>
-            <li>
-              <Link href="/minecraft">
-                <SiMojangstudios />
-                Gosta de Minecraft? Jogue comigo!
-              </Link>
-            </li>
+            {cms.fields.email && cms.fields.sendEmailText && (
+              <li {...cms.props.sendEmailText}>
+                <a href={`mailto:${cms.fields.email}`}>
+                  <TbMail />
+                  {cms.fields.sendEmailText}
+                </a>
+              </li>
+            )}
+            {cms.fields.textOfPixOption && (
+              <li {...cms.props.textOfPixOption}>
+                <Link href="/pix">
+                  <MdPix />
+                  {cms.fields.textOfPixOption}
+                </Link>
+              </li>
+            )}
+            {cms.fields.musicPlaylistText && cms.fields.playlistLink && (
+              <li {...cms.props.musicPlaylistText}>
+                <a href={cms.fields.playlistLink} target="_blank">
+                  <TbMusic />
+                  {cms.fields.musicPlaylistText}
+                </a>
+              </li>
+            )}
+            {cms.fields.minecraftText && (
+              <li {...cms.props.minecraftText}>
+                <Link href="/minecraft">
+                  <SiMojangstudios />
+                  {cms.fields.minecraftText}
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
       </div>
