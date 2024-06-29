@@ -1,9 +1,15 @@
-import localFont from "next/font/local";
-import styles from "./styles.module.css";
-import React from "react";
-import Window from "./window";
-import { BedrockPingResponse } from "@minescope/mineping";
 import { getServerStatus } from "@/services/api/minecraft";
+import { MinecraftCMSData, getCMSDataForMinecraftPage, useCMSDataForMinecraftPage } from "@/services/cms/minecraft";
+import { BedrockPingResponse } from "@minescope/mineping";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
+import localFont from "next/font/local";
+import React from "react";
+import styles from "./styles.module.css";
+import Window from "./window";
+
+interface Props {
+  cms: MinecraftCMSData;
+}
 
 const minecraftFont = localFont({
   src: [
@@ -31,10 +37,21 @@ const minecraftFont = localFont({
   display: "swap",
 });
 
-function MinecraftPage() {
-  const [serverData, setServerData] = React.useState<
-    BedrockPingResponse | false
-  >();
+export const getStaticProps: GetStaticProps<Props> = async (context) => {
+  const isPreview = context.draftMode || false;
+
+  return {
+    props: {
+      cms: await getCMSDataForMinecraftPage(isPreview),
+    },
+  };
+};
+
+type ComponentProps = InferGetStaticPropsType<typeof getStaticProps>;
+
+export default function MinecraftPage(props: ComponentProps) {
+  const cms = useCMSDataForMinecraftPage(props.cms);
+  const [serverData, setServerData] = React.useState<BedrockPingResponse | false>();
 
   const makeStatusMessage = React.useMemo(() => {
     if (serverData === undefined) return "Carregando...";
@@ -44,12 +61,12 @@ function MinecraftPage() {
   }, [serverData]);
 
   React.useEffect(() => {
-    getServerStatus()
+    getServerStatus(props.cms.isPreview)
       .then(setServerData)
       .catch(() => {
         setServerData(false);
       });
-  }, []);
+  }, [props.cms.isPreview]);
 
   return (
     <div className={[minecraftFont.className, styles.container].join(" ")}>
@@ -58,27 +75,22 @@ function MinecraftPage() {
           <div className={styles.statusModal}>
             <h4>Conecte-se ao servidor:</h4>
             <div className={styles.dataContainer}>
-              <p>Tipo de Minecraft: Bedrock</p>
-              <p>IP: google.gui.dev.br</p>
-              <p>Porta: 19232</p>
+              <p>Tipo de Minecraft: {cms.fields.type}</p>
+              <p>IP: {cms.fields.ip}</p>
+              <p>Porta: {cms.fields.port}</p>
               <p>Status do Servidor: {makeStatusMessage}</p>
               {serverData && (
                 <>
                   <p>
-                    Jogadores online: {serverData.players.online}/
-                    {serverData.players.max}
+                    Jogadores online: {serverData.players.online}/{serverData.players.max}
                   </p>
                 </>
               )}
             </div>
-            <p className={styles.centerText}>
-              Peça permissão para o Guilherme para jogar no servidor!
-            </p>
+            <p className={styles.centerText}>{cms.fields.helperText}</p>
           </div>
         </Window>
       </div>
     </div>
   );
 }
-
-export default MinecraftPage;
