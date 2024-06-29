@@ -5,3 +5,19 @@ export type CMSData<T extends EntrySkeletonType> = {
   locale: "pt-BR";
   isPreview: boolean;
 };
+
+export type RichTextContent = {
+  content: [
+    {
+      content: Array<{
+        data: {};
+        marks: Array<{
+          type: "bold";
+        }>;
+        value: string;
+        nodeType: "text";
+      }>;
+      nodeType: "paragraph";
+    }
+  ];
+};

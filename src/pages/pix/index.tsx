@@ -1,72 +1,72 @@
-import { copyTextToClipboard } from "@/utils/copyTextToClipboard";
-import styles from "./styles.module.scss";
 import { DefaultSeo } from "@/components/DefaultSeo";
+import RichTextComponent from "@/services/cms/RichTextComponent";
+import { PixCMSData, getCMSDataForPixPage, useCMSDataForPixPage } from "@/services/cms/pix";
+import { copyTextToClipboard } from "@/utils/copyTextToClipboard";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useCallback } from "react";
-import QRCode from "react-qr-code";
 import { useAlert } from "react-alert";
+import QRCode from "react-qr-code";
+import styles from "./styles.module.scss";
 
-export default function Pix() {
-  const PIX_EMAIL = "pix@gui.dev.br";
-  const PIX_QR_CODE =
-    "00020126360014br.gov.bcb.pix0114pix@gui.dev.br5204000053039865802BR5924Guilherme da Silva Benev6008Brasilia62080504mpda6304F8FA";
+interface Props {
+  cms: PixCMSData;
+}
+
+export const getStaticProps: GetStaticProps<Props> = async (context) => {
+  const isPreview = context.draftMode || false;
+
+  return {
+    props: {
+      cms: await getCMSDataForPixPage(isPreview),
+    },
+  };
+};
+
+type ComponentProps = InferGetStaticPropsType<typeof getStaticProps>;
+
+export default function Pix(props: ComponentProps) {
+  const cms = useCMSDataForPixPage(props.cms);
   const alert = useAlert();
   const copyQrCode = useCallback(async () => {
-    copyTextToClipboard(PIX_QR_CODE)
+    copyTextToClipboard(cms.fields.qrCode)
       .then(() => {
         alert.success("Código copiado para a área de transferência");
       })
       .catch(() => {
         alert.error("Não foi possível copiar o código");
       });
-  }, [alert]);
+  }, [alert, cms.fields.qrCode]);
   const copyPixEmail = useCallback(async () => {
-    copyTextToClipboard(PIX_EMAIL)
+    copyTextToClipboard(cms.fields.email)
       .then(() => {
         alert.success("E-mail copiado para a área de transferência");
       })
       .catch(() => {
         alert.error("Não foi possível copiar o e-mail");
       });
-  }, [alert]);
+  }, [alert, cms.fields.email]);
 
   return (
     <div className={styles.container}>
-      <DefaultSeo
-        title="Guilherme Benevides - PIX"
-        description="Faça um PIX para o Guilherme"
-        image={getOpenMediaImageForNextSeo("PIX")}
-        site_name="Site do Guilherme"
-        type="website"
-      />
+      <DefaultSeo title="Guilherme Benevides - PIX" description="Faça um PIX para o Guilherme" image={getOpenMediaImageForNextSeo("PIX")} site_name="Site do Guilherme" type="website" />
       <h1>PIX</h1>
       <div className={styles.content}>
         <div className={styles.qrCode}>
           <button onClick={copyQrCode}>
-            <QRCode value={PIX_QR_CODE} bgColor="transparent" fgColor="white" />
+            <QRCode value={cms.fields.qrCode} bgColor="transparent" fgColor="white" {...cms.props.qrCode} />
           </button>
         </div>
-        <div className={styles.textArea}>
-          <p>
-            <b>Chave PIX: </b>
-            <a onClick={copyPixEmail}>{PIX_EMAIL}</a>
-            <br />
-            <b>Nome: </b>Guilherme da Silva Benevides
-            <br />
-            <b>CPF: </b>***.409.328-**
-            <br />
-            <b>Instituição Financeira: </b> Mercado Pago
-          </p>
+        <div>
+          <div className={styles.textArea} {...cms.props.email}>
+            <p>
+              <b>E-mail:</b> <a onClick={copyPixEmail}>{cms.fields.email}</a>
+            </p>
+          </div>
+          <RichTextComponent className={styles.textArea} content={cms.fields.accountInformation} contentFullFieldProps={cms.props.accountInformation} />
         </div>
       </div>
-      <p className={styles.warning}>
-        <b>Avisos Importates: </b>
-        <br />
-        Fique atento, se as informações não baterem, não faça o PIX!
-        <br />
-        Atenção, a doação é um ato voluntário, não é obrigatório, e que não
-        poderá ser revertida.
-      </p>
+      <RichTextComponent className={styles.warning} content={cms.fields.warnings} contentFullFieldProps={cms.props.warnings} />
     </div>
   );
 }

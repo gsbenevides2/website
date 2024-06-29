@@ -1,15 +1,11 @@
-import styles from "./index.module.scss";
 import { ButtonSSRLink } from "@/components/Button";
+import { DefaultSeo } from "@/components/DefaultSeo";
+import { HomeCMSData, getCMSDataForHomePage, useCMSDataForHomePage } from "@/services/cms/home";
+import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useRouter } from "next/navigation";
 import { MouseEventHandler, useCallback, useEffect, useRef } from "react";
-import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
-import { DefaultSeo } from "@/components/DefaultSeo";
-import { GetStaticProps, InferGetStaticPropsType } from "next";
-import {
-  HomeCMSData,
-  getCMSDataForHomePage,
-  useCMSDataForHomePage,
-} from "@/services/cms/home";
+import styles from "./index.module.scss";
 
 interface Props {
   cms: HomeCMSData;
@@ -48,31 +44,14 @@ export default function Home(props: ComponentProps) {
       document.body.style.overflow = "auto";
     };
   }, []);
-
   return (
     <div className={styles.container} ref={containerRef}>
-      <DefaultSeo
-        title="Site do Guilherme"
-        description="Seja bem vindo ao meu site pessoal!"
-        image={getOpenMediaImageForNextSeo("Site do Guilherme")}
-        site_name="Site do Guilherme"
-        type="website"
-      />
+      <DefaultSeo title="Site do Guilherme" description="Seja bem vindo ao meu site pessoal!" image={getOpenMediaImageForNextSeo("Site do Guilherme")} site_name="Site do Guilherme" type="website" />
       <div className={styles.firstArea}>
-        <h1
-          className={styles.title}
-          {...cms.props.title}
-          suppressHydrationWarning
-        >
+        <h1 className={styles.title} {...cms.props.title} suppressHydrationWarning>
           {cms.fields.title}
         </h1>
-        <ButtonSSRLink
-          href="/about"
-          className={styles.button}
-          onClick={goToNext}
-          {...cms.props.buttonText}
-          suppressHydrationWarning
-        >
+        <ButtonSSRLink href="/about" className={styles.button} onClick={goToNext} {...cms.props.buttonText} suppressHydrationWarning>
           {cms.fields.buttonText}
         </ButtonSSRLink>
       </div>

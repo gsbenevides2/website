@@ -17,7 +17,10 @@ export default function MyApp(props: AppProps) {
       <Provider template={AlertTemplate} position={positions.BOTTOM_CENTER}>
         {response()}
       </Provider>
-      <Script src="https://cdnjs.cloudflare.com/ajax/libs/jimp/0.22.8/jimp.min.js" />
+      <Script
+        async
+        src="https://cdnjs.cloudflare.com/ajax/libs/jimp/0.22.8/jimp.min.js"
+      />
       <Analytics />
       <SpeedInsights />
     </main>
