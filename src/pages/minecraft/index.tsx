@@ -1,11 +1,13 @@
 import { getServerStatus } from "@/services/api/minecraft";
 import { MinecraftCMSData, getCMSDataForMinecraftPage, useCMSDataForMinecraftPage } from "@/services/cms/minecraft";
+import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 import { BedrockPingResponse } from "@minescope/mineping";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import localFont from "next/font/local";
 import React from "react";
 import styles from "./styles.module.css";
 import Window from "./window";
+import { DefaultSeo } from "next-seo";
 
 interface Props {
   cms: MinecraftCMSData;
@@ -70,6 +72,7 @@ export default function MinecraftPage(props: ComponentProps) {
 
   return (
     <div className={[minecraftFont.className, styles.container].join(" ")}>
+      <DefaultSeo title="Minecraft - Site do Guilherme" description="Opa! Deseja jogar minecraft comigo?" image={getOpenMediaImageForNextSeo("Minecraft")} site_name="Site do Guilherme" type="website" />
       <div className={styles.modalCenter}>
         <Window transparent>
           <div className={styles.statusModal}>
