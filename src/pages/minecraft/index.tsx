@@ -1,3 +1,4 @@
+import { DefaultSeo } from "@/components/DefaultSeo";
 import { getServerStatus } from "@/services/api/minecraft";
 import { MinecraftCMSData, getCMSDataForMinecraftPage, useCMSDataForMinecraftPage } from "@/services/cms/minecraft";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
@@ -7,7 +8,6 @@ import localFont from "next/font/local";
 import React from "react";
 import styles from "./styles.module.css";
 import Window from "./window";
-import { DefaultSeo } from "next-seo";
 
 interface Props {
   cms: MinecraftCMSData;
