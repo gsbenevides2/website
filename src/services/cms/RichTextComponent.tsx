@@ -8,7 +8,6 @@ interface Props {
 
 export default function RichTextComponent(props: Props) {
   const { content, className, contentFullFieldProps } = props;
-  console.log({ contentFullFieldProps });
   return (
     <div className={className} {...contentFullFieldProps}>
       {content.content.map((paragraph, index) => (

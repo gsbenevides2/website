@@ -75,9 +75,9 @@ export default function MinecraftPage(props: ComponentProps) {
           <div className={styles.statusModal}>
             <h4>Conecte-se ao servidor:</h4>
             <div className={styles.dataContainer}>
-              <p>Tipo de Minecraft: {cms.fields.type}</p>
-              <p>IP: {cms.fields.ip}</p>
-              <p>Porta: {cms.fields.port}</p>
+              <p {...cms.props.type}>Tipo de Minecraft: {cms.fields.type}</p>
+              <p {...cms.props.ip}>IP: {cms.fields.ip}</p>
+              <p {...cms.props.port}>Porta: {cms.fields.port}</p>
               <p>Status do Servidor: {makeStatusMessage}</p>
               {serverData && (
                 <>
@@ -87,7 +87,9 @@ export default function MinecraftPage(props: ComponentProps) {
                 </>
               )}
             </div>
-            <p className={styles.centerText}>{cms.fields.helperText}</p>
+            <p className={styles.centerText} {...cms.props.helperText}>
+              {cms.fields.helperText}
+            </p>
           </div>
         </Window>
       </div>

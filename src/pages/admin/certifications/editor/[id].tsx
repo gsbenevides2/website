@@ -44,7 +44,6 @@ export default function Page() {
 
     try {
       const cert = await getCertification(certId);
-      console.log(cert);
 
       const certFile = await getCertificateFile(certId);
       formContext.changeMultipleInputValues({

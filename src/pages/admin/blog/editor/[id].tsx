@@ -200,7 +200,6 @@ export default function Page() {
           file,
         });
       }
-      console.log(post);
       formContext.changeMultipleInputValues({
         name: post.name,
         description: post.description,
