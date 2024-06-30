@@ -1,0 +1,16 @@
+{
+  "name": "firestore_rules_test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
+  "dependencies": {
+    "@firebase/rules-unit-testing": "^3.0.3",
+    "@types/node": "^20.14.9",
+    "firebase": "^10.12.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.2"
+  }
+}
