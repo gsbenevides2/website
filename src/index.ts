@@ -1,14 +1,21 @@
+import console from "console";
+import cors from "cors";
 import "dotenv/config";
 import express from "express";
 import { cert, initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
+import fs from "fs";
+import { unlink } from "fs/promises";
+import mime from "mime-types";
 import multer from "multer";
 import path from "path";
 
 const app = express();
 const port = process.env.PORT || 3000;
 const adminUserEmail = "gsbenevides2@gmail.com";
+
+app.use(cors());
 
 function loadGCPCredentials() {
   const stringB64 = process.env.GCP_CREDENTIALS;
@@ -36,16 +43,16 @@ interface StorageData {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 const storage = multer.diskStorage({
-  destination: path.join(__dirname, "files"),
+  destination: path.join(__dirname, "..", "files"),
   filename: (req, file, cb) => {
-    cb(null, req.body.id);
+    cb(null, req.params.id as string);
   },
 });
 
-app.get("/download", async (req, res) => {
-  const { id } = req.query;
-  console.log({ id });
+app.get("/file/:id", async (req, res) => {
+  const { id } = req.params;
 
   if (!id) {
     return res.status(400).send("Id is required");
@@ -59,29 +66,48 @@ app.get("/download", async (req, res) => {
   console.log("Querying Firestore for document");
   const doc = await docRef.get();
   console.log("Firestore query complete");
-  console.log({ doc });
   if (!doc.exists) {
     return res.status(404).send("Not found");
   }
   const data = doc.data() as StorageData;
 
-  const sendFile = () => {
-    res.header("Content-Disposition", `attachment; filename=${data.filename}`);
-    res.sendFile(path.join(__dirname, "files", id));
+  const sendFile = async () => {
+    const filePath = path.join(__dirname, "..", "files", id);
+
+    const exists = await fs.promises
+      .stat(filePath)
+      .catch(() => false)
+      .then(() => true);
+
+    if (!exists) {
+      return res.status(404).send("Not found");
+    }
+
+    const { size } = await fs.promises.stat(filePath);
+    const stream = fs.createReadStream(filePath);
+    const mimeType = mime.lookup(data.filename);
+
+    res.setHeader("Content-type", mimeType || "application/octet-stream");
+    res.setHeader("Content-Length", size);
+    res.setHeader("Content-Disposition", `attachment; filename=${data.filename}`);
+    stream.pipe(res);
   };
 
   if (!data.visible) {
-    const idToken = req.header("Authorization");
+    const idToken = req.query.idToken;
     if (!idToken) {
       return res.status(401).send("Unauthorized");
+    }
+    if (typeof idToken !== "string") {
+      return res.status(400).send("idToken must be a string");
     }
     try {
       const decodecToken = await auth.verifyIdToken(idToken);
       if (!decodecToken.email) return res.status(401).send("Unauthorized");
-      if (
-        !data.allowedUsers.includes(decodecToken.email) &&
-        decodecToken.email !== adminUserEmail
-      ) {
+      if (decodecToken.email === adminUserEmail) {
+        return sendFile();
+      }
+      if (!data.allowedUsers.includes(decodecToken.email)) {
         return res.status(401).send("Unauthorized");
       }
       sendFile();
@@ -95,9 +121,9 @@ app.get("/download", async (req, res) => {
 });
 
 app.post(
-  "/upload",
-  async (req, res) => {
-    const { id } = req.body;
+  "/file/:id",
+  async (req, res, next) => {
+    const { id } = req.params;
     const idToken = req.header("Authorization");
     if (!idToken) {
       return res.status(401).send("Unauthorized");
@@ -113,12 +139,37 @@ app.post(
     if (decodecToken.email !== adminUserEmail) {
       return res.status(401).send("Unauthorized");
     }
+    next();
   },
   multer({ storage }).single("file"),
   (_req, res) => {
     res.send("Uploaded");
   }
 );
+app.delete("/file/:id", async (req, res) => {
+  const { id } = req.params;
+  const idToken = req.header("Authorization");
+  if (!idToken) {
+    return res.status(401).send("Unauthorized");
+  }
+  if (!id) {
+    return res.status(400).send("Id is required");
+  }
+  if (typeof id !== "string") {
+    return res.status(400).send("Id must be a string");
+  }
+  const decodecToken = await auth.verifyIdToken(idToken);
+  if (!decodecToken.email) return res.status(401).send("Unauthorized");
+  if (decodecToken.email !== adminUserEmail) {
+    return res.status(401).send("Unauthorized");
+  }
+  try {
+    await unlink(path.join(__dirname, "..", "files", id));
+  } catch (e) {
+    console.error(e);
+  }
+  res.send("Deleted");
+});
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
