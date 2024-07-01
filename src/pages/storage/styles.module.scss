@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 24px;
+  }
+  button,
+  a {
+    margin-top: 24px;
+    max-width: 400px;
+  }
+  p {
+    text-align: center;
+  }
+  .error {
+    margin-top: 24px;
+    font-weight: bold;
+  }
+  .logOut {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+}

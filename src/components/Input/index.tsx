@@ -1,21 +1,10 @@
-import {
-  ChangeEventHandler,
-  DetailedHTMLProps,
-  InputHTMLAttributes,
-  useCallback,
-  useEffect,
-  useRef,
-} from "react";
+import { Nunito_Sans } from "next/font/google";
+import { ChangeEventHandler, DetailedHTMLProps, InputHTMLAttributes, useCallback, useEffect, useRef } from "react";
 import styles from "./styles.module.css";
-import { Nunito } from "next/font/google";
 
-const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito" });
+const nunito = Nunito_Sans({ subsets: ["latin"], variable: "--font-nunito" });
 
-interface InputProps<T>
-  extends Omit<
-    DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
-    "ref"
-  > {
+interface InputProps<T> extends Omit<DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "ref"> {
   boxClassName?: string;
   label?: string;
   state?: T;
@@ -24,16 +13,7 @@ interface InputProps<T>
 }
 
 export default function Input<T>(props: InputProps<T>) {
-  const {
-    label,
-    state,
-    setState,
-    boxClassName,
-    className: propClassName,
-    onChange: propOnChange,
-    ref: propRef,
-    ...rest
-  } = props;
+  const { label, state, setState, boxClassName, className: propClassName, onChange: propOnChange, ref: propRef, ...rest } = props;
 
   const ref = useRef<HTMLInputElement>(null);
   const className = [styles.input, nunito.className, propClassName].join(" ");

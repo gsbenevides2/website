@@ -52,10 +52,13 @@
 .list .textArea {
   flex: 1;
 }
+.list .textArea p {
+  white-space: pre-line;
+}
 .list .iconButtonsArea {
   display: grid;
   align-items: center;
-  gap:8px;
+  gap: 8px;
   grid-template-columns: repeat(2, 1fr);
 }
 
@@ -64,16 +67,21 @@
 }
 
 @media (max-width: 768px) {
-.list {
-	padding-top: 12px;
-}
+  .list {
+    padding-top: 12px;
+  }
   .list li img {
     display: none;
   }
   .list li h2 {
-	font-size: 1.2rem;
+    font-size: 1.2rem;
   }
   .list li h3 {
-	font-size: 1rem;
+    font-size: 1rem;
   }
+}
+
+.form {
+  display: flex;
+  gap: 8px;
 }
