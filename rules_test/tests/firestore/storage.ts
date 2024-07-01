@@ -1,5 +1,5 @@
 import { RulesTestEnvironment, assertFails, assertSucceeds } from "@firebase/rules-unit-testing";
-import { Firestore, addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { Firestore, addDoc, collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
 
 export async function runTestsForStorage(firestore: Firestore, testEnv: RulesTestEnvironment) {
   const admin = testEnv.authenticatedContext("gsbenevides2", {
@@ -54,4 +54,19 @@ export async function runTestsForStorage(firestore: Firestore, testEnv: RulesTes
 
   console.debug("Try to read a hidden document from the storage collection as an authenticated non-admin user who is not allowed, it should fail");
   await assertFails(getDoc(doc(storageCollectionForAnotherUser, hiddenStorageId)));
+
+  console.debug("Try to list documents from the storage collection as an unauthenticated user, it should fail");
+  await assertFails(getDocs(storageCollection));
+
+  console.debug("Try to list documents from the storage collection as an authenticated admin user gsbenevides2, it should succeed");
+  await assertSucceeds(getDocs(storageCollectionForAdmin));
+
+  console.debug("Try to list documents from the storage collection as an authenticated non-admin user, it should fail");
+  await assertFails(getDocs(storageCollectionForNotAdmin));
+
+  console.debug("Try to list documents from the storage collection as an authenticated non-admin user who is allowed, it should fail");
+  await assertFails(getDocs(query(storageCollectionForNotAdmin, where("allowedUsers", "array-contains", "notAdmin@gmail.com"))));
+
+  console.debug("Try to list documents from the storage collection as an authenticated non-admin user, and filter by visible, it should fail");
+  await assertFails(getDocs(query(storageCollectionForNotAdmin, where("visible", "==", true))));
 }
