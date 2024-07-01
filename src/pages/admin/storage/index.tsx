@@ -3,7 +3,7 @@ import * as FirebaseSelfStorage from "@/services/firebase/client/selfstorage";
 import { uploadFileViaJs } from "@/utils/uploadFileViaJs";
 import { useCallback, useMemo, useState } from "react";
 import { TbEye, TbTrash, TbUpload } from "react-icons/tb";
-import { AddFileModal } from "./components/AddFileModal/AddFileModal";
+import { AddFileModal } from "../../../components/pages/admin/storage/AddFileModal/AddFileModal";
 
 import dynamic from "next/dynamic";
 
@@ -18,7 +18,7 @@ function formatDate(date: Date) {
   }).format(date);
 }
 
-const ChangeVisibility = dynamic(() => import("./components/ChangeVisibility/ChangeVisibility"), { ssr: false });
+const ChangeVisibility = dynamic(() => import("../../../components/pages/admin/storage/ChangeVisibility/ChangeVisibility"), { ssr: false });
 
 export default function Page() {
   const [showAddFileModal, setShowAddFileModal] = useState(false);
