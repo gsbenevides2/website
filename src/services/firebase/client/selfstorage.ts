@@ -12,7 +12,11 @@ export interface SelfStorageFileDocument extends DocumentData {
 
 type SelfStorageFileCollection = CollectionReference<SelfStorageFileDocument>;
 
-export const serverUrl = process.env.NODE_ENV === "production" ? "https://storage.selfhost.gui.dev.br" : "http://localhost:8087";
+export const getServerUrl = () => {
+  const enviromentVariable = process.env.NEXT_PUBLIC_SELFHOSTED_STORAGE_URL || process.env.SELFHOSTED_STORAGE_URL;
+  if (!enviromentVariable) throw new Error("NEXT_PUBLIC_SELFHOSTED_STORAGE_URL is not defined");
+  return enviromentVariable;
+};
 
 const getCollection = (db: Firestore) => collection(db, "storage") as SelfStorageFileCollection;
 
@@ -29,7 +33,7 @@ export const createNewFile = async (id: string, file: File) => {
   });
   const formData = new FormData();
   formData.append("file", file);
-  await fetch(`${serverUrl}/file/${id}`, {
+  await fetch(`${getServerUrl()}/file/${id}`, {
     method: "POST",
     body: formData,
     headers: {
@@ -43,7 +47,7 @@ export const deleteFile = async (id: string) => {
   const collection = getCollection(db);
   const document = doc(collection, id);
   await deleteDoc(document);
-  await fetch(`${serverUrl}/file/${id}`, {
+  await fetch(`${getServerUrl()}/file/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: (await Firebase.getAuth().currentUser?.getIdToken()) ?? "",
@@ -61,7 +65,7 @@ export const reuploadFile = async (id: string, file: File) => {
   });
   const formData = new FormData();
   formData.append("file", file);
-  await fetch(`${serverUrl}/file/${id}`, {
+  await fetch(`${getServerUrl()}/file/${id}`, {
     method: "POST",
     body: formData,
     headers: {

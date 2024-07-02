@@ -1,16 +1,8 @@
+import { CollectionReference, collection, deleteDoc, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
 import { getBlob, getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import {
-  CollectionReference,
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-} from "firebase/firestore";
 
-import Firebase from "./config";
 import MyError from "@/utils/MyError";
+import Firebase from "./config";
 
 interface Project {
   id: string;
@@ -41,9 +33,7 @@ interface ProjectSet {
 
 function getProjectsCollection() {
   const firestore = Firebase.getFirestore();
-  return collection(firestore, "projects") as CollectionReference<
-    Omit<ProjectInFirestore, "id">
-  >;
+  return collection(firestore, "projects") as CollectionReference<Omit<ProjectInFirestore, "id">>;
 }
 
 async function uploadProjectImageFile(certificationId: string, file: File) {
@@ -56,14 +46,9 @@ async function uploadProjectImageFile(certificationId: string, file: File) {
 
 export async function addOrUpdateProject(project: ProjectToAddOrUpdate) {
   const projectsRef = getProjectsCollection();
-  const projectDoc = project.id
-    ? doc(projectsRef, project.id)
-    : doc(projectsRef);
+  const projectDoc = project.id ? doc(projectsRef, project.id) : doc(projectsRef);
   const projectId = projectDoc.id;
-  const imageDownloadUrl = await uploadProjectImageFile(
-    projectId,
-    project.image
-  );
+  const imageDownloadUrl = await uploadProjectImageFile(projectId, project.image);
   await setDoc(projectDoc, {
     name: project.name,
     github: project.github,
@@ -97,11 +82,7 @@ export async function getProject(projectId: string): Promise<Project> {
   const projectRef = doc(getProjectsCollection(), projectId);
   const project = await getDoc(projectRef);
   const projectData = project.data();
-  if (!projectData)
-    throw new MyError(
-      "project-not-found",
-      `Projeto não encontrado. O projeto com id: ${projectId} não foi encontrado no Firebase Firestore!`
-    );
+  if (!projectData) throw new MyError("project-not-found", `Projeto não encontrado. O projeto com id: ${projectId} não foi encontrado no Firebase Firestore!`);
   return {
     id: project.id,
     ...projectData,

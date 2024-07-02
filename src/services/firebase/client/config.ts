@@ -1,19 +1,12 @@
-import { FirebaseApp, initializeApp } from "firebase/app";
-import {
-  Firestore,
-  connectFirestoreEmulator,
-  getFirestore,
-} from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
+import { FirebaseApp, initializeApp } from "firebase/app";
 import { Auth, connectAuthEmulator, getAuth } from "firebase/auth";
-import {
-  FirebaseStorage,
-  connectStorageEmulator,
-  getStorage,
-} from "firebase/storage";
-import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
-import {getMessaging, Messaging} from 'firebase/messaging'
-const firebaseConfig = JSON.parse(process.env.NEXT_PUBLIC_FIREBASE_CREDENTIALS)
+import { Firestore, connectFirestoreEmulator, getFirestore } from "firebase/firestore";
+import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
+import { Messaging, getMessaging } from "firebase/messaging";
+import { FirebaseStorage, connectStorageEmulator, getStorage } from "firebase/storage";
+import getEnviromentConfig from "../config";
+const firebaseConfig = JSON.parse(process.env.NEXT_PUBLIC_FIREBASE_CREDENTIALS);
 
 export default class Firebase {
   static app: FirebaseApp | undefined;
@@ -26,12 +19,14 @@ export default class Firebase {
     if (Firebase.firestore) return Firebase.firestore;
     const app = Firebase.getApp();
     const firestore = getFirestore(app);
-    if (process.env.NODE_ENV === "development")
+    const enviromentData = getEnviromentConfig("firestore", "merged");
+    if (enviromentData.isEmulator) {
       try {
-        connectFirestoreEmulator(firestore, "localhost", 8080);
+        connectFirestoreEmulator(firestore, enviromentData.host, enviromentData.port);
       } catch (e) {
         console.error(e);
       }
+    }
     Firebase.firestore = firestore;
     return firestore;
   }
@@ -40,10 +35,12 @@ export default class Firebase {
     if (Firebase.auth) return Firebase.auth;
     const app = Firebase.getApp();
     const auth = getAuth(app);
-    if (process.env.NODE_ENV === "development")
-      connectAuthEmulator(auth, "http://localhost:9099", {
+    const enviromentData = getEnviromentConfig("auth", "merged");
+    if (enviromentData.isEmulator) {
+      connectAuthEmulator(auth, `http://${enviromentData.host}:${enviromentData.port}`, {
         disableWarnings: true,
       });
+    }
     Firebase.auth = auth;
     return auth;
   }
@@ -52,8 +49,8 @@ export default class Firebase {
     if (Firebase.storage) return Firebase.storage;
     const app = Firebase.getApp();
     const storage = getStorage(app);
-    if (process.env.NODE_ENV === "development")
-      connectStorageEmulator(storage, "localhost", 9199);
+    const enviromentData = getEnviromentConfig("storage", "merged");
+    if (enviromentData.isEmulator) connectStorageEmulator(storage, enviromentData.host, enviromentData.port);
     Firebase.storage = storage;
     return storage;
   }
@@ -61,17 +58,20 @@ export default class Firebase {
   static getApp() {
     if (Firebase.app) return Firebase.app;
     const app = initializeApp(firebaseConfig);
-    const isServer = typeof window === 'undefined';
+
+    const isServer = typeof window === "undefined";
     if (process.env.NODE_ENV !== "development" && !isServer) getAnalytics(app);
     const functions = getFunctions(app);
-    if (process.env.NODE_ENV !== "development")
-      connectFunctionsEmulator(functions, "127.0.0.1", 5001);
+
+    const enviromentData = getEnviromentConfig("functions", "merged");
+    if (enviromentData.isEmulator) connectFunctionsEmulator(functions, enviromentData.host, enviromentData.port);
+
     Firebase.app = app;
     return app;
   }
 
-  static getMessaging(){
-    if(Firebase.messaging) return Firebase.messaging;
+  static getMessaging() {
+    if (Firebase.messaging) return Firebase.messaging;
     const app = Firebase.getApp();
     const messaging = getMessaging(app);
     Firebase.messaging = messaging;
