@@ -129,7 +129,10 @@ async function fetchStatusFromService(
     statusPage: service.statusPage,
   };
 }
-
+/**
+ * Fetches the status of all services
+ * @return {Promise<ServiceResponse[]>} - The status of all services
+ */
 async function fetchStatusFromAllServices(): Promise<ServiceResponse[]> {
   const statusPromises = services.map(fetchStatusFromService);
   return await Promise.all(statusPromises);
