@@ -10,7 +10,8 @@
     "plugin:import/warnings",
     "plugin:import/typescript",
     "google",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -18,7 +19,7 @@
     "sourceType": "module"
   },
   "ignorePatterns": ["/lib/**/*"],
-  "plugins": ["@typescript-eslint", "import", "prettier"],
+  "plugins": ["@typescript-eslint", "import"],
   "rules": {
     "quotes": ["error", "double"],
     "import/no-unresolved": 0,
