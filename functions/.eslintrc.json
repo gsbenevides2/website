@@ -17,13 +17,8 @@
     "project": ["./tsconfig.json"],
     "sourceType": "module"
   },
-  "ignorePatterns": [
-    "/lib/**/*"
-  ],
-  "plugins": [
-    "@typescript-eslint",
-    "import"
-  ],
+  "ignorePatterns": ["/lib/**/*"],
+  "plugins": ["@typescript-eslint", "import", "prettier"],
   "rules": {
     "quotes": ["error", "double"],
     "import/no-unresolved": 0,
