@@ -1,3 +1,4 @@
+import * as cors from "cors";
 import * as express from "express";
 import { fetchFromAtlassianStatuspage } from "./atlasian";
 import { fetchFromGoogleCloudStatusDashboard } from "./google";
@@ -6,7 +7,7 @@ import { fetchFromPing } from "./ping";
 import { Service, ServiceResponse } from "./types";
 import { fetchFromZerotierStatuspage } from "./zerotier";
 const app = express();
-
+app.use(cors());
 const services: Service[] = [
   {
     name: "GitHub",
