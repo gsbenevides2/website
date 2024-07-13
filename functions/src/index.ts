@@ -3,6 +3,7 @@ import * as logger from "firebase-functions/logger";
 import { onDocumentDeleted } from "firebase-functions/v2/firestore";
 import { onRequest } from "firebase-functions/v2/https";
 import { setGlobalOptions } from "firebase-functions/v2/options";
+import { decoMiddleware } from "./deco";
 import { linksMiddleware } from "./links";
 import { statusMiddleware } from "./status";
 import { deleteStorageFolder } from "./utils";
@@ -42,3 +43,5 @@ export const deleteProject = onDocumentDeleted(
 export const links = onRequest(linksMiddleware);
 
 export const status = onRequest(statusMiddleware);
+
+export const deco = onRequest(decoMiddleware);
