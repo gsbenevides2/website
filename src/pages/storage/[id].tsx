@@ -1,7 +1,7 @@
 import { AuthState, logIn, logOut, useAuthentication } from "@/services/firebase/client/auth";
 
 import { Button, ButtonAnchor } from "@/components/Button";
-import { SelfStorageFileDocument, getFile, serverUrl } from "@/services/firebase/client/selfstorage";
+import { SelfStorageFileDocument, getFile, getServerUrl } from "@/services/firebase/client/selfstorage";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./styles.module.scss";
@@ -12,6 +12,7 @@ export default function Page() {
   const router = useRouter();
   const [state, setState] = useState<States>("loading");
   const [file, setFile] = useState<SelfStorageFileDocument | null>(null);
+  const serverUrl = getServerUrl();
 
   const [downloadUrl, setDownloadUrl] = useState<string>("");
 
