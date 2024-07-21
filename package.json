@@ -48,6 +48,7 @@
   },
   "devDependencies": {
     "@types/cookies": "^0.7.7",
+    "@types/dom-view-transitions": "^1.0.5",
     "@types/papaparse": "^5.3.14",
     "@types/react-alert": "^7.0.6",
     "@types/react-syntax-highlighter": "^15.5.7",

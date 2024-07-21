@@ -1,27 +1,25 @@
-import Input from "@/components/Input";
-import Image from "next/image";
-import {
-  MouseEventHandler,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import styles from "./styles.module.css";
-import { listCertifications } from "@/services/firebase/client/certificates";
-import { useRouter } from "next/router";
-import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { DefaultSeo } from "@/components/DefaultSeo";
+import Input from "@/components/Input";
+import { listCertifications } from "@/services/firebase/client/certificates";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
+import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import styles from "./styles.module.css";
 
 interface Certificate {
   id: string;
   name: string;
-  pdfThumbnail: string;
+  institution: string;
   keywords: string[];
-  pdfThumbnailBlur: string;
+  certificate: {
+    thumbnail: {
+      png: string;
+      blur: string;
+    };
+  };
 }
 
 interface Props {
@@ -38,46 +36,31 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   };
 };
 
-export default function Page(
-  props: InferGetStaticPropsType<typeof getStaticProps>
-) {
+export default function Page(props: InferGetStaticPropsType<typeof getStaticProps>) {
   const { certificates } = props;
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredCertificates, setFilteredCertificates] =
-    useState<Certificate[]>();
+  const [filteredCertificates, setFilteredCertificates] = useState<Certificate[]>();
   const router = useRouter();
   const hidder = useRef<HTMLDivElement>(null);
 
-  const handleClickCertificate: MouseEventHandler<HTMLAnchorElement> =
-    useCallback(
-      async (event) => {
-        const href = event.currentTarget.href;
-        event.preventDefault();
-        hidder.current?.classList.add(styles.hide);
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        router.push(href);
-      },
-      [router]
-    );
+  const handleClickCertificate: MouseEventHandler<HTMLAnchorElement> = useCallback(
+    async (event) => {
+      const href = event.currentTarget.href;
+      event.preventDefault();
+      hidder.current?.classList.add(styles.hide);
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      router.push(href);
+    },
+    [router]
+  );
 
   const visibleCertificates = filteredCertificates || certificates;
 
   const memorizedComponent = useMemo(() => {
     return visibleCertificates.map((certificate) => (
-      <Link
-        href={`/certificate/${certificate.id}`}
-        key={certificate.id}
-        onClick={handleClickCertificate}
-      >
+      <Link href={`/certificate/${certificate.id}`} key={certificate.id} onClick={handleClickCertificate}>
         <li>
-          <Image
-            src={certificate.pdfThumbnail}
-            width={300}
-            height={200}
-            alt={`Certificado de conclusão do curso de ${certificate.name}`}
-            placeholder="blur"
-            blurDataURL={certificate.pdfThumbnailBlur}
-          />
+          <Image src={certificate.certificate.thumbnail.png} width={300} height={200} alt={`Certificado de conclusão do curso de ${certificate.name}`} placeholder="blur" blurDataURL={certificate.certificate.thumbnail.blur} />
           <div>{certificate.name}</div>
         </li>
       </Link>
@@ -104,23 +87,10 @@ export default function Page(
   return (
     <div ref={hidder} className={styles.hidder}>
       <div className={styles.container}>
-        <DefaultSeo
-          title="Mural de Certificações"
-          description="Mural de Certificações do Guilherme"
-          image={getOpenMediaImageForNextSeo("Meus Certificados")}
-          site_name="Site do Guilherme"
-          type="website"
-        />
+        <DefaultSeo title="Mural de Certificações" description="Mural de Certificações do Guilherme" image={getOpenMediaImageForNextSeo("Meus Certificados")} site_name="Site do Guilherme" type="website" />
         <div className={styles.header}>
           <h1>Mural de Certificações</h1>
-          <Input
-            boxClassName={styles.searchBox}
-            type="text"
-            placeholder="Procure por Linguagem ou Skill:"
-            id="search"
-            state={searchTerm}
-            setState={setSearchTerm}
-          />
+          <Input boxClassName={styles.searchBox} type="text" placeholder="Procure por Linguagem ou Skill:" id="search" state={searchTerm} setState={setSearchTerm} />
         </div>
         <ul className={styles.certificatesList}>{memorizedComponent}</ul>
       </div>

@@ -1,17 +1,13 @@
-import { Button, ButtonAnchor } from "@/components/Button";
-import {
-  getCertification,
-  listCertifications,
-} from "@/services/firebase/client/certificates";
-import { useCallback, useMemo } from "react";
+import { ButtonAnchor } from "@/components/Button";
+import { DefaultSeo } from "@/components/DefaultSeo";
+import { getCertification, listCertifications } from "@/services/firebase/client/certificates";
+import { parseDateObjcToDDMMYYYY } from "@/utils/parseDateStringtoDateObj";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import dynamic from "next/dynamic";
+import { ParsedUrlQuery } from "querystring";
+import { useMemo } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import styles from "../project/styles.module.css";
-import { parseDateObjcToDDMMYYYY } from "@/utils/parseDateStringtoDateObj";
-import Head from "next/head";
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
-import { ParsedUrlQuery } from "querystring";
-import { DefaultSeo } from "@/components/DefaultSeo";
-import dynamic from "next/dynamic";
 
 interface Certification {
   id: string;
@@ -19,12 +15,18 @@ interface Certification {
   institution: string;
   date: string;
   externalReference?: string;
-  descriptionDesktop: string;
-  descriptionMobile: string;
-  pdf: string;
+  description: {
+    desktop: string;
+    mobile: string;
+  };
+  certificate: {
+    pdf: string;
+    thumbnail: {
+      png: string;
+      blur: string;
+    };
+  };
   keywords: string[];
-  pdfThumbnail: string;
-  pdfThumbnailBlur: string;
 }
 interface Props {
   certificate: Certification;
@@ -44,9 +46,7 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps<Props, Params> = async (
-  context
-) => {
+export const getStaticProps: GetStaticProps<Props, Params> = async (context) => {
   const { id } = context.params as { id: string };
   const certificate = await getCertification(id);
   if (certificate == null)
@@ -64,9 +64,7 @@ export const getStaticProps: GetStaticProps<Props, Params> = async (
   };
 };
 
-export default function Page(
-  props: InferGetStaticPropsType<typeof getStaticProps>
-) {
+export default function Page(props: InferGetStaticPropsType<typeof getStaticProps>) {
   const { certificate } = props;
   const PdfViewer = dynamic(() => import("@/components/PdfViewer"), {
     ssr: false,
@@ -75,11 +73,7 @@ export default function Page(
     if (!certificate) return null;
     if (!certificate.externalReference) return null;
     return (
-      <ButtonAnchor
-        href={certificate.externalReference}
-        target="_blank"
-        className={styles.viewMoreButton}
-      >
+      <ButtonAnchor href={certificate.externalReference} target="_blank" className={styles.viewMoreButton}>
         Saiba Mais sobre o Curso
       </ButtonAnchor>
     );
@@ -93,7 +87,7 @@ export default function Page(
         title={certificate.name}
         description={`Certificado de ${certificate.name} emitido pela instituição ${certificate.institution}`}
         image={{
-          url: certificate.pdfThumbnail,
+          url: certificate.certificate.thumbnail.png,
           width: 800,
           height: 600,
         }}
@@ -105,14 +99,14 @@ export default function Page(
       <h4>Data de Conclusão: {certificate.date}</h4>
       <div className={styles.area1}>
         <div className={styles.pdf}>
-          <PdfViewer file={certificate.pdf} />
+          <PdfViewer file={certificate.certificate.pdf} />
         </div>
         <div className={styles.description}>
           <div className={styles.descriptionDesktop}>
-            <ReactMarkdown>{certificate.descriptionDesktop}</ReactMarkdown>
+            <ReactMarkdown>{certificate.description.desktop}</ReactMarkdown>
           </div>
           <div className={styles.descriptionMobile}>
-            <ReactMarkdown>{certificate.descriptionMobile}</ReactMarkdown>
+            <ReactMarkdown>{certificate.description.mobile}</ReactMarkdown>
           </div>
           {referenceButton}
         </div>

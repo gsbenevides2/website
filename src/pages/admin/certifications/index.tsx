@@ -1,20 +1,22 @@
+import ListAdminPage from "@/components/ListAdminPage";
+import { revalidateNextPages } from "@/services/api/revalidateNextPages";
+import { deleteCertification, listCertifications } from "@/services/firebase/client/certificates";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TbEdit, TbTrash } from "react-icons/tb";
 import styles from "./styles.module.css";
-import {
-  deleteCertification,
-  listCertifications,
-} from "@/services/firebase/client/certificates";
-import { revalidateNextPages } from "@/services/api/revalidateNextPages";
-import ListAdminPage from "@/components/ListAdminPage";
 
 interface CertToList {
   id: string;
   name: string;
   institution: string;
-  pdfThumbnail: string;
-  pdfThumbnailBlur: string;
+  keywords: string[];
+  certificate: {
+    thumbnail: {
+      png: string;
+      blur: string;
+    };
+  };
 }
 
 export default function Page() {
@@ -27,9 +29,7 @@ export default function Page() {
   }, []);
 
   const deleteCert = useCallback(async (id: string) => {
-    const confirm = window.confirm(
-      "Deseja realmente excluir este certificado?"
-    );
+    const confirm = window.confirm("Deseja realmente excluir este certificado?");
     if (!confirm) return;
     await deleteCertification(id);
     await revalidateNextPages("certificates", id);
@@ -55,8 +55,8 @@ export default function Page() {
       id: cert.id,
       title: cert.name,
       description: cert.institution,
-      image: cert.pdfThumbnail,
-      blurImage: cert.pdfThumbnailBlur,
+      image: cert.certificate.thumbnail.png,
+      blurImage: cert.certificate.thumbnail.blur,
       altImage: "Image do Certificado: " + cert.name,
     }));
   }, [certs]);

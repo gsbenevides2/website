@@ -1,38 +1,24 @@
+import { Button } from "@/components/Button";
+import { Form, Input, StatelessInput, Textarea, useFormContext } from "@/components/Form";
+import { FormSubmitEvent } from "@/components/Form/types";
 import InputCustom from "@/components/Input";
+import Loader from "@/components/Loader";
 import { PdfInput } from "@/components/PdfInput";
 import TextareaCustom from "@/components/TextArea";
+import { revalidateNextPages } from "@/services/api/revalidateNextPages";
+import { AuthState, useAdminAuthentication } from "@/services/firebase/client/auth";
+import { addOrUpdateCertification, getCertificateFile, getCertification } from "@/services/firebase/client/certificates";
+import MyError from "@/utils/MyError";
+import { generateBlur } from "@/utils/imageManager";
+import { pdf2Img } from "@/utils/pdf2Img";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./styles.module.css";
-import { Button } from "@/components/Button";
-import { useRouter } from "next/router";
-import {
-  addOrUpdateCertification,
-  getCertificateFile,
-  getCertification,
-} from "@/services/firebase/client/certificates";
-import {
-  AuthState,
-  useAdminAuthentication,
-} from "@/services/firebase/client/auth";
-import { pdf2Img } from "@/utils/pdf2Img";
-import MyError from "@/utils/MyError";
-import { revalidateNextPages } from "@/services/api/revalidateNextPages";
-import { generateBlur } from "@/utils/imageManager";
-import Loader from "@/components/Loader";
-import {
-  Form,
-  Input,
-  StatelessInput,
-  useFormContext,
-  Textarea,
-} from "@/components/Form";
-import { FormSubmitEvent } from "@/components/Form/types";
 
 export default function Page() {
   const router = useRouter();
-  const certId =
-    router.query.id === "new" ? undefined : (router.query.id as string);
+  const certId = router.query.id === "new" ? undefined : (router.query.id as string);
   const hidder = useRef<HTMLDivElement>(null);
   const loader = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -51,8 +37,8 @@ export default function Page() {
         institution: cert.institution,
         date: cert.date.toISOString().split("T")[0],
         externalReference: cert.externalReference,
-        descriptionDesktop: cert.descriptionDesktop,
-        descriptionMobile: cert.descriptionMobile,
+        descriptionDesktop: cert.description.desktop,
+        descriptionMobile: cert.description.mobile,
         pdf: [certFile],
         keywords: cert.keywords.join(","),
       });
@@ -60,9 +46,7 @@ export default function Page() {
       if (e instanceof MyError) {
         alert(e.message);
       } else {
-        alert(
-          "Erro ao carregar dados do certificado. Veja o console para detalhes!"
-        );
+        alert("Erro ao carregar dados do certificado. Veja o console para detalhes!");
         console.error(e);
       }
       router.push("/admin/certifications");
@@ -92,16 +76,7 @@ export default function Page() {
   }
   const formSubmit: FormSubmitEvent<FormValues> = useCallback(
     async (e) => {
-      const {
-        name,
-        institution,
-        date,
-        externalReference,
-        descriptionDesktop,
-        descriptionMobile,
-        pdf,
-        keywords,
-      } = e;
+      const { name, institution, date, externalReference, descriptionDesktop, descriptionMobile, pdf, keywords } = e;
       if (!pdf[0]) {
         alert("Selecione um PDF");
         return;
@@ -116,12 +91,18 @@ export default function Page() {
         institution: institution,
         date: date,
         externalReference: externalReference?.toString() ?? "",
-        descriptionDesktop: descriptionDesktop,
-        descriptionMobile: descriptionMobile,
-        pdf: pdf[0],
+        description: {
+          desktop: descriptionDesktop,
+          mobile: descriptionMobile,
+        },
+        certificate: {
+          pdf: pdf[0],
+          thumbnail: {
+            png: pdfThumbnail,
+            blur: await generateBlur(pdfThumbnail),
+          },
+        },
         keywords: keywords.split(",").map((e) => e.trim()),
-        pdfThumbnail,
-        pdfThumbnailBlur: await generateBlur(pdfThumbnail),
       });
       await revalidateNextPages("certificates", responseCertId);
 
@@ -158,99 +139,15 @@ export default function Page() {
             <title>{certId ? "Editar" : "Adicionar"} Certificação</title>
           </Head>
           <h1>{certId ? "Editar" : "Adicionar"} Certificado</h1>
-          <Form
-            className={styles.form}
-            submit={formSubmit}
-            contextLoader={formContext.contextLoader}
-          >
-            <Input
-              placeholder="Digite o Nome do Curso/Certificado"
-              required
-              id="name"
-              name="name"
-              customComponent={({ ref, ...props }) => (
-                <InputCustom {...props} label="Nome do Curso/Certificado:" />
-              )}
-            />
-            <Input
-              placeholder="Digite o Nome da Instituição"
-              required
-              id="institution"
-              name="institution"
-              customComponent={({ ref, ...props }) => (
-                <InputCustom {...props} label="Instituição:" />
-              )}
-            />
-            <Input
-              type="date"
-              id="date"
-              name="date"
-              required
-              customComponent={({ ref, ...props }) => (
-                <InputCustom {...props} label="Data de Emissão" />
-              )}
-            />
-            <Input
-              id="externalReference"
-              name="externalReference"
-              placeholder="Digite o link para o Certificado"
-              type="url"
-              customComponent={({ ref, ...props }) => (
-                <InputCustom
-                  {...props}
-                  label="Referência Externa: (Opcional)"
-                />
-              )}
-            />
-            <Textarea
-              id="descriptionDesktop"
-              name="descriptionDesktop"
-              required
-              placeholder="Descrição Desktop (Markdown)"
-              customComponent={({ ref, ...props }) => (
-                <TextareaCustom
-                  {...props}
-                  label="Descrição Desktop: (Markdown)"
-                  className={styles.textarea}
-                />
-              )}
-            />
-            <Textarea
-              id="descriptionMobile"
-              name="descriptionMobile"
-              required
-              placeholder="Descrição Mobile (Markdown)"
-              customComponent={({ ref, ...props }) => (
-                <TextareaCustom
-                  {...props}
-                  label="Descrição Mobile: (Markdown)"
-                  className={styles.textarea}
-                />
-              )}
-            />
-            <StatelessInput
-              name="pdf"
-              customComponent={(props) => (
-                <PdfInput
-                  {...props}
-                  label="Selecione o PDF do Certificado"
-                  allowDownload
-                />
-              )}
-            />
-            <Textarea
-              id="keywords"
-              name="keywords"
-              required
-              placeholder="Digite as palavras chave separadas por vírgula"
-              customComponent={({ ref, ...props }) => (
-                <TextareaCustom
-                  {...props}
-                  label="Palavras Chave:"
-                  className={styles.textarea}
-                />
-              )}
-            />
+          <Form className={styles.form} submit={formSubmit} contextLoader={formContext.contextLoader}>
+            <Input placeholder="Digite o Nome do Curso/Certificado" required id="name" name="name" customComponent={({ ref, ...props }) => <InputCustom {...props} label="Nome do Curso/Certificado:" />} />
+            <Input placeholder="Digite o Nome da Instituição" required id="institution" name="institution" customComponent={({ ref, ...props }) => <InputCustom {...props} label="Instituição:" />} />
+            <Input type="date" id="date" name="date" required customComponent={({ ref, ...props }) => <InputCustom {...props} label="Data de Emissão" />} />
+            <Input id="externalReference" name="externalReference" placeholder="Digite o link para o Certificado" type="url" customComponent={({ ref, ...props }) => <InputCustom {...props} label="Referência Externa: (Opcional)" />} />
+            <Textarea id="descriptionDesktop" name="descriptionDesktop" required placeholder="Descrição Desktop (Markdown)" customComponent={({ ref, ...props }) => <TextareaCustom {...props} label="Descrição Desktop: (Markdown)" className={styles.textarea} />} />
+            <Textarea id="descriptionMobile" name="descriptionMobile" required placeholder="Descrição Mobile (Markdown)" customComponent={({ ref, ...props }) => <TextareaCustom {...props} label="Descrição Mobile: (Markdown)" className={styles.textarea} />} />
+            <StatelessInput name="pdf" customComponent={(props) => <PdfInput {...props} label="Selecione o PDF do Certificado" allowDownload />} />
+            <Textarea id="keywords" name="keywords" required placeholder="Digite as palavras chave separadas por vírgula" customComponent={({ ref, ...props }) => <TextareaCustom {...props} label="Palavras Chave:" className={styles.textarea} />} />
             <Button type="submit">Salvar Certificado</Button>
           </Form>
         </div>

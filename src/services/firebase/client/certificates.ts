@@ -1,57 +1,55 @@
-import {
-  getBlob,
-  getDownloadURL,
-  ref,
-  uploadBytes,
-  uploadString,
-} from "firebase/storage";
-import {
-  CollectionReference,
-  Timestamp,
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  orderBy,
-  query,
-  setDoc,
-  where,
-} from "firebase/firestore";
+import { CollectionReference, Timestamp, collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, setDoc } from "firebase/firestore";
+import { getBlob, getDownloadURL, ref, uploadBytes, uploadString } from "firebase/storage";
 
-import Firebase from "./config";
 import MyError from "@/utils/MyError";
+import Firebase from "./config";
 
-interface Certification {
+export interface Certification {
   id: string;
   name: string;
   institution: string;
   date: Date;
   externalReference?: string;
-  descriptionDesktop: string;
-  descriptionMobile: string;
-  pdf: string;
+  description: {
+    desktop: string;
+    mobile: string;
+  };
+  certificate: {
+    pdf: string;
+    thumbnail: {
+      png: string;
+      blur: string;
+    };
+  };
   keywords: string[];
-  pdfThumbnail: string;
-  pdfThumbnailBlur:string;
 }
 
-interface CertificationInFirestore extends Omit<Certification, "id" |"date" > {
-  date: Timestamp
+interface CertificationInFirestore extends Omit<Certification, "id" | "date"> {
+  date: Timestamp;
 }
 
-interface CertificationToAddOrUpdate extends Omit<Certification, "id" | "pdf"> {
+interface CertificationToAddOrUpdate extends Omit<Certification, "id" | "certificate"> {
   id?: string;
-  pdf: File;
+  certificate: {
+    pdf: File;
+    thumbnail: {
+      png: string;
+      blur: string;
+    };
+  };
 }
 
 interface CertificationSet {
   id: string;
   name: string;
   institution: string;
-  pdfThumbnail: string;
   keywords: string[];
-  pdfThumbnailBlur:string;
+  certificate: {
+    thumbnail: {
+      png: string;
+      blur: string;
+    };
+  };
 }
 
 function getCertificationCollection() {
@@ -60,7 +58,6 @@ function getCertificationCollection() {
 }
 
 async function uploadCertificationFile(certificationId: string, file: File) {
-
   const storage = Firebase.getStorage();
   const certificationsRef = ref(storage, `certifications`);
   const certificationRef = ref(certificationsRef, `${certificationId}.pdf`);
@@ -68,10 +65,7 @@ async function uploadCertificationFile(certificationId: string, file: File) {
   return await getDownloadURL(certificationRef);
 }
 
-async function uploadCertificationThumbImg(
-  certificationId: string,
-  thumbImg: string
-) {
+async function uploadCertificationThumbImg(certificationId: string, thumbImg: string) {
   const storage = Firebase.getStorage();
   const certificationsRef = ref(storage, `certifications`);
   const certificationRef = ref(certificationsRef, `${certificationId}.png`);
@@ -83,25 +77,25 @@ export async function addOrUpdateCertification(certification: CertificationToAdd
   const certificationsRef = getCertificationCollection();
   const certificationDoc = certification.id ? doc(certificationsRef, certification.id) : doc(certificationsRef);
   const certificationId = certificationDoc.id;
-  const pdfDownloadUrl = await uploadCertificationFile(
-    certificationId,
-    certification.pdf
-  );
-  const thumbImgDownloadUrl = await uploadCertificationThumbImg(
-    certificationId,
-    certification.pdfThumbnail
-  );
+  const pdfDownloadUrl = await uploadCertificationFile(certificationId, certification.certificate.pdf);
+  const thumbImgDownloadUrl = await uploadCertificationThumbImg(certificationId, certification.certificate.thumbnail.png);
   await setDoc(certificationDoc, {
     name: certification.name,
     institution: certification.institution,
     date: Timestamp.fromDate(certification.date),
     externalReference: certification.externalReference,
-    descriptionDesktop: certification.descriptionDesktop,
-    descriptionMobile: certification.descriptionMobile,
-    pdf: pdfDownloadUrl,
+    description: {
+      desktop: certification.description.desktop,
+      mobile: certification.description.mobile,
+    },
+    certificate: {
+      pdf: pdfDownloadUrl,
+      thumbnail: {
+        png: thumbImgDownloadUrl,
+        blur: certification.certificate.thumbnail.blur,
+      },
+    },
     keywords: certification.keywords,
-    pdfThumbnail: thumbImgDownloadUrl,
-    pdfThumbnailBlur: certification.pdfThumbnailBlur,
   });
   return certificationId;
 }
@@ -109,19 +103,21 @@ export async function addOrUpdateCertification(certification: CertificationToAdd
 export async function listCertifications(): Promise<CertificationSet[]> {
   const qy = query(getCertificationCollection(), orderBy("date", "desc"));
   const certifications = await getDocs(qy);
-  const certificationsList: CertificationSet[] = certifications.docs.map(
-    (certification) => {
-      const data = certification.data();
-      return {
-        id: certification.id,
-        name: data.name,
-        institution: data.institution,
-        pdfThumbnail: data.pdfThumbnail,
-        keywords: data.keywords,
-        pdfThumbnailBlur:data.pdfThumbnailBlur,
-      };
-    }
-  );
+  const certificationsList: CertificationSet[] = certifications.docs.map((certification) => {
+    const data = certification.data();
+    return {
+      id: certification.id,
+      name: data.name,
+      institution: data.institution,
+      keywords: data.keywords,
+      certificate: {
+        thumbnail: {
+          png: data.certificate.thumbnail.png,
+          blur: data.certificate.thumbnail.blur,
+        },
+      },
+    };
+  });
   return certificationsList;
 }
 
@@ -139,14 +135,14 @@ export async function getCertification(certificationId: string): Promise<Certifi
     id: certification.id,
     ...certificationData,
     date: certificationData.date.toDate(),
-  }
+  };
 }
 
-export async function getCertificateFile(certificationId:string):Promise<File>{
+export async function getCertificateFile(certificationId: string): Promise<File> {
   const fileName = `${certificationId}.pdf`;
   const storage = Firebase.getStorage();
   const certificationsRef = ref(storage, `certifications`);
   const certificationRef = ref(certificationsRef, fileName);
-  const blob = await getBlob(certificationRef)
-  return new File([blob], fileName, {type: blob.type})
+  const blob = await getBlob(certificationRef);
+  return new File([blob], fileName, { type: blob.type });
 }
