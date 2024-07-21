@@ -96,7 +96,7 @@ export default function Page() {
           mobile: descriptionMobile,
         },
         certificate: {
-          pdf: pdf[0],
+          pdf: { file: pdf[0] },
           thumbnail: {
             png: pdfThumbnail,
             blur: await generateBlur(pdfThumbnail),

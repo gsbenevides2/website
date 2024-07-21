@@ -15,7 +15,9 @@ export interface Certification {
     mobile: string;
   };
   certificate: {
-    pdf: string;
+    pdf: {
+      file: string;
+    };
     thumbnail: {
       png: string;
       blur: string;
@@ -31,7 +33,9 @@ interface CertificationInFirestore extends Omit<Certification, "id" | "date"> {
 interface CertificationToAddOrUpdate extends Omit<Certification, "id" | "certificate"> {
   id?: string;
   certificate: {
-    pdf: File;
+    pdf: {
+      file: File;
+    };
     thumbnail: {
       png: string;
       blur: string;
@@ -77,7 +81,7 @@ export async function addOrUpdateCertification(certification: CertificationToAdd
   const certificationsRef = getCertificationCollection();
   const certificationDoc = certification.id ? doc(certificationsRef, certification.id) : doc(certificationsRef);
   const certificationId = certificationDoc.id;
-  const pdfDownloadUrl = await uploadCertificationFile(certificationId, certification.certificate.pdf);
+  const pdfDownloadUrl = await uploadCertificationFile(certificationId, certification.certificate.pdf.file);
   const thumbImgDownloadUrl = await uploadCertificationThumbImg(certificationId, certification.certificate.thumbnail.png);
   await setDoc(certificationDoc, {
     name: certification.name,
@@ -89,7 +93,9 @@ export async function addOrUpdateCertification(certification: CertificationToAdd
       mobile: certification.description.mobile,
     },
     certificate: {
-      pdf: pdfDownloadUrl,
+      pdf: {
+        file: pdfDownloadUrl,
+      },
       thumbnail: {
         png: thumbImgDownloadUrl,
         blur: certification.certificate.thumbnail.blur,

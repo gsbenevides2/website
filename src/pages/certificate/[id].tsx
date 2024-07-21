@@ -20,7 +20,9 @@ interface Certification {
     mobile: string;
   };
   certificate: {
-    pdf: string;
+    pdf: {
+      file: string;
+    };
     thumbnail: {
       png: string;
       blur: string;
@@ -99,7 +101,7 @@ export default function Page(props: InferGetStaticPropsType<typeof getStaticProp
       <h4>Data de Conclusão: {certificate.date}</h4>
       <div className={styles.area1}>
         <div className={styles.pdf}>
-          <PdfViewer file={certificate.certificate.pdf} />
+          <PdfViewer file={certificate.certificate.pdf.file} />
         </div>
         <div className={styles.description}>
           <div className={styles.descriptionDesktop}>
