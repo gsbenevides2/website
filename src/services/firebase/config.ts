@@ -35,7 +35,6 @@ type EnviromentConfig =
     };
 
 export default function getEnviromentConfig(service: Services, isAdmin: boolean | "merged"): EnviromentConfig {
-  console.log(process.env);
   if (process.env.NODE_ENV !== "development") return { isEmulator: false };
   if (isAdmin === true) {
     const enviromentVariableValue = enviromentData[service].admin;

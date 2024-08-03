@@ -1,33 +1,60 @@
-.pdf{
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap:12px;
+.pdf {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.pdf .page > canvas{
-    width: 100% !important;
-    height: 100% !important;
+.pdf .containerArea {
+  position: relative;
+  max-width: 100%;
+  display: grid;
+}
+.pdf .containerArea .fallbackImageContainer {
+  position: relative;
+  float: left;
+  grid-area: 1 / 1 / 2 / 2;
 }
 
-.pdf .page > div  {
-    display:none;
+.pdf .containerArea .fallbackImageContainer img {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
-.pdf .pdfController{
-    display: flex;
-    height: 44px;
-    align-self: center;
-    gap: 10px;
+.pdf .containerArea > div:first-child {
+  position: relative;
+  z-index: 2;
+  background-color: transparent !important;
+  grid-area: 1 / 1 / 2 / 2;
 }
-.pdf .pdfController p{
-    min-width: fit-content;
-    align-self: center;
+.pdf .containerArea > div:first-child > div {
+  background-color: transparent !important;
+}
+
+.pdf .page > canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.pdf .page > div {
+  display: none;
+}
+
+.pdf .pdfController {
+  display: flex;
+  height: 44px;
+  align-self: center;
+  gap: 10px;
+}
+.pdf .pdfController p {
+  min-width: fit-content;
+  align-self: center;
 }
 
 .pdf .pdfController .button {
-    width: 44px;
+  width: 44px;
 }

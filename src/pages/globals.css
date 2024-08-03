@@ -6,19 +6,18 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  color: #f1f1f1;
+  color: var(--dynamic-text-color, #f1f1f1);
 }
 
 body {
   background: linear-gradient(270deg, #4c3e4a 26.56%, #575469 100%);
-  color: #f1f1f1;
+  color: var(--dynamic-text-color, #f1f1f1);
 }
 
 svg#freepik_stories-404-error:not(.animated) .animable {
   opacity: 0;
 }
-svg.freepik_stories-404-error.animated
-  #freepik--background-complete--inject-11 {
+svg.freepik_stories-404-error.animated #freepik--background-complete--inject-11 {
   animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideRight;
   animation-delay: 0s;
 }
@@ -89,33 +88,27 @@ svg#freepik_stories-404-error.animated #freepik--Rocket--inject-11 {
 svg#freepik_stories-computer-troubleshooting:not(.animated) .animable {
   opacity: 0;
 }
-svg#freepik_stories-computer-troubleshooting.animated
-  #freepik--background-complete--inject-2 {
+svg#freepik_stories-computer-troubleshooting.animated #freepik--background-complete--inject-2 {
   animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) fadeIn;
   animation-delay: 0s;
 }
-svg#freepik_stories-computer-troubleshooting.animated
-  #freepik--Shadow--inject-2 {
+svg#freepik_stories-computer-troubleshooting.animated #freepik--Shadow--inject-2 {
   animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) lightSpeedLeft;
   animation-delay: 0s;
 }
-svg#freepik_stories-computer-troubleshooting.animated
-  #freepik--speech-bubble--inject-2 {
+svg#freepik_stories-computer-troubleshooting.animated #freepik--speech-bubble--inject-2 {
   animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideRight;
   animation-delay: 0s;
 }
-svg#freepik_stories-computer-troubleshooting.animated
-  #freepik--Character--inject-2 {
+svg#freepik_stories-computer-troubleshooting.animated #freepik--Character--inject-2 {
   animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomOut;
   animation-delay: 0s;
 }
-svg#freepik_stories-computer-troubleshooting.animated
-  #freepik--Device--inject-2 {
+svg#freepik_stories-computer-troubleshooting.animated #freepik--Device--inject-2 {
   animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) fadeIn;
   animation-delay: 0s;
 }
-svg#freepik_stories-computer-troubleshooting.animated
-  #freepik--tool-box--inject-2 {
+svg#freepik_stories-computer-troubleshooting.animated #freepik--tool-box--inject-2 {
   animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideLeft;
   animation-delay: 0s;
 }
@@ -177,8 +170,7 @@ svg#freepik_stories-computer-troubleshooting.animated
 svg#freepik_stories-internet-on-the-go:not(.animated) .animable {
   opacity: 0;
 }
-svg#freepik_stories-internet-on-the-go.animated
-  #freepik--background-simple--inject-3 {
+svg#freepik_stories-internet-on-the-go.animated #freepik--background-simple--inject-3 {
   animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomOut;
   animation-delay: 0s;
 }
@@ -225,5 +217,19 @@ svg#freepik_stories-internet-on-the-go.animated #freepik--Character--inject-3 {
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0);
+  }
+}
+
+::view-transition-old(certificate-zoom):only-child,
+::view-transition-new(certificate-zoom):only-child {
+  animation: zoomIn 0.5s ease-in-out forwards;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(10);
   }
 }
