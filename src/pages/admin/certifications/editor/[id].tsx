@@ -10,7 +10,7 @@ import { AuthState, useAdminAuthentication } from "@/services/firebase/client/au
 import { addOrUpdateCertification, getCertificateFile, getCertification } from "@/services/firebase/client/certificates";
 import MyError from "@/utils/MyError";
 import { generateBlur } from "@/utils/imageManager";
-import { pdf2Img } from "@/utils/pdf2Img";
+import { pdf2Img, pdfSize } from "@/utils/pdf";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -84,6 +84,7 @@ export default function Page() {
       setIsLoading(true);
 
       const pdfThumbnail = await pdf2Img(pdf[0]);
+      const sizes = await pdfSize(pdf[0]);
 
       const responseCertId = await addOrUpdateCertification({
         id: certId,
@@ -98,6 +99,8 @@ export default function Page() {
         certificate: {
           pdf: {
             file: pdf[0],
+            height: parseInt(sizes.height.toString()),
+            width: parseInt(sizes.width.toString()),
           },
           thumbnail: {
             png: pdfThumbnail,

@@ -17,15 +17,21 @@ export interface Props {
     width: number;
     height: number;
   };
+  onLoadSuccess?: () => void;
 }
 export default function PdfViewer(props: Props) {
-  const [numPages, setNumPages] = useState<number>();
+  const [numPages, setNumPages] = useState<number | undefined>();
   const [pageNumber, setPageNumber] = useState(1);
   const [hideFallback, setHideFallback] = useState(false);
-  const onLoadSuccess: OnDocumentLoadSuccess = useCallback(({ numPages }) => {
-    setPageNumber(1);
-    setNumPages(numPages);
-  }, []);
+  const { onLoadSuccess: onLoadSuccessProps } = props;
+  const onLoadSuccess: OnDocumentLoadSuccess = useCallback(
+    ({ numPages, ...args }) => {
+      setPageNumber((old) => (old === undefined ? 1 : old));
+      setNumPages(numPages);
+      if (onLoadSuccessProps) onLoadSuccessProps();
+    },
+    [onLoadSuccessProps]
+  );
   const PdfRender = dynamic(() => import("./PdfRender"), {
     ssr: false,
   });

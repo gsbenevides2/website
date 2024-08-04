@@ -5,9 +5,9 @@ import { getCertification, listCertifications } from "@/services/firebase/client
 import { parseDateObjcToDDMMYYYY } from "@/utils/parseDateStringtoDateObj";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
-import styles from "../project/styles.module.css";
+import styles from "../project/styles.module.scss";
 import useLoadColor from "./loadColorAnimation";
 
 interface Certification {
@@ -85,8 +85,11 @@ export default function Page(props: InferGetStaticPropsType<typeof getStaticProp
       </ButtonAnchor>
     );
   }, [certificate]);
-  useLoadColor(certificate?.certificate.colors?.gradient, certificate.certificate.colors?.text);
-
+  useLoadColor(certificate?.certificate.colors?.gradient, certificate?.certificate.colors?.text);
+  const certLoad = useCallback(() => {
+    const img = document.getElementById("animatedImageZoom");
+    if (img) img.remove();
+  }, []);
   if (!certificate) return null;
 
   const fallback = props.certificate.certificate.pdf.height && props.certificate.certificate.pdf.width ? { src: props.certificate.certificate.thumbnail.png, blur: props.certificate.certificate.thumbnail.blur, width: props.certificate.certificate.pdf.width, height: props.certificate.certificate.pdf.height } : undefined;
@@ -109,7 +112,7 @@ export default function Page(props: InferGetStaticPropsType<typeof getStaticProp
       <h4>Data de Conclusão: {certificate.date}</h4>
       <div className={styles.area1}>
         <div className={styles.pdf}>
-          <PdfViewer file={certificate.certificate.pdf.file} fallback={fallback} />
+          <PdfViewer file={certificate.certificate.pdf.file} fallback={fallback} onLoadSuccess={certLoad} />
         </div>
         <div className={styles.description}>
           <div className={styles.descriptionDesktop}>

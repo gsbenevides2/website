@@ -104,4 +104,5 @@
   top: 0;
   left: 0;
   transition: 0.5s;
+  z-index: 10;
 }

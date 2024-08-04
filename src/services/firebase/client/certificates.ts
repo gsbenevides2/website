@@ -65,6 +65,10 @@ interface CertificationSet {
       png: string;
       blur: string;
     };
+    pdf: {
+      width: number | null;
+      height: number | null;
+    };
   };
 }
 
@@ -134,6 +138,10 @@ export async function listCertifications(): Promise<CertificationSet[]> {
         thumbnail: {
           png: data.certificate.thumbnail.png,
           blur: data.certificate.thumbnail.blur,
+        },
+        pdf: {
+          width: data.certificate.pdf.width ?? null,
+          height: data.certificate.pdf.height ?? null,
         },
       },
     };
