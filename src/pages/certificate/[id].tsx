@@ -7,8 +7,8 @@ import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
 import { useCallback, useMemo } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
-import styles from "../project/styles.module.scss";
 import useLoadColor from "./loadColorAnimation";
+import styles from "./styles.module.scss";
 
 interface Certification {
   id: string;
