@@ -114,6 +114,7 @@ export async function addOrUpdateCertification(certification: CertificationToAdd
         height: certification.certificate.pdf.height,
         file: pdfDownloadUrl,
       },
+      colors: certification.certificate.colors,
       thumbnail: {
         png: thumbImgDownloadUrl,
         blur: certification.certificate.thumbnail.blur,

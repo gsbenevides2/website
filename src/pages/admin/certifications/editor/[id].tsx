@@ -9,6 +9,7 @@ import { revalidateNextPages } from "@/services/api/revalidateNextPages";
 import { AuthState, useAdminAuthentication } from "@/services/firebase/client/auth";
 import { addOrUpdateCertification, getCertificateFile, getCertification } from "@/services/firebase/client/certificates";
 import MyError from "@/utils/MyError";
+import { getColorsOfImageAndText } from "@/utils/color";
 import { generateBlur } from "@/utils/imageManager";
 import { pdf2Img, pdfSize } from "@/utils/pdf";
 import Head from "next/head";
@@ -102,6 +103,7 @@ export default function Page() {
             height: parseInt(sizes.height.toString()),
             width: parseInt(sizes.width.toString()),
           },
+          colors: await getColorsOfImageAndText(pdfThumbnail),
           thumbnail: {
             png: pdfThumbnail,
             blur: await generateBlur(pdfThumbnail),

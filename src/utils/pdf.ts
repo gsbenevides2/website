@@ -6,7 +6,6 @@ export async function pdf2Img(pdf: File): Promise<string> {
   const pdfDoc = await pdfjs.getDocument(pdfUrl).promise;
   const page = await pdfDoc.getPage(1);
   const viewport = page.getViewport({ scale: 1 });
-  console.log(viewport);
   const canvas = document.createElement("canvas");
   const canvasContext = canvas.getContext("2d");
   if (!canvasContext) throw new Error("Canvas context not found");
