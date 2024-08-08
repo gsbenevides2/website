@@ -1,8 +1,9 @@
 .button {
   background-color: transparent;
-  border: 1px solid #fff;
+  border-style: solid;
+  border: 1px solid var(--dynamic-text-color, #f1f1f1);
   border-radius: 12px;
-  color: #fff;
+  color: var(--dynamic-text-color, #f1f1f1);
   padding: 10px 20px;
   cursor: pointer;
   font-size: 18px;
@@ -11,7 +12,8 @@
   text-decoration: none;
   text-align: center;
   &:hover {
-    background-color: #fff;
+    border-color: #f1f1f1;
+    background-color: #f1f1f1;
     color: #000;
     transform: scale(1.05);
   }

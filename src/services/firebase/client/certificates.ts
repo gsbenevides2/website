@@ -17,6 +17,12 @@ export interface Certification {
   certificate: {
     pdf: {
       file: string;
+      width?: number;
+      height?: number;
+    };
+    colors?: {
+      gradient: [string, string];
+      text: "white" | "black";
     };
     thumbnail: {
       png: string;
@@ -35,6 +41,12 @@ interface CertificationToAddOrUpdate extends Omit<Certification, "id" | "certifi
   certificate: {
     pdf: {
       file: File;
+      width?: number;
+      height?: number;
+    };
+    colors?: {
+      gradient: [string, string];
+      text: "white" | "black";
     };
     thumbnail: {
       png: string;
@@ -52,6 +64,10 @@ interface CertificationSet {
     thumbnail: {
       png: string;
       blur: string;
+    };
+    pdf: {
+      width: number | null;
+      height: number | null;
     };
   };
 }
@@ -94,8 +110,11 @@ export async function addOrUpdateCertification(certification: CertificationToAdd
     },
     certificate: {
       pdf: {
+        width: certification.certificate.pdf.width,
+        height: certification.certificate.pdf.height,
         file: pdfDownloadUrl,
       },
+      colors: certification.certificate.colors,
       thumbnail: {
         png: thumbImgDownloadUrl,
         blur: certification.certificate.thumbnail.blur,
@@ -120,6 +139,10 @@ export async function listCertifications(): Promise<CertificationSet[]> {
         thumbnail: {
           png: data.certificate.thumbnail.png,
           blur: data.certificate.thumbnail.blur,
+        },
+        pdf: {
+          width: data.certificate.pdf.width ?? null,
+          height: data.certificate.pdf.height ?? null,
         },
       },
     };
