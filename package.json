@@ -11,7 +11,8 @@
     "deploy": "firebase deploy",
     "deployFunctions": "firebase deploy --only functions",
     "deployFirestore": "firebase deploy --only firestore",
-    "deployStorage": "firebase deploy --only storage"
+    "deployStorage": "firebase deploy --only storage",
+    "testRules": "yarn --cwd rules_test run start"
   },
   "dependencies": {
     "firebase-tools": "^13.12.0"
