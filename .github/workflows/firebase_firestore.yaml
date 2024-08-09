@@ -17,7 +17,7 @@ jobs:
           with:
             node-version: '18.x'
         - name: Install Dependencies
-          run: npm run install
+          run: npm install
         - name: Install and Run Firebase Emulator
           run: node actions/runTests.js
     deploy:
