@@ -19,6 +19,8 @@ jobs:
             node-version: '18.x'
         - name: Install Dependencies
           run: npm install
+        - name: Install Test Dependencies
+          run: cd rules_test && npm install
         - name: Install and Run Firebase Emulator
           run: node actions/runTests.js
     deploy:
