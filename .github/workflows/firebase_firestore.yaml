@@ -21,8 +21,15 @@ jobs:
           run: npm install
         - name: Install Test Dependencies
           run: cd rules_test && npm install
+        - name: Save Service Account Key
+          run: echo $GCP_SA_KEY > service-account.json
+          env: 
+            GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
         - name: Install and Run Firebase Emulator
           run: node actions/runTests.js
+          env:
+            GOOGLE_APPLICATION_CREDENTIALS: service-account.json
+          
     deploy:
         name: Deploy
         runs-on: ubuntu-latest
