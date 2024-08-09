@@ -4,6 +4,7 @@ on:
     branches:
       - firebase_setup
     paths:
+      - '.github/workflows/firebase_firestore.yaml'
       - 'rules_test/**'
       - 'firestore.rules'
       - 'firestore.indexes.json'
