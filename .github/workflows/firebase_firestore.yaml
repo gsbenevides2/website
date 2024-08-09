@@ -29,6 +29,7 @@ jobs:
           run: node actions/runTests.js
           env:
             GOOGLE_APPLICATION_CREDENTIALS: service-account.json
+            EMULATOR_HOST: '127.0.0.1'
           
     deploy:
         name: Deploy
