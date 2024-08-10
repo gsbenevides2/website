@@ -44,7 +44,6 @@
 <h3> 📁 Pastas <h3>
 <ul>
 <li><b>functions:</b> Pasta de funções do firebase.</li>
-<li><b>actions:</b> Pasta com script que roda os teste de regras de segurança em ambiente de Continuous Integration.</li>
 <li><b>.github:</b> Pasta com arquivos de configuração do github actions.</li>
 <li><b>rules_test:</b> Pasta com arquivos de testes de regras de segurança.</li>
 </ul>

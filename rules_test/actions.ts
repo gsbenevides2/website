@@ -57,9 +57,11 @@ const runTests = async () => {
 const stopFirebaseEmulator = async (processToStop: ChildProcessWithoutNullStreams) => {
   try {
     dispatchLog("info", "Stopping Firebase emulator...");
+    processToStop.stdout.removeAllListeners();
+    processToStop.stderr.removeAllListeners();
+    processToStop.removeAllListeners();
     processToStop.kill("SIGINT");
     await new Promise((resolve) => setTimeout(resolve, 3000));
-    processToStop.stdout.removeAllListeners();
     execSync("killall java");
     dispatchLog("success", "Firebase emulator started");
   } catch (error) {
