@@ -40,13 +40,13 @@ async function start() {
 
   connectFirestoreEmulator(firestore, host, 8080);
   await runFirestoreTests(firestore, testEnv);
-  //await testEnv.clearFirestore();
+  await testEnv.clearFirestore();
   dispatchLog("success", "Firestore Tests Completed");
   dispatchLog("info", "Initializing Storage Tests");
   const storage = getStorage();
   connectStorageEmulator(storage, host, 9199);
   await runStorageTests(storage, testEnv);
-  //await testEnv.clearStorage();
+  await testEnv.clearStorage();
   dispatchLog("success", "Storage Tests Completed");
   dispatchLog("success", "All Tests Completed");
   process.exit(0);
