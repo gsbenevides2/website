@@ -1,7 +1,7 @@
 import { RulesTestEnvironment, assertFails, assertSucceeds } from "@firebase/rules-unit-testing";
 import { Firestore, addDoc, collection } from "firebase/firestore";
 import { FirebaseStorage, getBytes, listAll, ref, uploadString } from "firebase/storage";
-import { registerTest } from "../../utils";
+import { dispatchLog, registerTest } from "../../utils";
 
 export default async function runPostsStorageTests(storage: FirebaseStorage, testEnv: RulesTestEnvironment, firestore: Firestore) {
   const admin = testEnv.authenticatedContext("gsbenevides2", {
@@ -20,7 +20,7 @@ export default async function runPostsStorageTests(storage: FirebaseStorage, tes
     title: "Post title",
     visible: true,
   });
-
+  dispatchLog("info", "Starting tests for posts storage rules");
   await uploadString(ref(admin.storage(), `posts/${exemplePostNotPublished.id}/teste.txt`), "Hello World!");
   await uploadString(ref(admin.storage(), `posts/${exemplePostPublished.id}/teste.txt`), "Hello World!");
   await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -42,4 +42,5 @@ export default async function runPostsStorageTests(storage: FirebaseStorage, tes
   await registerTest("Try to read a file with authenticated user notAdminUser, it should success (post published)", () => assertSucceeds(getBytes(ref(notAdminUser.storage(), `posts/${exemplePostPublished.id}/teste.txt`))));
   await registerTest("Try to read a file with authenticated user admin gsbenevides2, it should success (post published)", () => assertSucceeds(getBytes(ref(admin.storage(), `posts/${exemplePostPublished.id}/teste.txt`))));
   await registerTest("Try to read a file with not authenticated user, it should success (post published)", () => assertSucceeds(getBytes(ref(storage, `posts/${exemplePostPublished.id}/teste.txt`))));
+  dispatchLog("success", "All tests passed for posts storage rules");
 }

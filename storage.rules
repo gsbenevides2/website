@@ -34,11 +34,11 @@ service firebase.storage {
     	allow read: if getPostFile(postId);
       allow write: if adminOnly();
     }
-    match /publicFiles/{allPaths=**} {
+    match /storage/{allPaths=**} {
     	allow read: if adminOnly();
       allow write: if adminOnly();
     }
-    match /publicFiles/{fileId}/{allPaths=**} {
+    match /storage/{fileId}/{allPaths=**} {
     	allow read: if getStorageFile(fileId);
       allow write: if adminOnly();
     }
