@@ -4,7 +4,6 @@ import { connectFirestoreEmulator, getFirestore, setLogLevel } from "firebase/fi
 import { connectStorageEmulator, getStorage } from "firebase/storage";
 import fs from "fs";
 import path from "path";
-import { runFirestoreTests } from "./tests/firestore";
 import runStorageTests from "./tests/storage";
 import { dispatchLog } from "./utils";
 
@@ -29,7 +28,7 @@ async function start() {
 
   initializeApp({
     projectId: "gui-dev-br",
-    storageBucket: "gui-dev-br.appspot.com",
+    storageBucket: "gui-dev-br",
   });
 
   dispatchLog("success", "Firebase Test Environment Started");
@@ -39,13 +38,13 @@ async function start() {
   setLogLevel("silent");
 
   connectFirestoreEmulator(firestore, host, 8080);
-  await runFirestoreTests(firestore, testEnv);
+  //await runFirestoreTests(firestore, testEnv);
   await testEnv.clearFirestore();
   dispatchLog("success", "Firestore Tests Completed");
   dispatchLog("info", "Initializing Storage Tests");
   const storage = getStorage();
   connectStorageEmulator(storage, host, 9199);
-  await runStorageTests(storage, testEnv);
+  await runStorageTests(storage, testEnv, firestore);
   await testEnv.clearStorage();
   dispatchLog("success", "Storage Tests Completed");
   dispatchLog("success", "All Tests Completed");

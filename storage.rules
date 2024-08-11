@@ -13,8 +13,12 @@ service firebase.storage {
     	allow read: if true;
       allow write: if request.auth != null && request.auth.token.email == "gsbenevides2@gmail.com";
     }
+    match /posts/{allPaths=**} {
+    	allow read: if request.auth != null && request.auth.token.email == "gsbenevides2@gmail.com";
+      allow write: if request.auth != null && request.auth.token.email == "gsbenevides2@gmail.com";
+    }
     match /posts/{postId}/{allPaths=**} {
-    	allow read: if (firestore.get(/databases/(default)/documents/posts/$(postId)).visible == true)
+    	allow read: if (firestore.get(/databases/(default)/documents/posts/$(postId)).data.visible == true)
       || (request.auth != null && request.auth.token.email == "gsbenevides2@gmail.com");
       allow write: if request.auth != null && request.auth.token.email == "gsbenevides2@gmail.com";
     }
