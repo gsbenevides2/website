@@ -6,6 +6,7 @@ import fs from "fs";
 import path from "path";
 import runStorageTests from "./tests/storage";
 import { dispatchLog } from "./utils";
+import { runFirestoreTests } from "./tests/firestore";
 
 const firestoreRulesPath = path.resolve(__dirname, "..", "firestore.rules");
 const host = process.env.EMULATOR_HOST || "localhost";
@@ -38,7 +39,7 @@ async function start() {
   setLogLevel("silent");
 
   connectFirestoreEmulator(firestore, host, 8080);
-  //await runFirestoreTests(firestore, testEnv);
+  await runFirestoreTests(firestore, testEnv);
   await testEnv.clearFirestore();
   dispatchLog("success", "Firestore Tests Completed");
   dispatchLog("info", "Initializing Storage Tests");
