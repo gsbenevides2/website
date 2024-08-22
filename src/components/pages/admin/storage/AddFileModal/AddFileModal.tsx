@@ -29,6 +29,7 @@ export function AddFileModal(props: Props) {
     (data: FormData) => {
       async function process() {
         if (data.file === undefined || data.file.length === 0) return alert("Selecione um arquivo");
+
         await FirestoreSelfStorage.createNewFile(data.id, data.file[0]);
         alert("Arquivo enviado com sucesso");
         formContext.changeMultipleInputValues({ id: "", file: undefined });
@@ -39,6 +40,7 @@ export function AddFileModal(props: Props) {
         alert("Erro ao enviar arquivo");
       });
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [props]
   );
   return (

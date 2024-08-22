@@ -1,7 +1,7 @@
 import { AuthState, logIn, logOut, useAuthentication } from "@/services/firebase/client/auth";
 
 import { Button, ButtonAnchor } from "@/components/Button";
-import { SelfStorageFileDocument, getFile, getServerUrl } from "@/services/firebase/client/selfstorage";
+import { SelfStorageFileDocument, getFile, getFileUrl, getServerUrl } from "@/services/firebase/client/selfstorage";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./styles.module.scss";
@@ -26,12 +26,8 @@ export default function Page() {
     getFile(id)
       .then(async (link) => {
         if (link === null) return setState("not-found");
-        if (authState.state === AuthState.Authenticated) {
-          const token = await authState.user?.getIdToken();
-          setDownloadUrl(`${serverUrl}/file/${id}?idToken=${token}`);
-        } else {
-          setDownloadUrl(`${serverUrl}/file/${id}`);
-        }
+        const fileUlr = await getFileUrl(id, link.filename);
+        setDownloadUrl(fileUlr);
         setFile(link);
         setState("loaded");
       })
@@ -39,7 +35,7 @@ export default function Page() {
         console.error(error);
         setState("firestore-error");
       });
-  }, [id, authState.state, authState.user]);
+  }, [id, authState.state]);
 
   const authenticate = useCallback(() => {
     logIn().then(() => loadData());
@@ -73,7 +69,11 @@ export default function Page() {
           para fazer logout.
         </p>
       )}
-      {state === "loaded" && file && <ButtonAnchor href={downloadUrl}>Baixar</ButtonAnchor>}
+      {state === "loaded" && file && (
+        <ButtonAnchor href={downloadUrl} download>
+          Baixar
+        </ButtonAnchor>
+      )}
 
       {state === "firestore-error" && authState.state === AuthState.Unauthenticated && (
         <p className={styles.error}>

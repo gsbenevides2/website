@@ -36,7 +36,7 @@ export default function ChangeVisibility(props: Props) {
 
   const directLink = useMemo(() => {
     const host = window.location.origin;
-    return `${host}/s/d/${props.data?.id}`;
+    return `${host}/sd/${props.data?.id}`;
   }, [props.data]);
   const shareLink = useMemo(() => {
     const host = window.location.origin;
