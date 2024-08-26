@@ -1,5 +1,5 @@
 import { RulesTestEnvironment, assertFails, assertSucceeds } from "@firebase/rules-unit-testing";
-import { Firestore, addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { Firestore, addDoc, collection, doc, getDoc, getDocs, limit, orderBy, query, setDoc, where } from "firebase/firestore";
 import { dispatchLog, registerTest } from "../../utils";
 
 export async function runTestsForPosts(firestore: Firestore, testEnv: RulesTestEnvironment) {
@@ -39,6 +39,8 @@ export async function runTestsForPosts(firestore: Firestore, testEnv: RulesTestE
   await registerTest("Try to read a visible document from the posts collection with authenticated user notAdminUser, it should succeed", () => assertSucceeds(getDoc(doc(postsCollectionForNotAdmin, visiblePostId))));
 
   await registerTest("Try to read a hidden document from the posts collection with authenticated user notAdminUser, it should fail", () => assertFails(getDoc(doc(postsCollectionForNotAdmin, hiddenPostId))));
+
+  await registerTest("Try to first ten visible posts with not authenticated user, it should succeed", () => assertSucceeds(getDocs(query(postsCollection, orderBy("date", "desc"), limit(10), where("visible", "==", true)))));
 
   dispatchLog("success", "All tests for posts collection passed");
 }
