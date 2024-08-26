@@ -70,7 +70,7 @@ export default function Page() {
         </p>
       )}
       {state === "loaded" && file && (
-        <ButtonAnchor href={downloadUrl} download>
+        <ButtonAnchor href={downloadUrl} download={file.filename}>
           Baixar
         </ButtonAnchor>
       )}
