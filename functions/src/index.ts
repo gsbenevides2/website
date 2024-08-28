@@ -7,6 +7,7 @@ import { decoMiddleware } from "./deco";
 import { linksMiddleware } from "./links";
 import { statusMiddleware } from "./status";
 import { deleteStorageFolder } from "./utils";
+import { storageMiddleware } from "./storage";
 admin.initializeApp();
 
 setGlobalOptions({
@@ -45,3 +46,5 @@ export const links = onRequest(linksMiddleware);
 export const status = onRequest(statusMiddleware);
 
 export const deco = onRequest(decoMiddleware);
+
+export const storage = onRequest(storageMiddleware);
