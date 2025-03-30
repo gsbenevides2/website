@@ -16,6 +16,6 @@
     "actionsTest": "yarn --cwd rules_test run actions"
   },
   "dependencies": {
-    "firebase-tools": "^13.12.0"
+    "firebase-tools": "^14.0.1"
   }
 }
