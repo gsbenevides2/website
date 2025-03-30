@@ -4,6 +4,7 @@ on:
     branches:
       - firebase_setup
     paths:
+      - '.github/workflows/firebase_functions.yaml'
       - 'functions/**'
 jobs:
     deploy:
@@ -20,6 +21,12 @@ jobs:
               run: cd functions && npm run lint
             - name: Build
               run: cd functions && npm run build
+            - name: Save Service Account Key
+              run: echo $GCP_SA_KEY > service-account.json
+              env: 
+                GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+            - name: "Print service-account email"
+              run: cat service-account.json | jq -r '.client_email'
             - name: Deploy
               uses: w9jds/firebase-action@master
               with:
