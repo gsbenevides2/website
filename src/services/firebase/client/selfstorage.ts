@@ -1,4 +1,5 @@
 import { CollectionReference, DocumentData, Firestore, Timestamp, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, onSnapshot, orderBy, query, setDoc, updateDoc } from "firebase/firestore";
+import { deleteObject, getBlob, ref, uploadBytes } from "firebase/storage";
 import { useEffect, useState } from "react";
 import Firebase from "./config";
 
@@ -22,6 +23,9 @@ const getCollection = (db: Firestore) => collection(db, "storage") as SelfStorag
 
 export const createNewFile = async (id: string, file: File) => {
   const db = Firebase.getFirestore();
+  const storage = Firebase.getStorage();
+  const fileReference = ref(storage, `storage/${id}/${file.name}`);
+  await uploadBytes(fileReference, file);
   const collection = getCollection(db);
   const document = doc(collection, id);
   await setDoc(document, {
@@ -31,46 +35,37 @@ export const createNewFile = async (id: string, file: File) => {
     filename: file.name,
     visible: false,
   });
-  const formData = new FormData();
-  formData.append("file", file);
-  await fetch(`${getServerUrl()}/file/${id}`, {
-    method: "POST",
-    body: formData,
-    headers: {
-      Authorization: (await Firebase.getAuth().currentUser?.getIdToken()) ?? "",
-    },
-  });
 };
 
 export const deleteFile = async (id: string) => {
   const db = Firebase.getFirestore();
+  const storage = Firebase.getStorage();
   const collection = getCollection(db);
   const document = doc(collection, id);
+  const snapshot = await getDoc(document);
   await deleteDoc(document);
-  await fetch(`${getServerUrl()}/file/${id}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: (await Firebase.getAuth().currentUser?.getIdToken()) ?? "",
-    },
-  });
+  const filename = snapshot.data()?.filename;
+  if (!filename) return;
+  const fileReference = ref(storage, `storage/${id}/${filename}`);
+  await deleteObject(fileReference);
 };
 
 export const reuploadFile = async (id: string, file: File) => {
   const db = Firebase.getFirestore();
+  const storage = Firebase.getStorage();
   const collection = getCollection(db);
   const document = doc(collection, id);
+  const snapshot = await getDoc(document);
+  if (!snapshot.exists()) throw new Error("File does not exist");
+  const oldFilename = snapshot.data()?.filename;
+  if (!oldFilename) throw new Error("File does not have a filename");
+  const fileReference = ref(storage, `storage/${id}/${oldFilename}`);
+  await deleteObject(fileReference);
+  const newFileReference = ref(storage, `storage/${id}/${file.name}`);
+  await uploadBytes(newFileReference, file);
   await updateDoc(document, {
     dateOfLastUpdate: Timestamp.now(),
     filename: file.name,
-  });
-  const formData = new FormData();
-  formData.append("file", file);
-  await fetch(`${getServerUrl()}/file/${id}`, {
-    method: "POST",
-    body: formData,
-    headers: {
-      Authorization: (await Firebase.getAuth().currentUser?.getIdToken()) ?? "",
-    },
   });
 };
 
@@ -121,4 +116,11 @@ export const getFile = async (id: string) => {
   const snapshot = await getDoc(document);
   if (!snapshot.exists()) return null;
   return snapshot.data();
+};
+
+export const getFileUrl = async (id: string, filename: string) => {
+  const storage = Firebase.getStorage();
+  const fileReference = ref(storage, `storage/${id}/${filename}`);
+  const blob = await getBlob(fileReference);
+  return URL.createObjectURL(blob);
 };
