@@ -1,13 +1,13 @@
 import { ButtonAnchor } from "@/components/Button";
-import { useMemo } from "react";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
-import styles from "./styles.module.css";
-import { getProject, listProjects } from "@/services/firebase/client/projects";
-import Image from "next/image";
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
-import { ParsedUrlQuery } from "querystring";
 import { DefaultSeo } from "@/components/DefaultSeo";
+import { getProject, listProjects } from "@/services/firebase/client/projects";
 import { getIframeYoutubeUrl } from "@/utils/getYoutubeIframeUrl";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import Image from "next/image";
+import { ParsedUrlQuery } from "querystring";
+import { useMemo } from "react";
+import ReactMarkdown from "react-markdown";
+import styles from "./styles.module.css";
 
 interface Project {
   id: string;
@@ -39,9 +39,7 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps<Props, Params> = async (
-  context
-) => {
+export const getStaticProps: GetStaticProps<Props, Params> = async (context) => {
   const { id } = context.params!;
   const project = await getProject(id);
   if (project == null)
@@ -56,20 +54,14 @@ export const getStaticProps: GetStaticProps<Props, Params> = async (
   };
 };
 
-export default function Page(
-  props: InferGetStaticPropsType<typeof getStaticProps>
-) {
+export default function Page(props: InferGetStaticPropsType<typeof getStaticProps>) {
   const { project } = props;
 
   const githubButton = useMemo(() => {
     if (!project) return null;
     if (!project.github) return null;
     return (
-      <ButtonAnchor
-        className={styles.viewMoreButton}
-        href={project.github}
-        target="_blank"
-      >
+      <ButtonAnchor className={styles.viewMoreButton} href={project.github} target="_blank">
         Ver no Github
       </ButtonAnchor>
     );
@@ -92,27 +84,7 @@ export default function Page(
       />
       <h2>{project.name}</h2>
       <div className={styles.area1}>
-        <div className={styles.image}>
-          {project.youtube ? (
-            <iframe
-              width="100%"
-              height="100%"
-              src={getIframeYoutubeUrl(project.youtube)}
-              title="YouTube video player"
-              frameBorder="0"
-              className={styles.iframe}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-            />
-          ) : (
-            <Image
-              src={project.image}
-              alt="Image do projeto"
-              fill
-              placeholder="blur"
-              blurDataURL={project.imageBlur}
-            />
-          )}
-        </div>
+        <div className={styles.image}>{project.youtube ? <iframe width="100%" height="100%" src={getIframeYoutubeUrl(project.youtube)} title="YouTube video player" frameBorder="0" className={styles.iframe} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" /> : <Image src={project.image} alt="Image do projeto" fill placeholder="blur" blurDataURL={project.imageBlur} />}</div>
         <div className={styles.description}>
           <div className={styles.descriptionDesktop}>
             <ReactMarkdown>{project.descriptionDesktop}</ReactMarkdown>

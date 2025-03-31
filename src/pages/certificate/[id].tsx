@@ -6,7 +6,7 @@ import { parseDateObjcToDDMMYYYY } from "@/utils/parseDateStringtoDateObj";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
 import { useCallback, useMemo } from "react";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import ReactMarkdown from "react-markdown";
 import useLoadColor from "./loadColorAnimation";
 import styles from "./styles.module.scss";
 
