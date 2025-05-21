@@ -7,7 +7,7 @@ interface CustomInputProps<T> {
 }
 interface StatelessInputProps<T> {
   name: string;
-  customComponent: (props: CustomInputProps<T>) => JSX.Element;
+  customComponent: (props: CustomInputProps<T>) => React.ReactNode;
   initialState?: any;
 }
 

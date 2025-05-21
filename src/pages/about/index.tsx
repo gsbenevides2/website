@@ -1,19 +1,14 @@
-import styles from "./styles.module.scss";
-import { useRouter } from "next/navigation";
-import { TbCertificate, TbApps, TbUserCircle, TbPencil } from "react-icons/tb";
-import { MouseEvent, useCallback, useRef } from "react";
-import { GetStaticProps, InferGetStaticPropsType } from "next";
-import moment from "moment";
 import { DefaultSeo } from "@/components/DefaultSeo";
-import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
+import { AboutCMSData, EnabledLinkName, getCMSDataForAboutPage, useCMSDataForAboutPage } from "@/services/cms/about";
 import { calculeSemester } from "@/utils/calculateSemester";
+import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
+import moment from "moment";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Link from "next/link";
-import {
-  AboutCMSData,
-  EnabledLinkName,
-  getCMSDataForAboutPage,
-  useCMSDataForAboutPage,
-} from "@/services/cms/about";
+import { useRouter } from "next/navigation";
+import { MouseEvent, useCallback, useRef } from "react";
+import { TbApps, TbCertificate, TbPencil, TbUserCircle } from "react-icons/tb";
+import styles from "./styles.module.scss";
 
 interface Props {
   age: number;
@@ -38,7 +33,7 @@ interface Option {
   name: EnabledLinkName;
   text: string;
   href: string;
-  icon: JSX.Element;
+  icon: React.ReactNode;
 }
 
 const options: Option[] = [
@@ -68,9 +63,7 @@ const options: Option[] = [
   },
 ];
 
-export default function About(
-  props: InferGetStaticPropsType<typeof getStaticProps>
-) {
+export default function About(props: InferGetStaticPropsType<typeof getStaticProps>) {
   const cms = useCMSDataForAboutPage(props.cms);
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -88,44 +81,24 @@ export default function About(
     },
     [router]
   );
-  const textDesktop = cms.fields.textDesktop
-    .replaceAll("{age}", age.toString())
-    .replaceAll("{semesters}", semesters.toString());
-  const textMobile = cms.fields.textMobile
-    .replaceAll("{age}", age.toString())
-    .replaceAll("{semesters}", semesters.toString());
+  const textDesktop = cms.fields.textDesktop.replaceAll("{age}", age.toString()).replaceAll("{semesters}", semesters.toString());
+  const textMobile = cms.fields.textMobile.replaceAll("{age}", age.toString()).replaceAll("{semesters}", semesters.toString());
 
-  const filterOptions = options.filter((option) =>
-    (cms.entry.fields.enabledLinks as EnabledLinkName[]).includes(option.name)
-  );
+  const filterOptions = options.filter((option) => (cms.entry.fields.enabledLinks as EnabledLinkName[]).includes(option.name));
 
   return (
     <div className={styles.container} ref={containerRef}>
-      <DefaultSeo
-        title="Guilherme Benevides - Sobre"
-        description="Saiba mais sobre Guilherme Benevides, desenvolvedor web e mobile."
-        image={getOpenMediaImageForNextSeo("Sobre Mim")}
-        site_name="Site do Guilherme"
-        type="website"
-      />
+      <DefaultSeo title="Guilherme Benevides - Sobre" description="Saiba mais sobre Guilherme Benevides, desenvolvedor web e mobile." image={getOpenMediaImageForNextSeo("Sobre Mim")} site_name="Site do Guilherme" type="website" />
       <div className={styles.firstArea}>
         <div {...cms.props.textDesktop} suppressHydrationWarning>
           {textDesktop.split("\n\n").map((text, index) => (
-            <p
-              key={index}
-              className={styles.textDesktop}
-              suppressHydrationWarning
-            >
+            <p key={index} className={styles.textDesktop} suppressHydrationWarning>
               {text}
             </p>
           ))}
         </div>
 
-        <p
-          className={styles.textMobile}
-          suppressHydrationWarning
-          {...cms.props.textMobile}
-        >
+        <p className={styles.textMobile} suppressHydrationWarning {...cms.props.textMobile}>
           {textMobile}
         </p>
       </div>

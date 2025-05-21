@@ -5,13 +5,12 @@ import { Nunito_Sans } from "next/font/google";
 import Script from "next/script";
 import { positions, Provider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
-import { ReactNode } from "react-dom/node_modules/@types/react";
 import "./globals.css";
 
 const nunito = Nunito_Sans({ subsets: ["latin"] });
 
 export default function MyApp(props: AppProps) {
-  const response = () => (<props.Component {...props.pageProps} />) as ReactNode;
+  const response = () => (<props.Component {...props.pageProps} />) as React.ReactNode;
   return (
     <main className={nunito.className}>
       <Provider template={AlertTemplate} position={positions.BOTTOM_CENTER}>

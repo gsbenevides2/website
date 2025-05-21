@@ -108,7 +108,7 @@ function getCurrentImageDimensions(image: HTMLImageElement): Dimensions {
   return { width, height, x, y };
 }
 
-function createAnimatedImageAndRun(event: MouseEvent<HTMLAnchorElement>, certificates: Certificate[], fallback: () => void, hidder: React.RefObject<HTMLDivElement>) {
+function createAnimatedImageAndRun(event: MouseEvent<HTMLAnchorElement>, certificates: Certificate[], fallback: () => void, hidder: React.RefObject<HTMLDivElement | null>) {
   const animatedImage = document.createElement("img");
   const img = event.currentTarget.querySelector("img");
   const certificateFindResult = certificates.find((certificate) => certificate.id === event.currentTarget.dataset.certificateId);
@@ -201,7 +201,6 @@ export default function Page(props: InferGetStaticPropsType<typeof getStaticProp
         router.push(href);
       };
       event.preventDefault();
-
       createAnimatedImageAndRun(event, certificates, fallback, hidder);
     },
     [certificates, router]
