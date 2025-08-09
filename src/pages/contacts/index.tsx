@@ -1,25 +1,13 @@
-import {
-  TbBrandGithub,
-  TbBrandInstagram,
-  TbBrandLinkedin,
-  TbBrandTwitter,
-  TbBrandX,
-  TbMail,
-  TbMusic,
-} from "react-icons/tb";
+import { DefaultSeo } from "@/components/DefaultSeo";
+import { ContactsCMSData, getCMSDataForContactsPage, useCMSDataForContactsPage } from "@/services/cms/contacts";
+import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
+import { InspectorModeTags } from "@contentful/live-preview/dist/inspectorMode/types";
+import { GetStaticProps } from "next";
+import Link from "next/link";
 import { MdPix } from "react-icons/md";
 import { SiMojangstudios } from "react-icons/si";
+import { TbBrandGithub, TbBrandInstagram, TbBrandLinkedin, TbBrandX, TbMail, TbMusic } from "react-icons/tb";
 import styles from "./styles.module.scss";
-import { DefaultSeo } from "@/components/DefaultSeo";
-import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
-import Link from "next/link";
-import {
-  ContactsCMSData,
-  getCMSDataForContactsPage,
-  useCMSDataForContactsPage,
-} from "@/services/cms/contacts";
-import { GetStaticProps } from "next";
-import { InspectorModeTags } from "@contentful/live-preview/dist/inspectorMode/types";
 
 interface Props {
   cms: ContactsCMSData;
@@ -30,7 +18,7 @@ interface SocialMedia {
   style: string;
   url: string | null;
   props?: InspectorModeTags | {};
-  icon: JSX.Element;
+  icon: React.ReactNode;
 }
 
 export const getStaticProps: GetStaticProps<Props> = async (context) => {
@@ -74,34 +62,17 @@ export default function Contacts(props: Props) {
       icon: <TbBrandInstagram />,
     },
   ];
-  const filteredSocialMedias = socialMedias.filter((socialMedia) =>
-    Boolean(socialMedia.url)
-  );
+  const filteredSocialMedias = socialMedias.filter((socialMedia) => Boolean(socialMedia.url));
 
   return (
     <div className={styles.container}>
-      <DefaultSeo
-        title="Contatos"
-        description="Contatos do Guilherme"
-        image={getOpenMediaImageForNextSeo("Contatos")}
-        site_name="Site do Guilherme"
-        type="website"
-      />
+      <DefaultSeo title="Contatos" description="Contatos do Guilherme" image={getOpenMediaImageForNextSeo("Contatos")} site_name="Site do Guilherme" type="website" />
       <div className={styles.firstArea}>
         <h1>Contatos</h1>
         <ul className={styles.social}>
           {filteredSocialMedias.map((socialMedia) => (
-            <li
-              className={socialMedia.style}
-              key={socialMedia.name}
-              {...socialMedia.props}
-            >
-              <a
-                href={socialMedia.url ?? ""}
-                target="_blank"
-                rel="noreferrer"
-                className={socialMedia.name}
-              >
+            <li className={socialMedia.style} key={socialMedia.name} {...socialMedia.props}>
+              <a href={socialMedia.url ?? ""} target="_blank" rel="noreferrer" className={socialMedia.name}>
                 {socialMedia.icon}
                 <p>{socialMedia.name}</p>
               </a>

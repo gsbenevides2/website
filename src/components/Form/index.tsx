@@ -1,9 +1,9 @@
-import React, { FormEventHandler, createRef, useCallback, useRef } from "react";
-import { fetchInputsFromForm } from "./utils/fetchInputsFromForm";
-import { FormContextData, FormProps, InputSystem } from "./types";
+import React, { FormEventHandler, useCallback, useRef } from "react";
 import InputImported from "./Input";
-import TextareaImported from "./TextArea";
 import StatelessInputImported from "./StatelessInput";
+import TextareaImported from "./TextArea";
+import { FormContextData, FormProps, InputSystem } from "./types";
+import { fetchInputsFromForm } from "./utils/fetchInputsFromForm";
 
 const defaultValues: FormContextData = {
   inputs: [],
@@ -24,18 +24,11 @@ export function Form<T>(props: FormProps<T>) {
   }, []);
 
   const addStateInput = useCallback(
-    (
-      inputName: string,
-      retriveStateValue: () => any,
-      changeStateValue: (v: any) => void
-    ) => {
+    (inputName: string, retriveStateValue: () => any, changeStateValue: (v: any) => void) => {
       setInputs((inputs) => {
         const hasInput = inputs.findIndex((input) => input.name === inputName);
         if (hasInput !== -1) return inputs;
-        const oldElements = [
-          ...inputs.slice(0, hasInput),
-          ...inputs.slice(hasInput + 1),
-        ];
+        const oldElements = [...inputs.slice(0, hasInput), ...inputs.slice(hasInput + 1)];
         oldElements.push({
           name: inputName,
           retriveStateValue,
@@ -48,10 +41,7 @@ export function Form<T>(props: FormProps<T>) {
     []
   );
 
-  const value = React.useMemo(
-    () => ({ inputs, addSimpleInput, addStateInput, formNode }),
-    [inputs, addSimpleInput, addStateInput]
-  );
+  const value = React.useMemo(() => ({ inputs, addSimpleInput, addStateInput, formNode }), [inputs, addSimpleInput, addStateInput]);
 
   React.useEffect(() => {
     if (props.contextLoader) props.contextLoader(value);
@@ -60,22 +50,17 @@ export function Form<T>(props: FormProps<T>) {
   const handleSubmit: FormEventHandler<HTMLFormElement> = useCallback(
     (event) => {
       event.preventDefault();
-      const notStateInputsNames = inputs
-        .filter((input) => !input.retriveStateValue)
-        .map((input) => input.name);
+      const notStateInputsNames = inputs.filter((input) => !input.retriveStateValue).map((input) => input.name);
       const stateInputs = inputs.filter((input) => input.retriveStateValue);
 
       const values = {
         ...fetchInputsFromForm<T>(event.currentTarget, notStateInputsNames),
       };
 
-      
-
       stateInputs.forEach((input) => {
-      
         const key = input.name as keyof T;
         const value = input.retriveStateValue?.() as T[keyof T];
-  
+
         values[key] = value;
       });
 
@@ -98,7 +83,7 @@ export const Textarea = TextareaImported;
 export const StatelessInput = StatelessInputImported;
 
 export const useFormContext = () => {
-  const contextRef = useRef<FormContextData>();
+  const contextRef = useRef<FormContextData>(null);
 
   const changeInputValue = useCallback((name: string, value: string) => {
     const context = contextRef.current;
@@ -106,7 +91,7 @@ export const useFormContext = () => {
 
     if (!context.formNode?.current) return;
     const findedInput = context.inputs.find((input) => input.name === name);
-   
+
     if (!findedInput) return;
 
     if (findedInput.changeStateValue) {
@@ -121,7 +106,6 @@ export const useFormContext = () => {
 
   const changeMultipleInputValues = useCallback(
     (values: any) => {
-    
       const keys = Object.keys(values);
       keys.forEach((key) => {
         changeInputValue(key, values[key]);
@@ -131,7 +115,6 @@ export const useFormContext = () => {
   );
 
   const contextLoader = useCallback((contextReceived: FormContextData) => {
-
     contextRef.current = contextReceived;
   }, []);
   return { changeInputValue, changeMultipleInputValues, contextLoader };
