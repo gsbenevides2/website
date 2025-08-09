@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "engines": {
-    "node": "20.11.0",
-    "yarn": "1.22.22"
+    "node": "20.x",
+    "yarn": "1.22.x"
   },
   "dependencies": {
     "@contentful/live-preview": "^3.3.7",
