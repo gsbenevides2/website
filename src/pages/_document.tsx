@@ -1,3 +1,4 @@
+import { GoogleTagManager } from "@next/third-parties/google";
 import { Head, Html, Main, NextScript } from "next/document";
 
 export default function Document() {
@@ -13,7 +14,9 @@ export default function Document() {
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#7372a5" />
         <meta name="msapplication-TileColor" content="#7372a5" />
         <meta name="theme-color" content="#7372a5" />
+        <GoogleTagManager gtmId="GTM-NW5NDZP2" />
       </Head>
+
       <body>
         <Main />
         <NextScript />

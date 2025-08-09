@@ -8,9 +8,14 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "engines": {
+    "node": "20.11.0",
+    "yarn": "1.22.22"
+  },
   "dependencies": {
     "@contentful/live-preview": "^3.3.7",
     "@minescope/mineping": "^1.2.2",
+    "@next/third-parties": "^15.2.4",
     "@types/node": "20.3.1",
     "@types/react": "19.0.12",
     "@types/react-dom": "19.0.4",
@@ -29,9 +34,10 @@
     "firebase-admin": "^11.9.0",
     "get-similar-color": "^1.1.3",
     "jose": "^5.6.2",
+    "minimatch": "^10.0.3",
     "moment": "^2.29.4",
     "nanoid": "^5.0.7",
-    "next": "15.2.4",
+    "next": "^15.2.4",
     "next-mdx-remote": "^4.4.1",
     "next-pwa": "^5.6.0",
     "next-seo": "^6.1.0",
