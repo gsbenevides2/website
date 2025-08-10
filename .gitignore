@@ -29,7 +29,7 @@ yarn-error.log*
 
 # vercel
 .vercel
-/public/pdfjs/
+/public/noprecache/pdfjs/
 /public/fallback*.js
 /public/sw.js
 /public/workbox-*.js

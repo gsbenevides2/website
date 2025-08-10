@@ -1,21 +1,23 @@
 import { ButtonSSRLink } from "@/components/Button";
 import { DefaultSeo } from "@/components/DefaultSeo";
-import { HomeCMSData, getCMSDataForHomePage, useCMSDataForHomePage } from "@/services/cms/home";
+import { getLatestVersionDataByPath } from "@/services/firebase/client/cms";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useRouter } from "next/navigation";
 import { MouseEventHandler, useCallback, useEffect, useRef } from "react";
 import styles from "./index.module.scss";
 
-interface Props {
-  cms: HomeCMSData;
+interface HomeCMSData {
+  title: string;
+  buttonText: string;
 }
-export const getStaticProps: GetStaticProps<Props> = async (context) => {
-  const isPreview = context.draftMode || false;
+
+export const getStaticProps: GetStaticProps = async () => {
+  const data = await getLatestVersionDataByPath<HomeCMSData>("/");
 
   return {
     props: {
-      cms: await getCMSDataForHomePage(isPreview),
+      cms: data,
     },
   };
 };
@@ -23,7 +25,6 @@ export const getStaticProps: GetStaticProps<Props> = async (context) => {
 type ComponentProps = InferGetStaticPropsType<typeof getStaticProps>;
 
 export default function Home(props: ComponentProps) {
-  const cms = useCMSDataForHomePage(props.cms);
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const goToNext: MouseEventHandler<HTMLAnchorElement> = useCallback(
@@ -35,7 +36,7 @@ export default function Home(props: ComponentProps) {
       await new Promise((resolve) => setTimeout(resolve, 400));
       router.push(currentTarget.href);
     },
-    [containerRef, router]
+    [containerRef, router],
   );
 
   useEffect(() => {
@@ -46,13 +47,23 @@ export default function Home(props: ComponentProps) {
   }, []);
   return (
     <div className={styles.container} ref={containerRef}>
-      <DefaultSeo title="Site do Guilherme" description="Seja bem vindo ao meu site pessoal!" image={getOpenMediaImageForNextSeo("Site do Guilherme")} site_name="Site do Guilherme" type="website" />
+      <DefaultSeo
+        title="Site do Guilherme"
+        description="Seja bem vindo ao meu site pessoal!"
+        image={getOpenMediaImageForNextSeo("Site do Guilherme")}
+        site_name="Site do Guilherme"
+        type="website"
+      />
       <div className={styles.firstArea}>
-        <h1 className={styles.title} {...cms.props.title} suppressHydrationWarning>
-          {cms.fields.title}
+        <h1 className={styles.title}>
+          {props.cms.title}
         </h1>
-        <ButtonSSRLink href="/about" className={styles.button} onClick={goToNext} {...cms.props.buttonText} suppressHydrationWarning>
-          {cms.fields.buttonText}
+        <ButtonSSRLink
+          href="/about"
+          className={styles.button}
+          onClick={goToNext}
+        >
+          {props.cms.buttonText}
         </ButtonSSRLink>
       </div>
       <div className={styles.secondArea}>

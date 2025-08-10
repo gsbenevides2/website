@@ -1,10 +1,11 @@
 import { retriveIdToken } from "@/services/firebase/client/auth";
 
-type Services = "certificates" | "projects" | "blog";
+type Services = "certificates" | "projects" | "blog" | "cms";
 const idsNames: Record<Services, string> = {
   certificates: "certificateId",
   projects: "projectId",
   blog: "postId",
+  cms: "pageUrl",
 };
 
 export async function revalidateNextPages(

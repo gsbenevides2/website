@@ -2,6 +2,7 @@
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
@@ -15,16 +16,19 @@
   transition: all 0.3s ease-in-out;
   justify-content: center;
   align-items: center;
+
   .content {
     display: flex;
     width: 100%;
     padding-top: 1vw;
     align-items: center;
+
     .qrCode {
       display: flex;
       width: 50%;
       padding-right: 5vw;
       justify-content: flex-end;
+
       button {
         cursor: pointer;
         background-color: transparent;
@@ -33,40 +37,53 @@
         padding: 0;
         margin: 0;
         transition: all 0.3s ease-in-out;
+
         &:hover {
           transform: scale(1.1);
         }
       }
     }
+
     .textArea {
       display: flex;
       box-sizing: border-box;
+
       a {
         cursor: pointer;
+
         &:hover {
           text-decoration: underline;
         }
       }
     }
   }
-  .warning p {
-    text-align: center;
+
+  .warning {
     padding-top: 2vw;
+
+    p {
+      text-align: center;
+
+    }
   }
+
   @media (max-width: 768px) {
     .content {
       flex-direction: column;
+
       .qrCode {
         width: 100%;
         justify-content: center;
         padding: 0;
         padding-top: 5vw;
       }
+
       .textArea {
         width: 100%;
         padding-top: 5vw;
         justify-content: center;
         text-align: center;
+
         .text {
           width: 100%;
           padding-left: 5vw;
@@ -74,6 +91,7 @@
         }
       }
     }
+
     .warning p {
       padding: 5vw;
     }

@@ -1,5 +1,5 @@
 import { DefaultSeo } from "@/components/DefaultSeo";
-import { AboutCMSData, EnabledLinkName, getCMSDataForAboutPage, useCMSDataForAboutPage } from "@/services/cms/about";
+import { getLatestVersionDataByPath } from "@/services/firebase/client/cms";
 import { calculeSemester } from "@/utils/calculateSemester";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 import moment from "moment";
@@ -10,15 +10,26 @@ import { MouseEvent, useCallback, useRef } from "react";
 import { TbApps, TbCertificate, TbPencil, TbUserCircle } from "react-icons/tb";
 import styles from "./styles.module.scss";
 
+type EnabledLinkName = "courses" | "projects" | "social" | "blog";
 interface Props {
   age: number;
   semesters: number;
-  cms: AboutCMSData;
+  cms: CMSData;
+}
+
+interface CMSData {
+  textDesktop: string;
+  textMobile: string;
+  enabledLinks: EnabledLinkName[];
 }
 
 export const getStaticProps: GetStaticProps<Props> = async (context) => {
-  const isPreview = context.draftMode || false;
-  const cms = await getCMSDataForAboutPage(isPreview);
+  const cms = await getLatestVersionDataByPath<CMSData>("/about");
+  if (!cms) {
+    return {
+      notFound: true,
+    };
+  }
   return {
     props: {
       age: moment().diff(moment("2003-05-30"), "years", false),
@@ -63,8 +74,10 @@ const options: Option[] = [
   },
 ];
 
-export default function About(props: InferGetStaticPropsType<typeof getStaticProps>) {
-  const cms = useCMSDataForAboutPage(props.cms);
+export default function About(
+  props: InferGetStaticPropsType<typeof getStaticProps>,
+) {
+  const cms = props.cms;
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { age, semesters } = props;
@@ -79,31 +92,45 @@ export default function About(props: InferGetStaticPropsType<typeof getStaticPro
         router.push(currentTarget.href);
       }, 400);
     },
-    [router]
+    [router],
   );
-  const textDesktop = cms.fields.textDesktop.replaceAll("{age}", age.toString()).replaceAll("{semesters}", semesters.toString());
-  const textMobile = cms.fields.textMobile.replaceAll("{age}", age.toString()).replaceAll("{semesters}", semesters.toString());
+  const textDesktop = cms.textDesktop.replaceAll("{age}", age.toString())
+    .replaceAll("{semesters}", semesters.toString());
+  const textMobile = cms.textMobile.replaceAll("{age}", age.toString())
+    .replaceAll("{semesters}", semesters.toString());
 
-  const filterOptions = options.filter((option) => (cms.entry.fields.enabledLinks as EnabledLinkName[]).includes(option.name));
+  const filterOptions = options.filter((option) =>
+    (cms.enabledLinks as EnabledLinkName[]).includes(option.name)
+  );
 
   return (
     <div className={styles.container} ref={containerRef}>
-      <DefaultSeo title="Guilherme Benevides - Sobre" description="Saiba mais sobre Guilherme Benevides, desenvolvedor web e mobile." image={getOpenMediaImageForNextSeo("Sobre Mim")} site_name="Site do Guilherme" type="website" />
+      <DefaultSeo
+        title="Guilherme Benevides - Sobre"
+        description="Saiba mais sobre Guilherme Benevides, desenvolvedor web e mobile."
+        image={getOpenMediaImageForNextSeo("Sobre Mim")}
+        site_name="Site do Guilherme"
+        type="website"
+      />
       <div className={styles.firstArea}>
-        <div {...cms.props.textDesktop} suppressHydrationWarning>
+        <div>
           {textDesktop.split("\n\n").map((text, index) => (
-            <p key={index} className={styles.textDesktop} suppressHydrationWarning>
+            <p
+              key={index}
+              className={styles.textDesktop}
+              suppressHydrationWarning
+            >
               {text}
             </p>
           ))}
         </div>
 
-        <p className={styles.textMobile} suppressHydrationWarning {...cms.props.textMobile}>
+        <p className={styles.textMobile}>
           {textMobile}
         </p>
       </div>
       <nav className={styles.secondArea}>
-        <ul suppressHydrationWarning {...cms.props.enabledLinks}>
+        <ul>
           {filterOptions.map((option) => (
             <li key={option.href}>
               <Link href={option.href} onClick={optionDispatcher}>

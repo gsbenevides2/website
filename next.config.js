@@ -17,7 +17,10 @@ const nextConfig = {
     config.plugins.push(
       new CopyPlugin({
         patterns: [
-          { from: "node_modules/pdfjs-dist/build", to: "../public/pdfjs/" },
+          {
+            from: "node_modules/pdfjs-dist/build",
+            to: "../public/noprecache/pdfjs/",
+          },
         ],
       })
     );
@@ -28,4 +31,5 @@ const nextConfig = {
 module.exports = withPWA({
   dest: "public",
   disable: process.env.NODE_ENV === "development",
+  publicExcludes: ['!noprecache/**/*']
 })(nextConfig);
