@@ -5,7 +5,7 @@ import { useCallback, useMemo, useState } from "react";
 import { TbEdit, TbTrash, TbVersions } from "react-icons/tb";
 
 export default function CMS() {
-    const [pages, setPages] = useState<ListItem[]>([]);
+    const [pages, setPages] = useState<ListItem[] | undefined>(undefined);
 
     const loadPages = useCallback(async () => {
         const pages = await cmsClient.listPages();

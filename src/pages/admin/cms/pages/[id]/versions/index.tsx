@@ -20,7 +20,7 @@ const ViewVersionModal = dynamic(
 export default function Versions() {
     const router = useRouter();
     const { id } = router.query as { id: string };
-    const [versions, setVersions] = useState<ListItem[]>([]);
+    const [versions, setVersions] = useState<ListItem[] | undefined>(undefined);
     const [showViewJsonModal, setShowViewJsonModal] = useState<string | null>(
         null,
     );
