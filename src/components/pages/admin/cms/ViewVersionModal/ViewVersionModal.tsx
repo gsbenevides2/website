@@ -11,7 +11,7 @@ interface Props {
     versionId: string | null;
 }
 
-export function ViewVersionModal(props: Props) {
+export default function ViewVersionModal(props: Props) {
     const [versionData, setVersionData] = useState<any>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);

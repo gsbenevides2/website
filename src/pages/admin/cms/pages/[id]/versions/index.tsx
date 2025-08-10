@@ -1,11 +1,21 @@
 import ListAdminPage, { ListItem } from "@/components/ListAdminPage";
-import { ViewVersionModal } from "@/components/pages/admin/cms/ViewVersionModal/ViewVersionModal";
 import { revalidateNextPages } from "@/services/api/revalidateNextPages";
 import * as cmsClient from "@/services/firebase/client/cms";
 import { Timestamp } from "firebase/firestore";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useCallback, useMemo, useState } from "react";
 import { TbArrowUp, TbCode } from "react-icons/tb";
+
+const ViewVersionModal = dynamic(
+    () =>
+        import(
+            "@/components/pages/admin/cms/ViewVersionModal/ViewVersionModal"
+        ),
+    {
+        ssr: false,
+    },
+);
 
 export default function Versions() {
     const router = useRouter();
