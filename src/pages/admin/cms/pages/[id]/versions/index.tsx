@@ -3,18 +3,13 @@ import { ViewVersionModal } from "@/components/pages/admin/cms/ViewVersionModal/
 import { revalidateNextPages } from "@/services/api/revalidateNextPages";
 import * as cmsClient from "@/services/firebase/client/cms";
 import { Timestamp } from "firebase/firestore";
-import { GetServerSidePropsContext } from "next";
+import { useRouter } from "next/router";
 import { useCallback, useMemo, useState } from "react";
 import { TbArrowUp, TbCode } from "react-icons/tb";
 
-export function getServerSideProps(context: GetServerSidePropsContext) {
-    const { id } = context.params as { id: string };
-    return {
-        props: { id },
-    };
-}
-
-export default function Versions({ id }: { id: string }) {
+export default function Versions() {
+    const router = useRouter();
+    const { id } = router.query as { id: string };
     const [versions, setVersions] = useState<ListItem[]>([]);
     const [showViewJsonModal, setShowViewJsonModal] = useState<string | null>(
         null,
@@ -52,7 +47,7 @@ export default function Versions({ id }: { id: string }) {
             await revalidateNextPages("cms", `${pageData.path}`);
         }
         loadVersions();
-    }, [loadVersions]);
+    }, [loadVersions, id]);
 
     const viewVersionJson = useCallback((versionId: string) => {
         setShowViewJsonModal(versionId);

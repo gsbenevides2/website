@@ -7,9 +7,8 @@ import {
     useAdminAuthentication,
 } from "@/services/firebase/client/auth";
 import { addVersion, getLatestVersion } from "@/services/firebase/client/cms";
-import { GetServerSidePropsContext } from "next";
 import Head from "next/head";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import styles from "../../editor.styles.module.scss";
 
@@ -17,18 +16,12 @@ interface FormData {
     content: string;
 }
 
-export function getServerSideProps(context: GetServerSidePropsContext) {
-    const { id } = context.params as { id: string };
-    return {
-        props: { id },
-    };
-}
-
-export default function NewVersion({ id }: { id: string }) {
+export default function NewVersion() {
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
     const { state: authState } = useAdminAuthentication();
     const [content, setContent] = useState("");
+    const { id } = router.query as { id: string };
 
     const loadPage = useCallback(async () => {
         const latestVersion = await getLatestVersion(id);
@@ -47,7 +40,7 @@ export default function NewVersion({ id }: { id: string }) {
         } else if (authState === AuthState.Unauthenticated) {
             router.push("/admin");
         }
-    }, [authState, loadPage]);
+    }, [authState, loadPage, router]);
 
     const handleSubmit = useCallback(async (data: FormData) => {
         setIsLoading(true);

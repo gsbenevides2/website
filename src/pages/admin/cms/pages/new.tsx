@@ -29,7 +29,7 @@ export default function NewPage() {
         } else if (authState === AuthState.Unauthenticated) {
             router.push("/admin");
         }
-    }, [authState]);
+    }, [authState, router]);
 
     const handleSubmit = useCallback(async (data: FormData) => {
         setIsLoading(true);

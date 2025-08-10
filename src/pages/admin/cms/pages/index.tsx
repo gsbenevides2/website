@@ -48,7 +48,7 @@ export default function CMS() {
                     icon: () => TbVersions,
                     onClick: editVersion,
                 },
-            ], [deletePage, editPage])}
+            ], [deletePage, editPage, editVersion])}
             title="CMS Páginas"
             executeBeforeAuthenticated={loadPages}
         />

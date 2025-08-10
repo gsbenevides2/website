@@ -40,6 +40,16 @@ interface Props {
 }
 
 export default function ListAdminPage(props: Props) {
+  const {
+    title,
+    addButtonText,
+    addButtonClick,
+    addButtonHideOnClicked,
+    emptyListText,
+    list,
+    listButtons,
+    executeBeforeAuthenticated,
+  } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { state } = useAdminAuthentication();
@@ -53,17 +63,17 @@ export default function ListAdminPage(props: Props) {
 
   useEffect(() => {
     if (state === AuthState.Authenticated) {
-      props.executeBeforeAuthenticated?.();
+      executeBeforeAuthenticated?.();
     } else if (state === AuthState.Unauthenticated) {
       router.push("/admin");
     }
-  }, [state, props.executeBeforeAuthenticated, router]);
+  }, [state, executeBeforeAuthenticated, router]);
 
   const handleAddClick = useCallback(async () => {
-    if (props.addButtonHideOnClicked) await hidePage();
-    const redirect = props.addButtonClick();
+    if (addButtonHideOnClicked) await hidePage();
+    const redirect = addButtonClick();
     if (redirect) router.push(redirect);
-  }, [hidePage, props, router]);
+  }, [hidePage, addButtonClick, addButtonHideOnClicked, router]);
 
   const handleButtonClick = useCallback(
     async (id: string, button: ListButton) => {
@@ -75,16 +85,16 @@ export default function ListAdminPage(props: Props) {
   );
 
   const memorizedCompoment = useMemo(() => {
-    if (!props.list) return <Loader />;
+    if (!list) return <Loader />;
 
     const filteredList = search.length === 0
-      ? props.list
-      : props.list.filter((item) =>
+      ? list
+      : list.filter((item) =>
         item.title.toLowerCase().includes(search.toLowerCase()) ||
         (item.description &&
           item.description.toLowerCase().includes(search.toLowerCase()))
       );
-    if (filteredList.length === 0) return <h2>{props.emptyListText}</h2>;
+    if (filteredList.length === 0) return <h2>{emptyListText}</h2>;
 
     return filteredList.map((item) => (
       <li key={item.id}>
@@ -104,7 +114,7 @@ export default function ListAdminPage(props: Props) {
           {item.description && <p>{item.description}</p>}
         </div>
         <div className={styles.iconButtonsArea}>
-          {props.listButtons.map((button, index) => (
+          {listButtons.map((button, index) => (
             <IconButton
               key={index.toString()}
               icon={button.icon(item.id)}
@@ -116,9 +126,9 @@ export default function ListAdminPage(props: Props) {
       </li>
     ));
   }, [
-    props.list,
-    props.emptyListText,
-    props.listButtons,
+    list,
+    emptyListText,
+    listButtons,
     search,
     handleButtonClick,
   ]);
@@ -127,10 +137,10 @@ export default function ListAdminPage(props: Props) {
     <div className={styles.container} ref={containerRef}>
       <div className={styles.containerInside}>
         <Head>
-          <title>{props.title}</title>
+          <title>{title}</title>
         </Head>
-        <h1>{props.title}</h1>
-        <Button onClick={handleAddClick}>{props.addButtonText}</Button>
+        <h1>{title}</h1>
+        <Button onClick={handleAddClick}>{addButtonText}</Button>
         <Form
           contextLoader={formContext.contextLoader}
           submit={({ searchQuery }: { searchQuery: string }) =>
