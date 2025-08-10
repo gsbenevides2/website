@@ -1,29 +1,18 @@
-import { MdCopyAll } from "react-icons/md";
-import { PrismAsync as SyntaxHighlighter } from "react-syntax-highlighter";
-import cb from "react-syntax-highlighter/dist/cjs/styles/prism/cb";
+import BlogHeader from "@/components/BlogHeader";
+import Code from "@/components/Code";
+import { DefaultSeo } from "@/components/DefaultSeo";
+import {
+  getFirstTenVisblePostsIds,
+  getPost,
+  Post,
+} from "@/services/firebase/client/posts";
+import { parseYYYYMMDDtoDDMMYYYY } from "@/utils/parseDateStringtoDateObj";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
-import { NextSeo } from "next-seo";
 import Image from "next/image";
 import { ParsedUrlQuery } from "querystring";
-import BlogHeader from "@/components/BlogHeader";
-import {
-  Post,
-  getFirstTenVisblePostsIds,
-  getPost,
-} from "@/services/firebase/client/posts";
 import styles from "./styles.module.css";
-import { JetBrains_Mono } from "next/font/google";
-import { useState } from "react";
-import { DefaultSeo } from "@/components/DefaultSeo";
-import { parseYYYYMMDDtoDDMMYYYY } from "@/utils/parseDateStringtoDateObj";
-import { copyTextToClipboard } from "@/utils/copyTextToClipboard";
-
-const jetBrainsMono = JetBrains_Mono({
-  variable: "--jetBrainsMono",
-  subsets: ["latin"],
-});
 
 interface Props {
   post: Post;
@@ -59,7 +48,7 @@ export const getStaticProps: GetStaticProps<Props> = async (context) => {
 };
 
 export default function PostPage(
-  props: InferGetStaticPropsType<typeof getStaticProps>
+  props: InferGetStaticPropsType<typeof getStaticProps>,
 ) {
   const ResponsiveImage = (imageProps: React.HTMLProps<HTMLImageElement>) => {
     const src = imageProps.src as string;
@@ -93,44 +82,6 @@ export default function PostPage(
       {linkProps.children}
     </a>
   );
-
-  interface CodeProps {
-    className: string;
-    children: string;
-  }
-
-  const Code = ({ className, children }: CodeProps) => {
-    const [copyMessage, setCopyMessage] = useState(
-      "Copiar para Area de Transferencia"
-    );
-    function copy() {
-      copyTextToClipboard(children).then(() => {
-        setCopyMessage("Copiado");
-        setTimeout(() => {
-          setCopyMessage("Copiar para Area de Transferencia");
-        }, 3000);
-      });
-    }
-    return (
-      <div className={jetBrainsMono.variable}>
-        <SyntaxHighlighter
-          language={className.replace("language-", "")}
-          style={cb}
-          customStyle={{
-            borderRadius: "8px 8px 0px 0px",
-            margin: "1em 0em 0em 0em",
-            ...jetBrainsMono.style,
-          }}
-        >
-          {children}
-        </SyntaxHighlighter>
-        <div className={styles.copy} onClick={copy}>
-          <MdCopyAll />
-          <span>{copyMessage}</span>
-        </div>
-      </div>
-    );
-  };
 
   const components = {
     img: ResponsiveImage,

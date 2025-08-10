@@ -1,9 +1,19 @@
 import { Button } from "@/components/Button";
-import { AuthState, adminLogIn, logOut, useAdminAuthentication } from "@/services/firebase/client/auth";
+import {
+  adminLogIn,
+  AuthState,
+  logOut,
+  useAdminAuthentication,
+} from "@/services/firebase/client/auth";
 import { wait } from "@/utils/wait";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
-import React, { MouseEventHandler, useCallback, useEffect, useRef } from "react";
+import React, {
+  MouseEventHandler,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
 import styles from "./styles.module.css";
 
 const loggedButtonOptions = {
@@ -12,6 +22,7 @@ const loggedButtonOptions = {
   Certificações: "/admin/certifications",
   Blog: "/admin/blog",
   Links: "/admin/links",
+  CMS: "/admin/cms/pages",
 };
 
 export default function Home() {
@@ -57,19 +68,21 @@ export default function Home() {
     logOut();
   }, []);
 
-  const handleLoggedButtonClick: MouseEventHandler<HTMLButtonElement> = useCallback(
-    async (clickEvent) => {
-      if (!containerRef.current) return;
-      const textContent = clickEvent.currentTarget.innerText as keyof typeof loggedButtonOptions;
-      const destination = loggedButtonOptions[textContent];
-      if (destination) {
-        containerRef.current.classList.add(styles.hide);
-        await wait(500);
-        router.push(destination);
-      }
-    },
-    [router]
-  );
+  const handleLoggedButtonClick: MouseEventHandler<HTMLButtonElement> =
+    useCallback(
+      async (clickEvent) => {
+        if (!containerRef.current) return;
+        const textContent = clickEvent.currentTarget
+          .innerText as keyof typeof loggedButtonOptions;
+        const destination = loggedButtonOptions[textContent];
+        if (destination) {
+          containerRef.current.classList.add(styles.hide);
+          await wait(500);
+          router.push(destination);
+        }
+      },
+      [router],
+    );
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -85,22 +98,42 @@ export default function Home() {
       </Head>
       <div className={styles.firstArea}>
         <h1 className={styles.title}>Olá Guilherme 👋</h1>
-        <h2 className={styles.subtitle}>Seja bem vindo ao painel de adminstrador</h2>
-        <p className={styles.description}>Aqui você pode adicionar, editar e remover os projetos do seu portfólio, e alterar suas certificações.</p>
+        <h2 className={styles.subtitle}>
+          Seja bem vindo ao painel de adminstrador
+        </h2>
+        <p className={styles.description}>
+          Aqui você pode adicionar, editar e remover os projetos do seu
+          portfólio, e alterar suas certificações.
+        </p>
         <div className={styles.authArea}>
           <div className={styles.buttonsArea} ref={unauthenticatedRef}>
-            <p className={styles.description}>Para continuar, faça login com sua conta do Google(gsbenevides2@gmail.com).</p>
-            <Button key="LogIn" className={styles.button} onClick={loginButtonClick}>
+            <p className={styles.description}>
+              Para continuar, faça login com sua conta do
+              Google(gsbenevides2@gmail.com).
+            </p>
+            <Button
+              key="LogIn"
+              className={styles.button}
+              onClick={loginButtonClick}
+            >
               Fazer login com o Google
             </Button>
           </div>
           <div className={styles.buttonsArea} ref={authenticatedRef}>
             {Object.entries(loggedButtonOptions).map(([key]) => (
-              <Button key={key} className={styles.button} onClick={handleLoggedButtonClick}>
+              <Button
+                key={key}
+                className={styles.button}
+                onClick={handleLoggedButtonClick}
+              >
                 {key}
               </Button>
             ))}
-            <Button key="LogOut" className={styles.button} onClick={logOutButtonClick}>
+            <Button
+              key="LogOut"
+              className={styles.button}
+              onClick={logOutButtonClick}
+            >
               Sair
             </Button>
           </div>
