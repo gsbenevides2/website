@@ -1,6 +1,6 @@
 import { DefaultSeo } from "@/components/DefaultSeo";
 import { getServerStatus } from "@/services/api/minecraft";
-import { MinecraftCMSData, getCMSDataForMinecraftPage, useCMSDataForMinecraftPage } from "@/services/cms/minecraft";
+import { getLatestVersionDataByPath } from "@/services/firebase/client/cms";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 import { BedrockPingResponse } from "@minescope/mineping";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
@@ -9,8 +9,15 @@ import React from "react";
 import styles from "./styles.module.css";
 import Window from "./window";
 
+export interface CMSData {
+  type: "Bedrock" | "Java";
+  ip: string;
+  port: number;
+  helperText: string;
+}
+
 interface Props {
-  cms: MinecraftCMSData;
+  cms: CMSData;
 }
 
 const minecraftFont = localFont({
@@ -40,11 +47,16 @@ const minecraftFont = localFont({
 });
 
 export const getStaticProps: GetStaticProps<Props> = async (context) => {
-  const isPreview = context.draftMode || false;
+  const cms = await getLatestVersionDataByPath<CMSData>("/minecraft");
+  if (!cms) {
+    return {
+      notFound: true,
+    };
+  }
 
   return {
     props: {
-      cms: await getCMSDataForMinecraftPage(isPreview),
+      cms,
     },
   };
 };
@@ -52,8 +64,10 @@ export const getStaticProps: GetStaticProps<Props> = async (context) => {
 type ComponentProps = InferGetStaticPropsType<typeof getStaticProps>;
 
 export default function MinecraftPage(props: ComponentProps) {
-  const cms = useCMSDataForMinecraftPage(props.cms);
-  const [serverData, setServerData] = React.useState<BedrockPingResponse | false>();
+  const cms = props.cms;
+  const [serverData, setServerData] = React.useState<
+    BedrockPingResponse | false
+  >();
 
   const makeStatusMessage = React.useMemo(() => {
     if (serverData === undefined) return "Carregando...";
@@ -63,35 +77,42 @@ export default function MinecraftPage(props: ComponentProps) {
   }, [serverData]);
 
   React.useEffect(() => {
-    getServerStatus(props.cms.isPreview)
+    getServerStatus(false)
       .then(setServerData)
       .catch(() => {
         setServerData(false);
       });
-  }, [props.cms.isPreview]);
+  }, []);
 
   return (
     <div className={[minecraftFont.className, styles.container].join(" ")}>
-      <DefaultSeo title="Minecraft - Site do Guilherme" description="Opa! Deseja jogar minecraft comigo?" image={getOpenMediaImageForNextSeo("Minecraft")} site_name="Site do Guilherme" type="website" />
+      <DefaultSeo
+        title="Minecraft - Site do Guilherme"
+        description="Opa! Deseja jogar minecraft comigo?"
+        image={getOpenMediaImageForNextSeo("Minecraft")}
+        site_name="Site do Guilherme"
+        type="website"
+      />
       <div className={styles.modalCenter}>
         <Window transparent>
           <div className={styles.statusModal}>
             <h4>Conecte-se ao servidor:</h4>
             <div className={styles.dataContainer}>
-              <p {...cms.props.type}>Tipo de Minecraft: {cms.fields.type}</p>
-              <p {...cms.props.ip}>IP: {cms.fields.ip}</p>
-              <p {...cms.props.port}>Porta: {cms.fields.port}</p>
+              <p>Tipo de Minecraft: {cms.type}</p>
+              <p>IP: {cms.ip}</p>
+              <p>Porta: {cms.port}</p>
               <p>Status do Servidor: {makeStatusMessage}</p>
               {serverData && (
                 <>
                   <p>
-                    Jogadores online: {serverData.players.online}/{serverData.players.max}
+                    Jogadores online:{" "}
+                    {serverData.players.online}/{serverData.players.max}
                   </p>
                 </>
               )}
             </div>
-            <p className={styles.centerText} {...cms.props.helperText}>
-              {cms.fields.helperText}
+            <p className={styles.centerText}>
+              {cms.helperText}
             </p>
           </div>
         </Window>

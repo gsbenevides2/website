@@ -1,78 +1,113 @@
 import { DefaultSeo } from "@/components/DefaultSeo";
-import { ContactsCMSData, getCMSDataForContactsPage, useCMSDataForContactsPage } from "@/services/cms/contacts";
+import { getLatestVersionDataByPath } from "@/services/firebase/client/cms";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
-import { InspectorModeTags } from "@contentful/live-preview/dist/inspectorMode/types";
 import { GetStaticProps } from "next";
 import Link from "next/link";
 import { MdPix } from "react-icons/md";
 import { SiMojangstudios } from "react-icons/si";
-import { TbBrandGithub, TbBrandInstagram, TbBrandLinkedin, TbBrandX, TbMail, TbMusic } from "react-icons/tb";
+import {
+  TbBrandGithub,
+  TbBrandInstagram,
+  TbBrandLinkedin,
+  TbBrandX,
+  TbMail,
+  TbMusic,
+} from "react-icons/tb";
 import styles from "./styles.module.scss";
 
 interface Props {
-  cms: ContactsCMSData;
+  cms: CMSData;
+}
+
+interface CMSData {
+  email?: string;
+  sendEmailText?: string;
+  textOfPixOption?: string;
+  musicPlaylistText?: string;
+  playlistLink?: string;
+  minecraftText?: string;
+  linkedin?: string;
+  github?: string;
+  instagram?: string;
+  twitter?: string;
 }
 
 interface SocialMedia {
   name: string;
   style: string;
-  url: string | null;
-  props?: InspectorModeTags | {};
+  url?: string;
   icon: React.ReactNode;
 }
 
-export const getStaticProps: GetStaticProps<Props> = async (context) => {
-  const { draftMode } = context;
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const cms = await getLatestVersionDataByPath<CMSData>("/contacts");
+  if (!cms) {
+    return {
+      notFound: true,
+    };
+  }
   return {
     props: {
-      cms: await getCMSDataForContactsPage(draftMode ?? true),
+      cms,
     },
   };
 };
 
 export default function Contacts(props: Props) {
-  const cms = useCMSDataForContactsPage(props.cms);
+  const cms = props.cms;
   const socialMedias: SocialMedia[] = [
     {
       name: "X",
       style: styles.x,
-      url: cms.fields.twitter,
-      props: cms.props.twitter,
+      url: cms.twitter,
       icon: <TbBrandX />,
     },
     {
       name: "Linkedin",
       style: styles.linkedin,
-      url: cms.fields.linkedin,
-      props: cms.props.linkedin,
+      url: cms.linkedin,
       icon: <TbBrandLinkedin />,
     },
     {
       name: "Github",
       style: styles.github,
-      url: cms.fields.github,
-      props: cms.props.github,
+      url: cms.github,
       icon: <TbBrandGithub />,
     },
     {
       name: "Instagram",
       style: styles.instagram,
-      url: cms.fields.instagram,
-      props: cms.props.instagram,
+      url: cms.instagram,
       icon: <TbBrandInstagram />,
     },
   ];
-  const filteredSocialMedias = socialMedias.filter((socialMedia) => Boolean(socialMedia.url));
+  const filteredSocialMedias = socialMedias.filter((socialMedia) =>
+    Boolean(socialMedia.url)
+  );
 
   return (
     <div className={styles.container}>
-      <DefaultSeo title="Contatos" description="Contatos do Guilherme" image={getOpenMediaImageForNextSeo("Contatos")} site_name="Site do Guilherme" type="website" />
+      <DefaultSeo
+        title="Contatos"
+        description="Contatos do Guilherme"
+        image={getOpenMediaImageForNextSeo("Contatos")}
+        site_name="Site do Guilherme"
+        type="website"
+      />
       <div className={styles.firstArea}>
         <h1>Contatos</h1>
         <ul className={styles.social}>
           {filteredSocialMedias.map((socialMedia) => (
-            <li className={socialMedia.style} key={socialMedia.name} {...socialMedia.props}>
-              <a href={socialMedia.url ?? ""} target="_blank" rel="noreferrer" className={socialMedia.name}>
+            <li
+              className={socialMedia.style}
+              key={socialMedia.name}
+            >
+              <a
+                href={socialMedia.url ?? ""}
+                target="_blank"
+                rel="noreferrer"
+                className={socialMedia.name}
+              >
                 {socialMedia.icon}
                 <p>{socialMedia.name}</p>
               </a>
@@ -81,35 +116,35 @@ export default function Contacts(props: Props) {
         </ul>
         <div>
           <ul className={styles.other}>
-            {cms.fields.email && cms.fields.sendEmailText && (
-              <li {...cms.props.sendEmailText}>
-                <a href={`mailto:${cms.fields.email}`}>
+            {cms.email && cms.sendEmailText && (
+              <li>
+                <a href={`mailto:${cms.email}`}>
                   <TbMail />
-                  {cms.fields.sendEmailText}
+                  {cms.sendEmailText}
                 </a>
               </li>
             )}
-            {cms.fields.textOfPixOption && (
-              <li {...cms.props.textOfPixOption}>
+            {cms.textOfPixOption && (
+              <li>
                 <Link href="/pix">
                   <MdPix />
-                  {cms.fields.textOfPixOption}
+                  {cms.textOfPixOption}
                 </Link>
               </li>
             )}
-            {cms.fields.musicPlaylistText && cms.fields.playlistLink && (
-              <li {...cms.props.musicPlaylistText}>
-                <a href={cms.fields.playlistLink} target="_blank">
+            {cms.musicPlaylistText && cms.playlistLink && (
+              <li>
+                <a href={cms.playlistLink} target="_blank">
                   <TbMusic />
-                  {cms.fields.musicPlaylistText}
+                  {cms.musicPlaylistText}
                 </a>
               </li>
             )}
-            {cms.fields.minecraftText && (
-              <li {...cms.props.minecraftText}>
+            {cms.minecraftText && (
+              <li>
                 <Link href="/minecraft">
                   <SiMojangstudios />
-                  {cms.fields.minecraftText}
+                  {cms.minecraftText}
                 </Link>
               </li>
             )}

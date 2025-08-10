@@ -97,6 +97,7 @@ export async function getPageByPath(path: string) {
 
 export async function getLatestVersionDataByPath<T>(path: string) {
     const pageRef = await getPageByPath(path);
+    if (!pageRef) return null;
     const latestVersion = await getLatestVersion(pageRef.id);
     if (!latestVersion) return null;
     const data = latestVersion.data()?.content;

@@ -1,15 +1,17 @@
-import { getCMSDataForMinecraftPage } from "@/services/cms/minecraft";
+import { getLatestVersionDataByPath } from "@/services/firebase/client/cms";
 import { pingBedrock } from "@minescope/mineping";
-import console from "console";
 import { NextApiRequest, NextApiResponse } from "next";
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { url } = req;
-  const isPreview = url?.includes("isPreview=true") || false;
+import { CMSData } from "../minecraft";
+
+export default async function handler(_: NextApiRequest, res: NextApiResponse) {
   try {
-    const cmsData = await getCMSDataForMinecraftPage(isPreview);
-    const { ip, port } = cmsData.entries.items[0].fields;
+    const cms = await getLatestVersionDataByPath<CMSData>("/minecraft");
+    if (!cms) {
+      return res.status(404).json({ error: "Minecraft page not found" });
+    }
+    const { ip, port } = cms;
     const data = await pingBedrock(ip, {
-      port,
+      port: port as number & { _brand: "Port" },
     });
     return res.status(200).json(data);
   } catch (error) {
