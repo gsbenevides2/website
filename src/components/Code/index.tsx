@@ -2,8 +2,8 @@ import { copyTextToClipboard } from "@/utils/copyTextToClipboard";
 import { JetBrains_Mono } from "next/font/google";
 import { useState } from "react";
 import { MdCopyAll } from "react-icons/md";
-import { LightAsync as SyntaxHighlighter } from "react-syntax-highlighter";
-import { darcula } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import { PrismAsync as SyntaxHighlighter } from "react-syntax-highlighter";
+import { cb } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import styles from "./styles.module.scss";
 
 const jetBrainsMono = JetBrains_Mono({
@@ -33,7 +33,7 @@ const Code = ({ className, children }: CodeProps) => {
         <div className={jetBrainsMono.variable}>
             <SyntaxHighlighter
                 language={className.replace("language-", "")}
-                style={darcula}
+                style={cb}
                 customStyle={{
                     borderRadius: "8px 8px 0px 0px",
                     margin: "1em 0em 0em 0em",
