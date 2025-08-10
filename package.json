@@ -4,6 +4,9 @@
   "main": "index.js",
   "repository": "git@github.com:gsbenevides2/website.git",
   "author": "Guilherme da Silva Benevides <gsbenevides2@gmail.com>",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "license": "MIT",
   "scripts": {
     "setup": "firebase login",

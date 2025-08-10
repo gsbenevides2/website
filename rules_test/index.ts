@@ -1,12 +1,12 @@
 import { initializeTestEnvironment } from "@firebase/rules-unit-testing";
 import { initializeApp } from "firebase/app";
 import { connectFirestoreEmulator, getFirestore, setLogLevel } from "firebase/firestore";
-import { connectStorageEmulator, getStorage } from "firebase/storage";
 import fs from "fs";
 import path from "path";
-import runStorageTests from "./tests/storage";
-import { dispatchLog } from "./utils";
 import { runFirestoreTests } from "./tests/firestore";
+import { dispatchLog } from "./utils";
+import { getStorage, connectStorageEmulator } from "firebase/storage";
+import runStorageTests from "./tests/storage";
 
 const firestoreRulesPath = path.resolve(__dirname, "..", "firestore.rules");
 const host = process.env.EMULATOR_HOST || "localhost";

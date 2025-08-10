@@ -2,6 +2,15 @@ import { ChildProcessWithoutNullStreams, execSync, spawn } from "child_process";
 import path from "path";
 import { dispatchLog } from "./utils";
 
+const killAllJavaProcesses = () => {
+  try {
+    dispatchLog("info", "Killing all Java processes...");
+    execSync("killall java");
+  } catch (error) {
+    dispatchLog("info", "No Java processes found");
+  }
+};
+
 const startFirebaseEmulator = () => {
   dispatchLog("info", "Starting Firebase emulator...");
   return new Promise<ChildProcessWithoutNullStreams>(async (resolve, reject) => {
@@ -71,6 +80,7 @@ const stopFirebaseEmulator = async (processToStop: ChildProcessWithoutNullStream
 };
 
 const runAutomatedTestRules = async () => {
+  killAllJavaProcesses();
   dispatchLog("info", "Starting automated test rules...");
   const processFirestore = await startFirebaseEmulator();
   await runTests();

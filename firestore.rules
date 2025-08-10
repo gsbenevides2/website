@@ -12,8 +12,11 @@ service cloud.firestore {
       let isAllowedUser = request.auth.token.email in get(/databases/(default)/documents/storage/$(storageId)).data.allowedUsers;
       let isAdminUser = adminOnly();
       let isVisible = get(/databases/(default)/documents/storage/$(storageId)).data.visible == true;
-
       return isAdminUser || isVisible || isAllowedUser;
+    }
+    function isLatestCMSVersion(cmsId, cmsVersion) {
+    	let isCMSLatestVersion = get(/databases/(default)/documents/cms/$(cmsId)).data.latestVersion == cmsVersion;
+      return isCMSLatestVersion;
     }
     match /{document=**} {
       allow read, write: if false;
@@ -38,7 +41,15 @@ service cloud.firestore {
       allow get: if getStorageData(resource.id);
       allow list : if adminOnly();
       allow write: if adminOnly();
-
+    }
+    match /cms/{cmsId} {
+      allow read: if true;
+      allow write: if adminOnly();
+    
+      match /versions/{cmsVersion} {
+        allow read: if adminOnly() || isLatestCMSVersion(cmsId, cmsVersion);
+        allow write: if adminOnly();
+      }
     }
   }
 }
