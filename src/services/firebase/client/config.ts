@@ -1,4 +1,4 @@
-import { getAnalytics } from "firebase/analytics";
+import { Analytics, getAnalytics } from "firebase/analytics";
 import { FirebaseApp, initializeApp } from "firebase/app";
 import { Auth, connectAuthEmulator, getAuth } from "firebase/auth";
 import { Firestore, connectFirestoreEmulator, getFirestore } from "firebase/firestore";
@@ -14,6 +14,7 @@ export default class Firebase {
   static firestore: Firestore | undefined;
   static storage: FirebaseStorage | undefined;
   static messaging: Messaging | undefined;
+  static analytics: Analytics | undefined;
 
   static getFirestore() {
     if (Firebase.firestore) return Firebase.firestore;
@@ -55,6 +56,12 @@ export default class Firebase {
     return storage;
   }
 
+  static getAnalytics() {
+    if (Firebase.analytics) return Firebase.analytics;
+    Firebase.getApp();
+    return Firebase.analytics as unknown as Analytics;
+  }
+
   static getApp() {
     if (Firebase.app) return Firebase.app;
     const app = initializeApp(firebaseConfig);
@@ -67,6 +74,11 @@ export default class Firebase {
     if (enviromentData.isEmulator) connectFunctionsEmulator(functions, enviromentData.host, enviromentData.port);
 
     Firebase.app = app;
+
+    if (!isServer) {
+      Firebase.analytics = getAnalytics(app);
+    }
+
     return app;
   }
 

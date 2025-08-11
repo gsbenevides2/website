@@ -31,7 +31,7 @@ export default function ChangeVisibility(props: Props) {
       if (props.data === null) return;
       FirebaseSelfStorage.addEmailToAllowedUsers(props.data.id, data.email);
     },
-    [props.data]
+    [props.data],
   );
 
   const directLink = useMemo(() => {
@@ -42,6 +42,12 @@ export default function ChangeVisibility(props: Props) {
     const host = window.location.origin;
     return `${host}/s/${props.data?.id}`;
   }, [props.data]);
+
+  const directLinkWithAnalytics = useMemo(() => {
+    const host = window.location.origin;
+    return `${host}/sad/${props.data?.id}`;
+  }, [props.data]);
+
   const directLinkClick = useCallback(() => {
     copyTextToClipboard(directLink)
       .then(() => {
@@ -61,34 +67,61 @@ export default function ChangeVisibility(props: Props) {
       });
   }, [shareLink]);
 
+  const directLinkWithAnalyticsClick = useCallback(() => {
+    copyTextToClipboard(directLinkWithAnalytics)
+      .then(() => {
+        alert("Link copiado com sucesso");
+      })
+      .catch(() => {
+        alert("Erro ao copiar link");
+      });
+  }, [directLinkWithAnalytics]);
+
   const removeEmailTrashClick = useCallback(
     (email: string) => {
       if (props.data === null) return;
       FirebaseSelfStorage.removeEmailFromAllowedUsers(props.data.id, email);
     },
-    [props.data]
+    [props.data],
   );
   return (
     <div className={[styles.backdrop, visible ? "" : styles.hidden].join(" ")}>
       <div className={styles.modal}>
         <button className={styles.close} onClick={props.close}>
           {" "}
-          <MdClose />{" "}
+          <MdClose />
+          {" "}
         </button>
 
         <h2>Alterar Visibilidade</h2>
         <div className={styles.content}>
           <div className={styles.toogleArea}>
-            <Toogle onChange={changeVisibility} checked={props.data?.visible ?? false} />
+            <Toogle
+              onChange={changeVisibility}
+              checked={props.data?.visible ?? false}
+            />
             <span>Vísivel para todos</span>
           </div>
           <div className={styles.content}>
-            <Form className={styles.userAddForm} contextLoader={addUserForm.contextLoader} submit={addEmailFormSubmit}>
-              <Input name="email" required placeholder="Digitar E-mail" customComponent={({ ref, ...props }) => <InputCustom {...props} label="Adicionar E-mail:" />} />
+            <Form
+              className={styles.userAddForm}
+              contextLoader={addUserForm.contextLoader}
+              submit={addEmailFormSubmit}
+            >
+              <Input
+                name="email"
+                required
+                placeholder="Digitar E-mail"
+                customComponent={({ ref, ...props }) => (
+                  <InputCustom {...props} label="Adicionar E-mail:" />
+                )}
+              />
               <Button type="submit">Adicionar E-mail</Button>
             </Form>
             <h3 className={styles.userList}>Lista de Usuários</h3>
-            {props.data?.allowedUsers.length === 0 && <span>Nenhum usuário autorizado</span>}
+            {props.data?.allowedUsers.length === 0 && (
+              <span>Nenhum usuário autorizado</span>
+            )}
             <ul className={styles.list}>
               {props.data?.allowedUsers.map((user) => (
                 <li key={user}>
@@ -101,12 +134,17 @@ export default function ChangeVisibility(props: Props) {
             </ul>
           </div>
           <div className={styles.links}>
-            <span>Link de Direto: </span>
+            <span>Link de Direto:</span>
             <br />
             <a onClick={directLinkClick}>{directLink}</a>
             <br />
+            <span>Link de Direto com Analytics:</span>
             <br />
-            <span>Link de Compartilhamento: </span>
+            <a onClick={directLinkWithAnalyticsClick}>
+              {directLinkWithAnalytics}
+            </a>
+            <br />
+            <span>Link de Compartilhamento:</span>
             <br />
             <a onClick={shareLinkClick}>{shareLink}</a>
           </div>
