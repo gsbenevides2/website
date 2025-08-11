@@ -1,8 +1,8 @@
-import { useCallback, useMemo, useState } from "react";
-import { TbTrash, TbCopy } from "react-icons/tb";
-import { deleteLink, listLinks } from "@/services/firebase/client/links";
 import ListAdminPage from "@/components/ListAdminPage";
+import { deleteLink, listLinks } from "@/services/firebase/client/links";
 import { copyTextToClipboard } from "@/utils/copyTextToClipboard";
+import { useCallback, useMemo, useState } from "react";
+import { TbCopy, TbGraph, TbTrash } from "react-icons/tb";
 
 interface LinkToList {
   id: string;
@@ -32,6 +32,13 @@ export default function Page() {
     alert("Link copiado para a área de transferência");
   }, []);
 
+  const handleCopyLinkWithAnalytics = useCallback(async (id: string) => {
+    const link = new URL(window.location.href);
+    link.pathname = `/la/${id}`;
+    await copyTextToClipboard(link.toString());
+    alert("Link copiado com analytics para a área de transferência");
+  }, []);
+
   const list = useMemo(() => {
     return links?.map((link) => ({
       id: link.id,
@@ -54,6 +61,10 @@ export default function Page() {
         {
           icon: () => TbCopy,
           onClick: handleCopyLink,
+        },
+        {
+          icon: () => TbGraph,
+          onClick: handleCopyLinkWithAnalytics,
         },
       ]}
       title="Gerenciador de Links Curtos"
