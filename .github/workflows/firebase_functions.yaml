@@ -15,12 +15,14 @@ jobs:
             - uses: actions/setup-node@v1
               with:
                   node-version: '22.x'
+                  package-manager: yarn
+                  cache: 'yarn'
             - name: Install Dependencies
-              run: cd functions && npm install
+              run: cd functions && yarn install
             - name: Run eslint
-              run: cd functions && npm run lint
+              run: cd functions && yarn lint
             - name: Build
-              run: cd functions && npm run build
+              run: cd functions && yarn build
             - name: Save Service Account Key
               run: echo $GCP_SA_KEY > service-account.json
               env: 
