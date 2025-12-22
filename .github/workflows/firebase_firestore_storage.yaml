@@ -18,10 +18,12 @@ jobs:
         - uses: actions/setup-node@v1
           with:
             node-version: '22.x'
+            package-manager: yarn
+            cache: 'yarn'
         - name: Install Dependencies
-          run: npm install
+          run: yarn install
         - name: Install Test Dependencies
-          run: cd rules_test && npm install
+          run: cd rules_test && yarn install
         - name: Save Service Account Key
           run: echo $GCP_SA_KEY > service-account.json
           env: 
@@ -29,7 +31,7 @@ jobs:
         - name: "Print service-account email"
           run: cat service-account.json | jq -r '.client_email'
         - name: Install and Run Firebase Emulator
-          run: yarn run actionsTest
+          run: yarn actionsTest
           env:
             GOOGLE_APPLICATION_CREDENTIALS: service-account.json
             EMULATOR_HOST: '127.0.0.1'
