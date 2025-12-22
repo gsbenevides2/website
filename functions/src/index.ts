@@ -40,7 +40,7 @@ export const deleteProject = onDocumentDeleted(
     await deleteStorageFolder(`projects/${projectId}`);
   },
 );
-
+/* Unsed functions
 export const links = onRequest(linksMiddleware);
 
 export const status = onRequest(statusMiddleware);
@@ -48,3 +48,4 @@ export const status = onRequest(statusMiddleware);
 export const deco = onRequest(decoMiddleware);
 
 export const storage = onRequest(storageMiddleware);
+*/
