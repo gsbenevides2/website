@@ -1,13 +1,16 @@
 import * as admin from "firebase-admin";
 import * as logger from "firebase-functions/logger";
 import { onDocumentDeleted } from "firebase-functions/v2/firestore";
-import { onRequest } from "firebase-functions/v2/https";
 import { setGlobalOptions } from "firebase-functions/v2/options";
+import { deleteStorageFolder } from "./utils";
+/*
+import { onRequest } from "firebase-functions/v2/https";
 import { decoMiddleware } from "./deco";
 import { linksMiddleware } from "./links";
 import { statusMiddleware } from "./status";
-import { deleteStorageFolder } from "./utils";
 import { storageMiddleware } from "./storage";
+*/
+
 admin.initializeApp();
 
 setGlobalOptions({
