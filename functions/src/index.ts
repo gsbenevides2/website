@@ -1,15 +1,10 @@
 import * as admin from "firebase-admin";
 import * as logger from "firebase-functions/logger";
+import { onRequest } from "firebase-functions/v2/https";
 import { onDocumentDeleted } from "firebase-functions/v2/firestore";
 import { setGlobalOptions } from "firebase-functions/v2/options";
 import { deleteStorageFolder } from "./utils";
-/*
-import { onRequest } from "firebase-functions/v2/https";
-import { decoMiddleware } from "./deco";
-import { linksMiddleware } from "./links";
-import { statusMiddleware } from "./status";
 import { storageMiddleware } from "./storage";
-*/
 
 admin.initializeApp();
 
@@ -43,12 +38,18 @@ export const deleteProject = onDocumentDeleted(
     await deleteStorageFolder(`projects/${projectId}`);
   },
 );
-/* Unsed functions
-export const links = onRequest(linksMiddleware);
-
-export const status = onRequest(statusMiddleware);
-
-export const deco = onRequest(decoMiddleware);
 
 export const storage = onRequest(storageMiddleware);
+
+
+
+
+/* Unsed functions
+import { decoMiddleware } from "./deco";
+import { linksMiddleware } from "./links";
+import { statusMiddleware } from "./status";
+export const links = onRequest(linksMiddleware);
+export const status = onRequest(statusMiddleware);
+export const deco = onRequest(decoMiddleware);
 */
+
