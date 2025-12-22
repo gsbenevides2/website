@@ -11,8 +11,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!fileInfo.visible) return res.status(403).json({ error: "File not visible" });
     const isDevelopment = process.env.NODE_ENV === "development";
     const emulatorHost = process.env.FIREBASE_STORAGE_EMULATOR_HOST;
-    if (isDevelopment && emulatorHost) return res.redirect("http://" + emulatorHost + "/gui-dev-br/us-central1/storage/" + req.query.id);
-    else return res.redirect("https://storage.gui.dev.br/" + req.query.id);
+    if (isDevelopment && emulatorHost) return res.redirect("http://" + emulatorHost + "/gui-dev-br/us-central1/storage/file/" + req.query.id);
+    else return res.redirect("https://storage.gui.dev.br/file/" + req.query.id);
   } catch (error) {
     console.log("Api error", error);
     return res.status(500).json({ error: "Internal server error" });
