@@ -3,7 +3,7 @@ import * as admin from "firebase-admin";
 
 const app = express();
 
-app.get("/:id", async (req, res) => {
+app.get("/file/:id", async (req, res) => {
   const id = req.params.id;
   const origem = req.query.origem ?? "https://gui.dev.br";
   const page404 = `${origem}/404`;
