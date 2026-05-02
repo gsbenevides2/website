@@ -31,6 +31,7 @@ import { FormSubmitEvent } from "@/components/Form/types";
 import {
   AuthState,
   useAdminAuthentication,
+  retriveIdToken,
 } from "@/services/firebase/client/auth";
 import { wait } from "@/utils/wait";
 import classNames from "classnames";
@@ -136,6 +137,10 @@ export default function Page() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [previewAssets, setPreviewAssets] = useState<Asset[]>([]);
+  const [showAIModal, setShowAIModal] = useState(false);
+  const [aiDescription, setAiDescription] = useState("");
+  const [isGeneratingAI, setIsGeneratingAI] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
   const { state: authState } = useAdminAuthentication();
   const formContext = useFormContext();
   const formSubmit: FormSubmitEvent<FormValues> = useCallback(
@@ -181,6 +186,57 @@ export default function Page() {
     },
     [postId, router]
   );
+
+  const handleGenerateAIThumbnail = useCallback(async () => {
+    if (!aiDescription.trim()) {
+      alert("Por favor, forneça uma descrição para a imagem");
+      return;
+    }
+
+    setIsGeneratingAI(true);
+    setAiError(null);
+
+    try {
+      const idToken = await retriveIdToken();
+
+      const response = await fetch("/api/ai/blog-thumbnail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          idToken,
+          prompt: aiDescription,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Erro ao gerar thumbnail");
+      }
+
+      const data = await response.json();
+
+      // Converter base64 para File
+      const dataUri = data.imageBase64;
+      const file = base64ToFile(dataUri, "thumbnail-ai.png");
+
+      // Atualizar campos do formulário
+      formContext.changeInputValue("image", [file]);
+      formContext.changeInputValue("altThumbnail", data.alt);
+
+      // Fechar modal e limpar campos
+      setShowAIModal(false);
+      setAiDescription("");      
+      alert("✅ Thumbnail gerada com sucesso!");
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Erro desconhecido";
+      setAiError(errorMessage);
+      console.error("Erro ao gerar thumbnail:", err);
+    } finally {
+      setIsGeneratingAI(false);
+    }
+  }, [aiDescription, formContext]);
 
   const loadDocData = useCallback(async () => {
     if (!postId) return setIsLoading(false);
@@ -300,12 +356,21 @@ export default function Page() {
             <StatelessInput
               name="image"
               customComponent={(props) => (
-                <ImageInput
-                  {...props}
-                  label="Selecione a thumbnail do post"
-                  required
-                  allowDownload
-                />
+                <div>
+                  <ImageInput
+                    {...props}
+                    label="Selecione a thumbnail do post"
+                    required
+                    allowDownload
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowAIModal(true)}
+                    className={styles.aiButton}
+                  >
+                    ✨ Gerar Thumbnail com IA
+                  </button>
+                </div>
               )}
             />
 
@@ -359,6 +424,60 @@ export default function Page() {
         <Loader />
         <span>Estamos fazendo algumas operações aguarde</span>
       </div>
+
+      {/* Modal de Geração de Thumbnail via IA */}
+      {showAIModal && (
+        <div className={styles.aiModalOverlay} onClick={() => setShowAIModal(false)}>
+          <div className={styles.aiModalContent} onClick={(e) => e.stopPropagation()}>
+            <h2>🎨 Gerar Thumbnail com IA</h2>
+            
+            <div className={styles.aiFormGroup}>
+              <label htmlFor="aiDescription">
+                Descrição da imagem: *
+              </label>
+              <textarea
+                id="aiDescription"
+                value={aiDescription}
+                onChange={(e) => setAiDescription(e.target.value)}
+                placeholder="Ex: Uma paisagem futurista com prédios iluminados à noite, representando tecnologia e inovação..."
+                rows={4}
+                disabled={isGeneratingAI}
+                maxLength={2000}
+                className={styles.aiTextarea}
+              />
+              <small className={styles.aiCharCount}>{aiDescription.length}/2000 caracteres</small>
+            </div>
+
+            {aiError && (
+              <div className={styles.aiErrorMessage}>
+                ⚠️ {aiError}
+              </div>
+            )}
+
+            <div className={styles.aiModalActions}>
+              <button 
+                onClick={() => {
+                  setShowAIModal(false);
+                  setAiError(null);
+                }} 
+                disabled={isGeneratingAI}
+                className={styles.aiButtonSecondary}
+                type="button"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={handleGenerateAIThumbnail} 
+                disabled={isGeneratingAI || !aiDescription.trim()}
+                className={styles.aiButtonPrimary}
+                type="button"
+              >
+                {isGeneratingAI ? "⏳ Gerando..." : "✨ Gerar Thumbnail"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

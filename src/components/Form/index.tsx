@@ -85,7 +85,7 @@ export const StatelessInput = StatelessInputImported;
 export const useFormContext = () => {
   const contextRef = useRef<FormContextData>(null);
 
-  const changeInputValue = useCallback((name: string, value: string) => {
+  const changeInputValue = useCallback((name: string, value: string | Array<File>) => {
     const context = contextRef.current;
     if (!context) return;
 
@@ -100,7 +100,7 @@ export const useFormContext = () => {
       const input = context.formNode.current.querySelector(`[name="${name}"]`);
       if (!input) return;
 
-      (input as HTMLInputElement).value = value;
+      (input as HTMLInputElement).value = value as string;
     }
   }, []);
 

@@ -17,6 +17,11 @@ const nextConfig = {
       },
     ],
   },
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb',
+    },
+  },
   webpack: (config) => {
     config.plugins.push(
       new CopyPlugin({
