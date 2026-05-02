@@ -56,8 +56,9 @@ export default function MarkdownEditor({
             const filename = resolvedSrc.replace("firebase://assets/", "");
             resolvedSrc = assetUrls.get(filename) ?? resolvedSrc;
           }
-          // eslint-disable-next-line @next/next/no-img-element
+
           return (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={resolvedSrc}
               alt={alt}
