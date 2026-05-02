@@ -1,5 +1,6 @@
 import InputCustom from "@/components/Input";
 import TextareaCustom from "@/components/TextArea";
+import MarkdownEditor from "@/components/MarkdownEditor";
 import Head from "next/head";
 import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./styles.module.css";
@@ -319,14 +320,10 @@ export default function Page() {
                 />
               )}
             />
-            <Textarea
-              placeholder="Digite o conteudo do post em Markdown"
-              required
-              className={styles.textAreaContent}
-              id="content"
+            <StatelessInput
               name="content"
-              customComponent={({ ref, ...props }) => (
-                <TextareaCustom {...props} label="Conteudo: (Markdown)" />
+              customComponent={(props) => (
+                <MarkdownEditor {...props} label="Conteúdo: (Markdown)" />
               )}
             />
             <StatelessInput

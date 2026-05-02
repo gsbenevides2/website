@@ -1,0 +1,99 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.label {
+  font-family: var(--font-nunito);
+  font-size: 16px;
+  color: #f1f1f1;
+  margin-bottom: 6px;
+}
+
+/* Reset da cor global (* { color: #f1f1f1 }) e aplica tema claro no editor */
+.container :global(.w-md-editor) {
+  border-radius: 12px !important;
+  border: 1.5px solid lightgrey !important;
+  box-shadow: 0px 0px 20px -18px;
+  transition: border 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  overflow: hidden;
+  color: #24292f;
+  background-color: #fff;
+}
+
+.container :global(.w-md-editor):focus-within {
+  border: 2px solid grey !important;
+}
+
+/* Toolbar */
+.container :global(.w-md-editor-toolbar) {
+  background-color: #f6f8fa !important;
+  border-bottom: 1px solid #d0d7de !important;
+  padding: 6px 8px !important;
+}
+
+.container :global(.w-md-editor-toolbar) *,
+.container :global(.w-md-editor-toolbar li > button) {
+  color: #24292f !important;
+}
+
+.container :global(.w-md-editor-toolbar li > button:hover),
+.container :global(.w-md-editor-toolbar li > button:focus) {
+  background-color: #e1e4e8 !important;
+  color: #24292f !important;
+}
+
+.container :global(.w-md-editor-toolbar-divider) {
+  background-color: #d0d7de !important;
+}
+
+/* Área de conteúdo */
+.container :global(.w-md-editor-content) {
+  background-color: #fff !important;
+}
+
+/* Painel esquerdo: editor de texto */
+.container :global(.w-md-editor-input) {
+  background-color: #fff !important;
+}
+
+.container :global(.w-md-editor-text),
+.container :global(.w-md-editor-text-pre > code),
+.container :global(.w-md-editor-text-input) {
+  color: #24292f !important;
+  caret-color: #24292f !important;
+}
+
+/* Painel direito: preview */
+.container :global(.w-md-editor-preview) {
+  background-color: #fff !important;
+}
+
+.container :global(.wmde-markdown) {
+  background-color: #fff !important;
+  color: #24292f !important;
+}
+
+.container :global(.wmde-markdown) * {
+  color: inherit;
+}
+
+.container :global(.wmde-markdown a) {
+  color: #0969da !important;
+}
+
+.container :global(.wmde-markdown pre),
+.container :global(.wmde-markdown code) {
+  background-color: #f6f8fa !important;
+  color: #24292f !important;
+}
+
+.container :global(.wmde-markdown blockquote) {
+  color: #57606a !important;
+  border-left-color: #d0d7de !important;
+}
+
+.container :global(.wmde-markdown hr) {
+  background-color: #d0d7de !important;
+}

@@ -19,6 +19,7 @@
     "@types/node": "20.3.1",
     "@types/react": "19.0.12",
     "@types/react-dom": "19.0.4",
+    "@uiw/react-md-editor": "^4.1.0",
     "@vercel/analytics": "^1.1.2",
     "@vercel/og": "^0.5.8",
     "@vercel/speed-insights": "^1.0.8",

@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { positions, Provider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 import "./globals.css";
+import "@uiw/react-md-editor/markdown-editor.css";
 
 const nunito = Nunito_Sans({ subsets: ["latin"] });
 
