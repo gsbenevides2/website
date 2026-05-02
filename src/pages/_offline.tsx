@@ -1,6 +1,4 @@
-import SVG404 from "@/components/404SVG";
 import styles from "./404And500styles.module.css";
-import { Button } from "@/components/Button";
 import { DefaultSeo } from "@/components/DefaultSeo";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 import SVGOffline from "@/components/OfflineSVG";
