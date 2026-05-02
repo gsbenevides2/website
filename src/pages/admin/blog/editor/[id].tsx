@@ -135,6 +135,7 @@ export default function Page() {
   const loader = useRef<HTMLDivElement>(null);
 
   const [isLoading, setIsLoading] = useState(true);
+  const [previewAssets, setPreviewAssets] = useState<Asset[]>([]);
   const { state: authState } = useAdminAuthentication();
   const formContext = useFormContext();
   const formSubmit: FormSubmitEvent<FormValues> = useCallback(
@@ -201,6 +202,7 @@ export default function Page() {
           file,
         });
       }
+      setPreviewAssets(assets);
       formContext.changeMultipleInputValues({
         name: post.name,
         description: post.description,
@@ -323,14 +325,27 @@ export default function Page() {
             <StatelessInput
               name="content"
               customComponent={(props) => (
-                <MarkdownEditor {...props} label="Conteúdo: (Markdown)" />
+                <MarkdownEditor
+                  {...props}
+                  label="Conteúdo: (Markdown)"
+                  assets={previewAssets}
+                />
               )}
             />
             <StatelessInput
               name="assets"
               initialState={[]}
-              customComponent={(props) => (
-                <AssetsInput {...props} allowDownload />
+              customComponent={({ state, setState }) => (
+                <AssetsInput
+                  state={state}
+                  setState={(value) => {
+                    const resolved =
+                      value instanceof Function ? value(state) : value;
+                    setState(resolved);
+                    setPreviewAssets(resolved);
+                  }}
+                  allowDownload
+                />
               )}
             />
             <Button type="submit">Salvar Post</Button>
