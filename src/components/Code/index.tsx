@@ -5,6 +5,7 @@ import { MdCopyAll } from "react-icons/md";
 import { PrismAsync as SyntaxHighlighter } from "react-syntax-highlighter";
 import { cb } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import styles from "./styles.module.scss";
+import Mermaid from "@/components/Mermaid";
 
 const jetBrainsMono = JetBrains_Mono({
     variable: "--jetBrainsMono",
@@ -20,6 +21,11 @@ const Code = ({ className, children }: CodeProps) => {
     const [copyMessage, setCopyMessage] = useState(
         "Copiar para Area de Transferencia",
     );
+
+    if (className === "language-mermaid") {
+        return <Mermaid chart={children} />;
+    }
+
     function copy() {
         copyTextToClipboard(children).then(() => {
             setCopyMessage("Copiado");
@@ -28,7 +34,6 @@ const Code = ({ className, children }: CodeProps) => {
             }, 3000);
         });
     }
-    console.log(className);
     return (
         <div className={jetBrainsMono.variable}>
             <SyntaxHighlighter

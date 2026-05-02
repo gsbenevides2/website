@@ -97,3 +97,7 @@
 .container :global(.wmde-markdown hr) {
   background-color: #d0d7de !important;
 }
+
+.container :global(.wmde-markdown-color) {
+  --dynamic-text-color: #24292f !important;
+}

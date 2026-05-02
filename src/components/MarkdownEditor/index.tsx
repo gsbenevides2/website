@@ -1,7 +1,17 @@
 import { Nunito_Sans } from "next/font/google";
 import dynamic from "next/dynamic";
-import { useEffect, useMemo, useState } from "react";
+import { isValidElement, useEffect, useMemo, useState } from "react";
+import type { ReactNode } from "react";
+import Mermaid from "@/components/Mermaid";
 import styles from "./styles.module.css";
+
+function extractText(node: ReactNode): string {
+  if (typeof node === "string") return node;
+  if (Array.isArray(node)) return node.map(extractText).join("");
+  if (isValidElement(node))
+    return extractText((node.props as { children?: ReactNode }).children);
+  return "";
+}
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
@@ -56,7 +66,6 @@ export default function MarkdownEditor({
             const filename = resolvedSrc.replace("firebase://assets/", "");
             resolvedSrc = assetUrls.get(filename) ?? resolvedSrc;
           }
-
           return (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -65,6 +74,15 @@ export default function MarkdownEditor({
               style={{ maxWidth: "100%", height: "auto" }}
             />
           );
+        },
+        code: ({
+          className,
+          children,
+        }: React.HTMLAttributes<HTMLElement>) => {
+          if (String(className ?? "").includes("language-mermaid")) {
+            return <Mermaid chart={extractText(children).trim()} />;
+          }
+          return <code className={className}>{children}</code>;
         },
       },
     }),
