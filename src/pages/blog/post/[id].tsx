@@ -8,15 +8,15 @@ import {
 } from "@/services/firebase/client/posts";
 import { parseYYYYMMDDtoDDMMYYYY } from "@/utils/parseDateStringtoDateObj";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
-import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
-import { serialize } from "next-mdx-remote/serialize";
+import { MDXClient, SerializeResult } from "next-mdx-remote-client";
+import { serialize } from "next-mdx-remote-client/serialize";
 import Image from "next/image";
 import { ParsedUrlQuery } from "querystring";
 import styles from "./styles.module.scss";
 
 interface Props {
   post: Post;
-  source: MDXRemoteSerializeResult<Record<string, unknown>>;
+  source: SerializeResult<Record<string, unknown>, Record<string, unknown>>;
 }
 interface Params extends ParsedUrlQuery {
   id: string;
@@ -37,7 +37,9 @@ export const getStaticProps: GetStaticProps<Props> = async (context) => {
   const { id } = context.params as Params;
   const post = await getPost(id);
   if (!post) return { notFound: true };
-  const source = await serialize(post.content);
+  const source = await serialize({
+    source: post.content,
+  });
 
   return {
     props: {
@@ -116,7 +118,7 @@ export default function PostPage(
         <span>{parseYYYYMMDDtoDDMMYYYY(props.post.date)}</span>
         <div className={styles.postContent}>
           {/* @ts-ignore */}
-          <MDXRemote {...props.source} components={components} />
+          <MDXClient {...props.source} components={components} />
         </div>
       </article>
     </div>

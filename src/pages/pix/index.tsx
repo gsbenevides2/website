@@ -4,8 +4,8 @@ import { copyTextToClipboard } from "@/utils/copyTextToClipboard";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 import { useToast } from "@/hooks/useToast";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
-import { MDXRemote } from "next-mdx-remote";
-import { serialize } from "next-mdx-remote/serialize";
+import { MDXClient } from "next-mdx-remote-client";
+import { serialize } from "next-mdx-remote-client/serialize";
 import { useCallback } from "react";
 import QRCode from "react-qr-code";
 import styles from "./styles.module.scss";
@@ -29,8 +29,12 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     };
   }
 
-  const sourceAccountInformation = await serialize(cms.accountInformation);
-  const sourceWarnings = await serialize(cms.warnings);
+  const sourceAccountInformation = await serialize({
+    source: cms.accountInformation,
+  });
+  const sourceWarnings = await serialize({
+    source: cms.warnings,
+  });
   return {
     props: {
       cms,
@@ -88,13 +92,13 @@ export default function Pix(props: ComponentProps) {
           </div>
           <div className={styles.accountInformation}>
             {/* @ts-ignore */}
-            <MDXRemote {...props.sourceAccountInformation} />
+            <MDXClient {...props.sourceAccountInformation} />
           </div>
         </div>
       </div>
       <div className={styles.warning}>
         {/* @ts-ignore */}
-        <MDXRemote {...props.sourceWarnings} />
+        <MDXClient {...props.sourceWarnings} />
       </div>
     </div>
   );

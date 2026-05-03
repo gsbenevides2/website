@@ -1,10 +1,8 @@
 import { validateAdminUser } from "@/services/firebase/admin/auth";
 import { NextApiRequest, NextApiResponse } from "next";
 
-import {
-  GoogleGenAI,
-  Modality,
-} from "@google/genai";
+import { google } from "@ai-sdk/google";
+import { generateText } from "ai";
 
 interface BlogThumbnailRequestBody {
   idToken: string;
@@ -61,15 +59,14 @@ Elementos genéricos sem contexto técnico
 Visual poluído
 
 Seu retorno deve ser somente a imagem em 3:2 e o texto para deficientes visuais e mais nada!
-`
+`;
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
   try {
-    const { idToken, prompt } =
-      req.body as BlogThumbnailRequestBody;
+    const { idToken, prompt } = req.body as BlogThumbnailRequestBody;
 
     // Method validation
     if (req.method !== "POST") {
@@ -98,56 +95,47 @@ export default async function handler(
     }
 
     // Check API key
-    if (!process.env.GEMINI_API_KEY) {
-      console.error("GEMINI_API_KEY not configured");
-      return res.status(500).json({ error: "Gemini API key not configured" });
+    if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+      console.error("GOOGLE_GENERATIVE_AI_API_KEY  not configured");
+      return res
+        .status(500)
+        .json({ error: "Google Generative AI API key not configured" });
     }
-
-    const genAI = new GoogleGenAI({
-      apiKey: process.env.GEMINI_API_KEY,
-    });
 
     // Step 1: Generate image using Gemini
     console.log("Generating image with Gemini...");
 
-    const imageResult = await genAI.models.generateContent({
-      model: "gemini-2.5-flash-image",
-      contents: prompt,
-      config: {
-        systemInstruction,
-        responseModalities: [Modality.IMAGE, Modality.TEXT],
-        imageConfig: {
-          aspectRatio: "3:2",
+    const imageResult = await generateText({
+      model: google("gemini-2.5-flash-image"),
+      prompt,
+      providerOptions: {
+        google: {
+          responseModalities: ["TEXT", "IMAGE"],
+          imageConfig: {
+            aspectRatio: "3:2",
+          },
         },
       },
+      system: systemInstruction,
     });
 
-    const generatedImageBaseDataData = imageResult.candidates
-      ?.at(0)
-      ?.content?.parts?.find((part) => part.inlineData?.data)?.inlineData?.data;
-
-      const mimeTypeFromResponse = imageResult.candidates
-      ?.at(0)
-      ?.content?.parts?.find((part) => part.inlineData?.mimeType)?.inlineData
-      ?.mimeType;
-    
-
-    const alt = imageResult.text ?? "Blog thumbnail image";
-
-    if (!generatedImageBaseDataData || !mimeTypeFromResponse) {
+    const generatedImage = imageResult.files.at(0);
+    if (!generatedImage) {
       console.error(
-        "No image in Gemini response:",
+        "No files in Gemini response:",
         JSON.stringify(imageResult, null, 2),
       );
       return res.status(500).json({ error: "Failed to generate image" });
     }
 
-    const finalBase = `data:${mimeTypeFromResponse};base64,${generatedImageBaseDataData}`;
+    const finalBase64 = `data:${generatedImage.mediaType};base64,${generatedImage.base64}`;
+
+    const alt = imageResult.text ?? "Blog thumbnail image";
 
     console.log("Blog thumbnail generated successfully");
     return res.status(200).json({
-      imageBase64: finalBase,
-      mimeType: mimeTypeFromResponse,
+      imageBase64: finalBase64,
+      mimeType: generatedImage.mediaType,
       alt,
     });
   } catch (error: any) {

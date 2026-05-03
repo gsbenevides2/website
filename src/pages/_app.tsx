@@ -6,10 +6,7 @@ import { AppProps } from "next/app";
 import { Nunito_Sans } from "next/font/google";
 import Script from "next/script";
 import { useEffect } from "react";
-/*
-import { positions, Provider } from "react-alert";
-import AlertTemplate from "react-alert-template-basic";
-*/
+
 import { ToastProvider } from "@/contexts/ToastContext";
 import ToastContainer from "@/components/ToastContainer";
 import "./globals.scss";
