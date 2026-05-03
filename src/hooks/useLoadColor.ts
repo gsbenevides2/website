@@ -5,7 +5,9 @@ function fetchComputedBackground(): [string, string] {
   const computedStyle = getComputedStyle(document.body);
   const background = computedStyle.background;
   // REGEX to parse the gradient in the format "linear-gradient(270deg, rgb(76, 62, 74) 26.56%, rgb(87, 84, 105) 100%)"
-  const gradient = background.match(/linear-gradient\((\d+deg),\s*(rgb\(\d+,\s*\d+,\s*\d+\))\s*(\d+.\d+%),\s*(rgb\(\d+,\s*\d+,\s*\d+\))\s*(\d+.\d+)%\)/);
+  const gradient = background.match(
+    /linear-gradient\((\d+deg),\s*(rgb\(\d+,\s*\d+,\s*\d+\))\s*(\d+.\d+%),\s*(rgb\(\d+,\s*\d+,\s*\d+\))\s*(\d+.\d+)%\)/,
+  );
   if (!gradient) return ["#4c3e4a", "#575469"];
   const colorOne = gradient[2];
   const colorTwo = gradient[4];
@@ -40,20 +42,25 @@ declare global {
   }
 }
 
-export default function useLoadColor(colors: [string, string] | undefined, textColor: string | undefined) {
-  return useEffect(() => {
+export default function useLoadColor(
+  colors: [string, string] | undefined,
+  textColor: string | undefined,
+) {
+  useEffect(() => {
     if (!window.colorManagerController) {
       window.colorManagerController = new AbortController();
     } else {
       window.colorManagerController.abort();
       window.colorManagerController = new AbortController();
     }
-    if (textColor) window.document.body.style.setProperty("--dynamic-text-color", textColor);
+    if (textColor)
+      window.document.body.style.setProperty("--dynamic-text-color", textColor);
 
     if (!colors) return;
     loadColor(colors, window.colorManagerController.signal);
     return () => {
-      if (textColor) window.document.body.style.removeProperty("--dynamic-text-color");
+      if (textColor)
+        window.document.body.style.removeProperty("--dynamic-text-color");
       if (!window.colorManagerController) return;
       window.colorManagerController.abort();
       window.colorManagerController = new AbortController();

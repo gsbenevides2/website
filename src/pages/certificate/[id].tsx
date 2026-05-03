@@ -1,13 +1,16 @@
 import { ButtonAnchor } from "@/components/Button";
 import { DefaultSeo } from "@/components/DefaultSeo";
 import PdfViewer from "@/components/PdfViewer";
-import { getCertification, listCertifications } from "@/services/firebase/client/certificates";
+import {
+  getCertification,
+  listCertifications,
+} from "@/services/firebase/client/certificates";
 import { parseDateObjcToDDMMYYYY } from "@/utils/parseDateStringtoDateObj";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
 import { useCallback, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
-import useLoadColor from "./loadColorAnimation";
+import useLoadColor from "@/hooks/useLoadColor";
 import styles from "./styles.module.scss";
 
 interface Certification {
@@ -55,7 +58,9 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps<Props, Params> = async (context) => {
+export const getStaticProps: GetStaticProps<Props, Params> = async (
+  context,
+) => {
   const { id } = context.params as { id: string };
   const certificate = await getCertification(id);
   if (certificate == null)
@@ -73,26 +78,44 @@ export const getStaticProps: GetStaticProps<Props, Params> = async (context) => 
   };
 };
 
-export default function Page(props: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function Page(
+  props: InferGetStaticPropsType<typeof getStaticProps>,
+) {
   const { certificate } = props;
 
   const referenceButton = useMemo(() => {
     if (!certificate) return null;
     if (!certificate.externalReference) return null;
     return (
-      <ButtonAnchor href={certificate.externalReference} target="_blank" className={styles.viewMoreButton}>
+      <ButtonAnchor
+        href={certificate.externalReference}
+        target="_blank"
+        className={styles.viewMoreButton}
+      >
         Saiba Mais sobre o Curso
       </ButtonAnchor>
     );
   }, [certificate]);
-  useLoadColor(certificate?.certificate.colors?.gradient, certificate?.certificate.colors?.text);
+  useLoadColor(
+    certificate?.certificate.colors?.gradient,
+    certificate?.certificate.colors?.text,
+  );
   const certLoad = useCallback(() => {
     const img = document.getElementById("animatedImageZoom");
     if (img) img.remove();
   }, []);
   if (!certificate) return null;
 
-  const fallback = props.certificate.certificate.pdf.height && props.certificate.certificate.pdf.width ? { src: props.certificate.certificate.thumbnail.png, blur: props.certificate.certificate.thumbnail.blur, width: props.certificate.certificate.pdf.width, height: props.certificate.certificate.pdf.height } : undefined;
+  const fallback =
+    props.certificate.certificate.pdf.height &&
+    props.certificate.certificate.pdf.width
+      ? {
+          src: props.certificate.certificate.thumbnail.png,
+          blur: props.certificate.certificate.thumbnail.blur,
+          width: props.certificate.certificate.pdf.width,
+          height: props.certificate.certificate.pdf.height,
+        }
+      : undefined;
 
   return (
     <div className={styles.containerCertification} id="container">
@@ -112,7 +135,11 @@ export default function Page(props: InferGetStaticPropsType<typeof getStaticProp
       <h4>Data de Conclusão: {certificate.date}</h4>
       <div className={styles.area1}>
         <div className={styles.pdf}>
-          <PdfViewer file={certificate.certificate.pdf.file} fallback={fallback} onLoadSuccess={certLoad} />
+          <PdfViewer
+            file={certificate.certificate.pdf.file}
+            fallback={fallback}
+            onLoadSuccess={certLoad}
+          />
         </div>
         <div className={styles.description}>
           <div className={styles.descriptionDesktop}>
