@@ -1,8 +1,3 @@
 {
-  "bunVersion": "1.x",
-  "functions": {
-    "api/**": {
-      "excludeFiles": "{.next,*.cache,node_modules,public,app}/**"
-    }
-  }
+  "bunVersion": "1.x"
 }

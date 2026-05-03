@@ -6,6 +6,14 @@ const nextConfig: NextConfig = {
     "@uiw/react-markdown-preview",
     "next-mdx-remote",
   ],
+  outputFileTracingExcludes: {
+    "/api/**": [
+      "**/node_modules/**",
+      "**/.next/**",
+      "**/.vercel/**",
+      "**/public/**",
+    ],
+  },
   images: {
     dangerouslyAllowLocalIP: true,
     remotePatterns: [
