@@ -12,7 +12,7 @@ import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
 import Image from "next/image";
 import { ParsedUrlQuery } from "querystring";
-import styles from "./styles.module.css";
+import styles from "./styles.module.scss";
 
 interface Props {
   post: Post;

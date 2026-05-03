@@ -1,7 +1,17 @@
-import { AuthState, logIn, logOut, useAuthentication } from "@/services/firebase/client/auth";
+import {
+  AuthState,
+  googleLogIn,
+  logOut,
+  useAuthentication,
+} from "@/services/firebase/client/auth";
 
 import { Button, ButtonAnchor } from "@/components/Button";
-import { SelfStorageFileDocument, getFile, getFileUrl, getServerUrl } from "@/services/firebase/client/selfstorage";
+import {
+  SelfStorageFileDocument,
+  getFile,
+  getFileUrl,
+  getServerUrl,
+} from "@/services/firebase/client/selfstorage";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./styles.module.scss";
@@ -38,10 +48,10 @@ export default function Page() {
   }, [id, authState.state]);
 
   const authenticate = useCallback(() => {
-    logIn().then(() => loadData());
+    googleLogIn().then(() => loadData());
   }, [loadData]);
   const reauthenticate = useCallback(() => {
-    logOut().then(() => logIn().then(() => loadData()));
+    logOut().then(() => googleLogIn().then(() => loadData()));
   }, [loadData]);
   const logOutClick = useCallback(() => {
     logOut().then(() => loadData());
@@ -58,8 +68,14 @@ export default function Page() {
       {state === "loading" && <p>Aguarde estamos buscando as informações...</p>}
       {state === "not-found" && <p>Arquivo não encontrado</p>}
       {state === "loaded" && file && <p>Nome do Arquivo: {file.filename}</p>}
-      {state === "loaded" && file && <p>Criado em: {file.dateOfCreation.toDate().toLocaleString()}</p>}
-      {state === "loaded" && file && <p>Última Atualização: {file.dateOfLastUpdate.toDate().toLocaleString()}</p>}
+      {state === "loaded" && file && (
+        <p>Criado em: {file.dateOfCreation.toDate().toLocaleString()}</p>
+      )}
+      {state === "loaded" && file && (
+        <p>
+          Última Atualização: {file.dateOfLastUpdate.toDate().toLocaleString()}
+        </p>
+      )}
       {state === "loaded" && authState.state === AuthState.Authenticated && (
         <p>
           Você está logado como: {authState.user?.email}.{" "}
@@ -75,25 +91,29 @@ export default function Page() {
         </ButtonAnchor>
       )}
 
-      {state === "firestore-error" && authState.state === AuthState.Unauthenticated && (
-        <p className={styles.error}>
-          Ocorreu um erro ao buscar as informações do arquivo.
-          <br />
-          Talvez você precise se autenticar para acessar este arquivo.
-          <br />
-          <Button onClick={authenticate}>Autenticar</Button>
-        </p>
-      )}
+      {state === "firestore-error" &&
+        authState.state === AuthState.Unauthenticated && (
+          <p className={styles.error}>
+            Ocorreu um erro ao buscar as informações do arquivo.
+            <br />
+            Talvez você precise se autenticar para acessar este arquivo.
+            <br />
+            <Button onClick={authenticate}>Autenticar</Button>
+          </p>
+        )}
 
-      {state === "firestore-error" && authState.state === AuthState.Authenticated && (
-        <p className={styles.error}>
-          Ocorreu um erro ao buscar as informações do arquivo.
-          <br />
-          Você está logado como: {authState.user?.email}.<br /> Talvez você não tenha permissão para acessar este arquivo. Tente se autenticar com outro usuário.
-          <br />
-          <Button onClick={reauthenticate}>Reautenticar</Button>
-        </p>
-      )}
+      {state === "firestore-error" &&
+        authState.state === AuthState.Authenticated && (
+          <p className={styles.error}>
+            Ocorreu um erro ao buscar as informações do arquivo.
+            <br />
+            Você está logado como: {authState.user?.email}.<br /> Talvez você
+            não tenha permissão para acessar este arquivo. Tente se autenticar
+            com outro usuário.
+            <br />
+            <Button onClick={reauthenticate}>Reautenticar</Button>
+          </p>
+        )}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import styles from "./404And500styles.module.css";
+import styles from "./404And500styles.module.scss";
 import { DefaultSeo } from "@/components/DefaultSeo";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 import SVGOffline from "@/components/OfflineSVG";

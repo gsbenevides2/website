@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-import styles from "./styles.module.css";
+import styles from "./styles.module.scss";
 import { useRouter } from "next/router";
 import { listProjects } from "@/services/firebase/client/projects";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
@@ -39,7 +39,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 };
 
 export default function Page(
-  props: InferGetStaticPropsType<typeof getStaticProps>
+  props: InferGetStaticPropsType<typeof getStaticProps>,
 ) {
   const { projects } = props;
   const [searchTerm, setSearchTerm] = useState("");
@@ -55,7 +55,7 @@ export default function Page(
       await new Promise((resolve) => setTimeout(resolve, 500));
       router.push(href);
     },
-    [router]
+    [router],
   );
 
   const projectsToShow = filteredProjects || projects;

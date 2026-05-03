@@ -1,5 +1,5 @@
 import SVG500 from "@/components/500SVG";
-import styles from "./404And500styles.module.css";
+import styles from "./404And500styles.module.scss";
 import { Button } from "@/components/Button";
 import { DefaultSeo } from "@/components/DefaultSeo";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";

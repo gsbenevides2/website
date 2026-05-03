@@ -1,6 +1,7 @@
 import { Button } from "@/components/Button";
 import {
-  adminLogIn,
+  adminGoogleLogIn,
+  adminSsoLogIn,
   AuthState,
   logOut,
   useAdminAuthentication,
@@ -14,7 +15,7 @@ import React, {
   useEffect,
   useRef,
 } from "react";
-import styles from "./styles.module.css";
+import styles from "./styles.module.scss";
 
 const loggedButtonOptions = {
   Armazenamento: "/admin/storage",
@@ -51,9 +52,22 @@ export default function Home() {
     }
   }, [state, showAuthenticatedRef, showUnauthenticatedRef]);
 
-  const loginButtonClick = useCallback(async () => {
+  const googleLogin = useCallback(async () => {
     try {
-      await adminLogIn();
+      await adminGoogleLogIn();
+    } catch (e: any) {
+      if (e?.message === "Usuário não autorizado") {
+        alert("Você não tem permissão para acessar o painel de administração!");
+      } else {
+        alert("Ocorreu um erro ao tentar fazer login! Veja o console.");
+        console.error(e);
+      }
+    }
+  }, []);
+
+  const ssoLogin = useCallback(async () => {
+    try {
+      await adminSsoLogIn();
     } catch (e: any) {
       if (e?.message === "Usuário não autorizado") {
         alert("Você não tem permissão para acessar o painel de administração!");
@@ -111,12 +125,11 @@ export default function Home() {
               Para continuar, faça login com sua conta do
               Google(gsbenevides2@gmail.com).
             </p>
-            <Button
-              key="LogIn"
-              className={styles.button}
-              onClick={loginButtonClick}
-            >
+            <Button key="LogIn" className={styles.button} onClick={googleLogin}>
               Fazer login com o Google
+            </Button>
+            <Button key="SSOLogin" className={styles.button} onClick={ssoLogin}>
+              Fazer login com SSO
             </Button>
           </div>
           <div className={styles.buttonsArea} ref={authenticatedRef}>
