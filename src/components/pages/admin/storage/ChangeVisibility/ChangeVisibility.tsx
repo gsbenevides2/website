@@ -2,6 +2,7 @@ import { Button } from "@/components/Button";
 import { Form, Input, useFormContext } from "@/components/Form";
 import InputCustom from "@/components/Input";
 import Toogle from "@/components/Toogle";
+import { toast } from "@/utils/toast";
 import * as FirebaseSelfStorage from "@/services/firebase/client/selfstorage";
 import { SelfStorageFileDocument } from "@/services/firebase/client/selfstorage";
 import { copyTextToClipboard } from "@/utils/copyTextToClipboard";
@@ -51,29 +52,29 @@ export default function ChangeVisibility(props: Props) {
   const directLinkClick = useCallback(() => {
     copyTextToClipboard(directLink)
       .then(() => {
-        alert("Link copiado com sucesso");
+        toast.success("Link copiado com sucesso");
       })
       .catch(() => {
-        alert("Erro ao copiar link");
+        toast.error("Erro ao copiar link");
       });
   }, [directLink]);
   const shareLinkClick = useCallback(() => {
     copyTextToClipboard(shareLink)
       .then(() => {
-        alert("Link copiado com sucesso");
+        toast.success("Link copiado com sucesso");
       })
       .catch(() => {
-        alert("Erro ao copiar link");
+        toast.error("Erro ao copiar link");
       });
   }, [shareLink]);
 
   const directLinkWithAnalyticsClick = useCallback(() => {
     copyTextToClipboard(directLinkWithAnalytics)
       .then(() => {
-        alert("Link copiado com sucesso");
+        toast.success("Link copiado com sucesso");
       })
       .catch(() => {
-        alert("Erro ao copiar link");
+        toast.error("Erro ao copiar link");
       });
   }, [directLinkWithAnalytics]);
 
@@ -89,8 +90,7 @@ export default function ChangeVisibility(props: Props) {
       <div className={styles.modal}>
         <button className={styles.close} onClick={props.close}>
           {" "}
-          <MdClose />
-          {" "}
+          <MdClose />{" "}
         </button>
 
         <h2>Alterar Visibilidade</h2>

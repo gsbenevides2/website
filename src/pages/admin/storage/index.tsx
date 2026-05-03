@@ -1,4 +1,5 @@
 import ListAdminPage from "@/components/ListAdminPage";
+import { toast } from "@/utils/toast";
 import * as FirebaseSelfStorage from "@/services/firebase/client/selfstorage";
 import { uploadFileViaJs } from "@/utils/uploadFileViaJs";
 import { useCallback, useMemo, useState } from "react";
@@ -18,11 +19,17 @@ function formatDate(date: Date) {
   }).format(date);
 }
 
-const ChangeVisibility = dynamic(() => import("../../../components/pages/admin/storage/ChangeVisibility/ChangeVisibility"), { ssr: false });
+const ChangeVisibility = dynamic(
+  () =>
+    import("../../../components/pages/admin/storage/ChangeVisibility/ChangeVisibility"),
+  { ssr: false },
+);
 
 export default function Page() {
   const [showAddFileModal, setShowAddFileModal] = useState(false);
-  const [showChangeVisibilityModal, setShowChangeVisibilityModal] = useState<string | null>(null);
+  const [showChangeVisibilityModal, setShowChangeVisibilityModal] = useState<
+    string | null
+  >(null);
   const files = FirebaseSelfStorage.useRealtimeListenFile();
   const list = files.map((file) => ({
     id: file.id,
@@ -39,11 +46,11 @@ export default function Page() {
     if (file === null) return;
     FirebaseSelfStorage.reuploadFile(id, file)
       .then(() => {
-        alert("Arquivo reenviado com sucesso");
+        toast.success("Arquivo reenviado com sucesso");
       })
       .catch((error) => {
         console.error(error);
-        alert("Erro ao reenviar arquivo");
+        toast.error("Erro ao reenviar arquivo");
       });
   }, []);
 
@@ -53,8 +60,14 @@ export default function Page() {
 
   return (
     <>
-      <AddFileModal visible={showAddFileModal} close={() => setShowAddFileModal(!showAddFileModal)} />
-      <ChangeVisibility close={() => setShowChangeVisibilityModal(null)} data={changeVisibilityData} />
+      <AddFileModal
+        visible={showAddFileModal}
+        close={() => setShowAddFileModal(!showAddFileModal)}
+      />
+      <ChangeVisibility
+        close={() => setShowChangeVisibilityModal(null)}
+        data={changeVisibilityData}
+      />
       <ListAdminPage
         title="Gerenciado de Arquivos na Nuvem"
         addButtonText="Subir Arquivo"

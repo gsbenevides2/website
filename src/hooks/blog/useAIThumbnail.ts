@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { toast } from "@/utils/toast";
 import { retriveIdToken } from "@/services/firebase/client/auth";
 import { base64ToFile } from "@/utils/imageManager";
 import { useFormContext } from "@/components/Form";
@@ -35,7 +36,7 @@ export function useAIThumbnail(formContext: UseFormContextReturn) {
 
   const handleGenerate = useCallback(async () => {
     if (!description.trim()) {
-      alert("Por favor, forneça uma descrição para a imagem");
+      toast.warning("Por favor, forneça uma descrição para a imagem");
       return;
     }
 
@@ -52,7 +53,7 @@ export function useAIThumbnail(formContext: UseFormContextReturn) {
 
       setShowModal(false);
       setDescription("");
-      alert("✅ Thumbnail gerada com sucesso!");
+      toast.success("Thumbnail gerada com sucesso!");
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Erro desconhecido";

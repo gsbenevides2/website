@@ -2,11 +2,11 @@ import { DefaultSeo } from "@/components/DefaultSeo";
 import { getLatestVersionDataByPath } from "@/services/firebase/client/cms";
 import { copyTextToClipboard } from "@/utils/copyTextToClipboard";
 import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
+import { useToast } from "@/hooks/useToast";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { MDXRemote } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
 import { useCallback } from "react";
-import { useAlert } from "react-alert";
 import QRCode from "react-qr-code";
 import styles from "./styles.module.scss";
 
@@ -44,25 +44,25 @@ type ComponentProps = InferGetStaticPropsType<typeof getStaticProps>;
 
 export default function Pix(props: ComponentProps) {
   const cms = props.cms;
-  const alert = useAlert();
+  const toast = useToast();
   const copyQrCode = useCallback(async () => {
     copyTextToClipboard(cms.qrCode)
       .then(() => {
-        alert.success("Código copiado para a área de transferência");
+        toast.success("Código copiado para a área de transferência");
       })
       .catch(() => {
-        alert.error("Não foi possível copiar o código");
+        toast.error("Não foi possível copiar o código");
       });
-  }, [alert, cms.qrCode]);
+  }, [toast, cms.qrCode]);
   const copyPixEmail = useCallback(async () => {
     copyTextToClipboard(cms.email)
       .then(() => {
-        alert.success("E-mail copiado para a área de transferência");
+        toast.success("E-mail copiado para a área de transferência");
       })
       .catch(() => {
-        alert.error("Não foi possível copiar o e-mail");
+        toast.error("Não foi possível copiar o e-mail");
       });
-  }, [alert, cms.email]);
+  }, [toast, cms.email]);
 
   return (
     <div className={styles.container}>
@@ -77,11 +77,7 @@ export default function Pix(props: ComponentProps) {
       <div className={styles.content}>
         <div className={styles.qrCode}>
           <button onClick={copyQrCode}>
-            <QRCode
-              value={cms.qrCode}
-              bgColor="transparent"
-              fgColor="white"
-            />
+            <QRCode value={cms.qrCode} bgColor="transparent" fgColor="white" />
           </button>
         </div>
         <div>

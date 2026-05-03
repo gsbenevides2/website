@@ -10,6 +10,8 @@ import { useEffect } from "react";
 import { positions, Provider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 */
+import { ToastProvider } from "@/contexts/ToastContext";
+import ToastContainer from "@/components/ToastContainer";
 import "./globals.scss";
 import "@uiw/react-md-editor/markdown-editor.css";
 
@@ -24,17 +26,20 @@ export default function MyApp(props: AppProps) {
   }, []);
 
   return (
-    <main className={nunito.className}>
-      <GoogleTagManager gtmId="GTM-NW5NDZP2" />
+    <ToastProvider>
+      <main className={nunito.className}>
+        <GoogleTagManager gtmId="GTM-NW5NDZP2" />
 
-      {response()}
+        {response()}
 
-      <Script
-        async
-        src="https://cdnjs.cloudflare.com/ajax/libs/jimp/0.22.8/jimp.min.js"
-      />
-      <Analytics />
-      <SpeedInsights />
-    </main>
+        <Script
+          async
+          src="https://cdnjs.cloudflare.com/ajax/libs/jimp/0.22.8/jimp.min.js"
+        />
+        <Analytics />
+        <SpeedInsights />
+        <ToastContainer />
+      </main>
+    </ToastProvider>
   );
 }

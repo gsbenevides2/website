@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { useRouter } from "next/router";
+import { toast } from "@/utils/toast";
 import MyError from "@/utils/MyError";
 import { wait } from "@/utils/wait";
 import { getPost } from "@/services/firebase/client/posts";
@@ -58,9 +59,9 @@ export function usePostLoader(
       });
     } catch (e) {
       if (e instanceof MyError) {
-        alert(e.message);
+        toast.error(e.message);
       } else {
-        alert(
+        toast.error(
           "Erro ao carregar dados do certificado. Veja o console para detalhes!",
         );
         console.error(e);

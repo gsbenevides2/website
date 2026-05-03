@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useRouter } from "next/router";
+import { toast } from "@/utils/toast";
 import { addOrUpdateProject } from "@/services/firebase/client/projects";
 import { revalidateNextPages } from "@/services/api/revalidateNextPages";
 import {
@@ -19,7 +20,7 @@ export interface FormValues {
 
 export function useProjectSubmit(
   projectId: string | undefined,
-  setIsLoading: (loading: boolean) => void
+  setIsLoading: (loading: boolean) => void,
 ) {
   const router = useRouter();
 
@@ -59,11 +60,11 @@ export function useProjectSubmit(
       } catch (error) {
         const message =
           error instanceof Error ? error.message : "Erro desconhecido";
-        alert(message);
+        toast.error(message);
         setIsLoading(false);
       }
     },
-    [projectId, router, setIsLoading]
+    [projectId, router, setIsLoading],
   );
 
   return { handleSubmit };

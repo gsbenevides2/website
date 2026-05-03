@@ -6,6 +6,7 @@ import {
   logOut,
   useAdminAuthentication,
 } from "@/services/firebase/client/auth";
+import { toast } from "@/utils/toast";
 import { wait } from "@/utils/wait";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
@@ -57,9 +58,11 @@ export default function Home() {
       await adminGoogleLogIn();
     } catch (e: any) {
       if (e?.message === "Usuário não autorizado") {
-        alert("Você não tem permissão para acessar o painel de administração!");
+        toast.error(
+          "Você não tem permissão para acessar o painel de administração!",
+        );
       } else {
-        alert("Ocorreu um erro ao tentar fazer login! Veja o console.");
+        toast.error("Ocorreu um erro ao tentar fazer login! Veja o console.");
         console.error(e);
       }
     }
@@ -70,9 +73,11 @@ export default function Home() {
       await adminSsoLogIn();
     } catch (e: any) {
       if (e?.message === "Usuário não autorizado") {
-        alert("Você não tem permissão para acessar o painel de administração!");
+        toast.error(
+          "Você não tem permissão para acessar o painel de administração!",
+        );
       } else {
-        alert("Ocorreu um erro ao tentar fazer login! Veja o console.");
+        toast.error("Ocorreu um erro ao tentar fazer login! Veja o console.");
         console.error(e);
       }
     }

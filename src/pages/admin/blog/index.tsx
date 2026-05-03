@@ -1,4 +1,5 @@
 import ListAdminPage from "@/components/ListAdminPage";
+import { toast } from "@/utils/toast";
 import { revalidateNextPages } from "@/services/api/revalidateNextPages";
 import { retriveIdToken } from "@/services/firebase/client/auth";
 import {
@@ -40,14 +41,14 @@ export default function Page() {
           posts?.map((post) => {
             if (post.id === postId) return { ...post, visible: !post.visible };
             return post;
-          })
+          }),
         );
       } catch (err) {
-        alert("Erro ao atualizar visibilidade do post. Veja o console.");
+        toast.error("Erro ao atualizar visibilidade do post. Veja o console.");
         console.error(err);
       }
     },
-    [posts]
+    [posts],
   );
 
   const loadVisibleIcon = useCallback(
@@ -56,7 +57,7 @@ export default function Page() {
       if (!post) return TbEyeOff;
       return post ? TbEye : TbEyeOff;
     },
-    [posts]
+    [posts],
   );
 
   const handleDeleteClick = useCallback(async (postId: string) => {

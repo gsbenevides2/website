@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useRouter } from "next/router";
+import { toast } from "@/utils/toast";
 import { addOrUpdateCertification } from "@/services/firebase/client/certificates";
 import { revalidateNextPages } from "@/services/api/revalidateNextPages";
 import {
@@ -63,7 +64,7 @@ export function useCertificationSubmit(
       } catch (error) {
         const message =
           error instanceof Error ? error.message : "Erro desconhecido";
-        alert(message);
+        toast.error(message);
         setIsLoading(false);
       }
     },

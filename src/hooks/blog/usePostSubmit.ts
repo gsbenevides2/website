@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useRouter } from "next/router";
+import { toast } from "@/utils/toast";
 import { createOrUpdatePost } from "@/services/firebase/client/posts";
 import {
   generateBlogThumbnails,
@@ -61,7 +62,7 @@ export function usePostSubmit(
       } catch (error) {
         const message =
           error instanceof Error ? error.message : "Erro desconhecido";
-        alert(message);
+        toast.error(message);
         setIsLoading(false);
       }
     },

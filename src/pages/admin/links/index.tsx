@@ -1,4 +1,5 @@
 import ListAdminPage from "@/components/ListAdminPage";
+import { toast } from "@/utils/toast";
 import { deleteLink, listLinks } from "@/services/firebase/client/links";
 import { copyTextToClipboard } from "@/utils/copyTextToClipboard";
 import { useCallback, useMemo, useState } from "react";
@@ -29,14 +30,14 @@ export default function Page() {
     const link = new URL(window.location.href);
     link.pathname = `/l/${id}`;
     await copyTextToClipboard(link.toString());
-    alert("Link copiado para a área de transferência");
+    toast.success("Link copiado para a área de transferência");
   }, []);
 
   const handleCopyLinkWithAnalytics = useCallback(async (id: string) => {
     const link = new URL(window.location.href);
     link.pathname = `/la/${id}`;
     await copyTextToClipboard(link.toString());
-    alert("Link copiado com analytics para a área de transferência");
+    toast.success("Link copiado com analytics para a área de transferência");
   }, []);
 
   const list = useMemo(() => {

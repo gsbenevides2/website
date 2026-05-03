@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { useRouter } from "next/router";
+import { toast } from "@/utils/toast";
 import MyError from "@/utils/MyError";
 import { getProject } from "@/services/firebase/client/projects";
 import { downloadProjectImageFile } from "@/services/projects/file.service";
@@ -9,7 +10,7 @@ type UseFormContextReturn = ReturnType<typeof useFormContext>;
 
 export function useProjectLoader(
   projectId: string | undefined,
-  formContext: UseFormContextReturn
+  formContext: UseFormContextReturn,
 ) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
@@ -41,10 +42,10 @@ export function useProjectLoader(
       });
     } catch (e) {
       if (e instanceof MyError) {
-        alert(e.message);
+        toast.error(e.message);
       } else {
-        alert(
-          "Erro ao carregar dados do projeto. Veja o console para detalhes!"
+        toast.error(
+          "Erro ao carregar dados do projeto. Veja o console para detalhes!",
         );
         console.error(e);
       }
