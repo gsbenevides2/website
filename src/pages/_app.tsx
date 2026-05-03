@@ -17,7 +17,7 @@ const nunito = Nunito_Sans({ subsets: ["latin"] });
 
 export default function MyApp(props: AppProps) {
   const response = () =>
-    <props.Component {...props.pageProps} /> as React.ReactNode;
+    (<props.Component {...props.pageProps} />) as React.ReactNode;
 
   useEffect(() => {
     Firebase.getAnalytics();
@@ -27,7 +27,7 @@ export default function MyApp(props: AppProps) {
     <main className={nunito.className}>
       <GoogleTagManager gtmId="GTM-NW5NDZP2" />
 
-        {response()}
+      {response()}
 
       <Script
         async
