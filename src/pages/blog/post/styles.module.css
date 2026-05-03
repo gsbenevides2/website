@@ -29,7 +29,6 @@
 
 .container>img {
   width: 100%;
-  max-width: 400px;
   border-radius: 8px;
   height: auto;
 }
@@ -63,8 +62,8 @@
 }
 
 .imageResponsive>img {
-  width: auto !important;
-  max-height: 80vh;
+  width: 100% !important;
+  height: auto;
   display: block;
 }
 

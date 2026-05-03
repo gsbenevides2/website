@@ -6,8 +6,10 @@ import { AppProps } from "next/app";
 import { Nunito_Sans } from "next/font/google";
 import Script from "next/script";
 import { useEffect } from "react";
+/*
 import { positions, Provider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
+*/
 import "./globals.css";
 import "@uiw/react-md-editor/markdown-editor.css";
 
@@ -24,9 +26,9 @@ export default function MyApp(props: AppProps) {
   return (
     <main className={nunito.className}>
       <GoogleTagManager gtmId="GTM-NW5NDZP2" />
-      <Provider template={AlertTemplate} position={positions.BOTTOM_CENTER}>
+
         {response()}
-      </Provider>
+
       <Script
         async
         src="https://cdnjs.cloudflare.com/ajax/libs/jimp/0.22.8/jimp.min.js"

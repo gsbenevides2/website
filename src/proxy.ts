@@ -5,7 +5,7 @@ import storagePage from "./middlewares/storagePage";
 
 const middlewares = [links, storagePage, storageDirectDownload];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   for (const config of middlewares) {
     if (config.requestTest(request)) {
       return config.middleware(request);

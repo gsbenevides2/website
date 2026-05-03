@@ -1,7 +1,7 @@
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Image from "next/image";
 import BlogHeader from "@/components/BlogHeader";
-import { getVisiblePosts, Post } from "@/services/firebase/client/posts";
+import { getVisiblePosts, type Post } from "@/services/firebase/client/posts";
 import styles from "./styles.module.scss";
 import { useRouter } from "next/router";
 import { MouseEventHandler, useCallback, useRef } from "react";
@@ -16,6 +16,7 @@ interface Props {
 interface PostProps {
   post: Post;
   onClick?: MouseEventHandler<HTMLAnchorElement>;
+  index: number;
 }
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
@@ -26,17 +27,16 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   };
 };
 
-function Post({ post, onClick }: PostProps) {
+function Post({ post, onClick, index }: PostProps) {
   return (
     <Link href={`/blog/post/${post.id}`} onClick={onClick}>
       <article>
         <li className={styles.post}>
           <Image
             src={post.thumbnail.list}
-            width={500}
-            height={334}
+            width={index == 0 ? 1000 : 500}
+            height={index == 0 ? 667 : 334}
             placeholder="blur"
-            layout="responsive"
             blurDataURL={post.thumbnail.blur}
             alt={`Capa do Post: ${post.name}. Contendo: ${post.thumbnail.alt}`}
           />
@@ -54,7 +54,7 @@ function Post({ post, onClick }: PostProps) {
 }
 
 export default function Blog(
-  props: InferGetStaticPropsType<typeof getStaticProps>
+  props: InferGetStaticPropsType<typeof getStaticProps>,
 ) {
   const { posts } = props;
   const containerRef = useRef<HTMLUListElement>(null);
@@ -69,7 +69,7 @@ export default function Blog(
       await new Promise((resolve) => setTimeout(resolve, 400));
       router.push(href);
     },
-    [containerRef, router]
+    [containerRef, router],
   );
 
   return (
@@ -85,8 +85,8 @@ export default function Blog(
       <BlogHeader />
       <div className={styles.container}>
         <ul className={styles.postsList} ref={containerRef}>
-          {posts.map((post) => (
-            <Post post={post} key={post.id} onClick={postClick} />
+          {posts.map((post, index) => (
+            <Post post={post} key={post.id} onClick={postClick} index={index} />
           ))}
         </ul>
       </div>

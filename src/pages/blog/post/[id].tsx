@@ -66,9 +66,8 @@ export default function PostPage(
       <span className={styles.imageResponsive}>
         <Image
           src={url}
-          layout="responsive"
-          width={300}
-          height={200}
+          width={1080}
+          height={720}
           className={styles.imageResponsive}
           alt={imageProps.alt || "Imagem do Post"}
           placeholder={blur ? "blur" : undefined}
@@ -107,8 +106,8 @@ export default function PostPage(
       <article className={styles.container}>
         <Image
           src={props.post.thumbnail.originalWebp}
-          width={300}
-          height={200}
+          width={1080}
+          height={720}
           placeholder="blur"
           blurDataURL={props.post.thumbnail.blur}
           alt={`Capa do Post: ${props.post.name}. Contendo: ${props.post.thumbnail.alt}`}
