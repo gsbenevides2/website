@@ -1,0 +1,49 @@
+/* AI Modal Styles */
+.aiModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 1rem;
+
+  .aiModalContent {
+    background: linear-gradient(270deg, #4c3e4a 26.56%, #575469 100%);
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+
+    h2 {
+      margin: 0 0 1.5rem 0;
+      color: #fff;
+      font-size: 1.5rem;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .aiErrorMessage {
+      background-color: #fee;
+      color: #c33;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border: 1px solid #fcc;
+    }
+
+    .aiModalActions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+    }
+  }
+}

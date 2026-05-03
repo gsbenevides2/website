@@ -1,7 +1,7 @@
 import InputCustom from "@/components/Input";
 import Head from "next/head";
 import { useCallback, useEffect, useRef, useState } from "react";
-import styles from "./styles.module.css";
+import styles from "./styles.module.scss";
 import { Button } from "@/components/Button";
 import { useRouter } from "next/router";
 import { addOrUpdateLink } from "@/services/firebase/client/links";

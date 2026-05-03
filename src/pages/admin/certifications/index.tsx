@@ -1,10 +1,12 @@
 import ListAdminPage from "@/components/ListAdminPage";
 import { revalidateNextPages } from "@/services/api/revalidateNextPages";
-import { deleteCertification, listCertifications } from "@/services/firebase/client/certificates";
+import {
+  deleteCertification,
+  listCertifications,
+} from "@/services/firebase/client/certificates";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TbEdit, TbTrash } from "react-icons/tb";
-import styles from "./styles.module.css";
 
 interface CertToList {
   id: string;
@@ -20,8 +22,6 @@ interface CertToList {
 }
 
 export default function Page() {
-  const router = useRouter();
-  const containerRef = useRef<HTMLDivElement>(null);
   const [certs, setCerts] = useState<CertToList[]>();
 
   const loadCerts = useCallback(async () => {
@@ -29,7 +29,9 @@ export default function Page() {
   }, []);
 
   const deleteCert = useCallback(async (id: string) => {
-    const confirm = window.confirm("Deseja realmente excluir este certificado?");
+    const confirm = window.confirm(
+      "Deseja realmente excluir este certificado?",
+    );
     if (!confirm) return;
     await deleteCertification(id);
     await revalidateNextPages("certificates", id);
@@ -37,15 +39,6 @@ export default function Page() {
       return certs?.filter((cert) => cert.id !== id);
     });
   }, []);
-
-  const editCert = useCallback(
-    async (id: string) => {
-      containerRef.current?.classList.add(styles.hide);
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      router.push(`/admin/certifications/editor/${id}`);
-    },
-    [router, containerRef]
-  );
 
   useEffect(() => {
     loadCerts();

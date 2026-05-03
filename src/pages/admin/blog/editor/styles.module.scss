@@ -1,0 +1,69 @@
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.pageWrapper {
+  opacity: 1;
+  transition: all 0.5s ease-in-out;
+
+  &.hide {
+    opacity: 0;
+  }
+
+  .container {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fadein 1s ease-in-out forwards;
+
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 850px;
+      max-width: 850px;
+
+      .textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+
+      .aiButton {
+        margin-top: 8px;
+        padding: 10px 16px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 768px) {
+        min-width: 90%;
+        max-width: 90%;
+      }
+    }
+  }
+}

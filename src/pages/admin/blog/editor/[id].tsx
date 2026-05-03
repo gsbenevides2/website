@@ -2,14 +2,12 @@ import InputCustom from "@/components/Input";
 import TextareaCustom from "@/components/TextArea";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import Head from "next/head";
-import { useCallback, useEffect, useRef, useState } from "react";
-import styles from "./styles.module.css";
+import { useEffect } from "react";
+import styles from "./styles.module.scss";
 import { Button } from "@/components/Button";
 import { useRouter } from "next/router";
-import MyError from "@/utils/MyError";
 import { ImageInput } from "@/components/ImageInput";
 import AssetsInput from "@/components/AssetsInput";
-import Loader from "@/components/Loader";
 import {
   Form,
   Input,
@@ -17,305 +15,65 @@ import {
   Textarea,
   useFormContext,
 } from "@/components/Form";
-import {
-  base64ToFile,
-  convertImageToWebP,
-  fileToBase64,
-  generateBlur,
-  getMimeType,
-  getSizeOfImage,
-  resizeImage,
-} from "@/utils/imageManager";
-import { createOrUpdatePost, getPost } from "@/services/firebase/client/posts";
 import { FormSubmitEvent } from "@/components/Form/types";
 import {
   AuthState,
   useAdminAuthentication,
-  retriveIdToken,
 } from "@/services/firebase/client/auth";
-import { wait } from "@/utils/wait";
 import classNames from "classnames";
-
-interface Asset {
-  altText: string;
-  file: File;
-}
-
-async function verifyThumbnails(original: File): Promise<boolean> {
-  const base64 = await fileToBase64(original);
-  const fileType = getMimeType(base64);
-  if (fileType !== "image/png") return false;
-  const sizes = await getSizeOfImage(base64);
-  if (sizes.width !== 1000) return false;
-  if (sizes.height !== 667) return false;
-  return true;
-}
-
-interface GeneratedThumbnails {
-  originalPng: File;
-  originalWebp: File;
-  metaTag: File;
-  list: File;
-  blur: string;
-}
-
-async function generateBlogThumbnails(
-  original: File
-): Promise<GeneratedThumbnails> {
-  const originalPng = original;
-  const base64Original = await fileToBase64(original);
-  const webpOriginalBase64 = await convertImageToWebP(base64Original);
-  const originalWebp = base64ToFile(webpOriginalBase64, "original.webp");
-  const metaTagBase64 = await resizeImage(base64Original, {
-    width: 500,
-    height: 334,
-  });
-  const metaTag = base64ToFile(metaTagBase64, "metaTag.png");
-  const listBase64 = await convertImageToWebP(metaTagBase64);
-  const list = base64ToFile(listBase64, "list.webp");
-  const blur = await generateBlur(base64Original);
-  return {
-    originalPng,
-    originalWebp,
-    metaTag,
-    list,
-    blur,
-  };
-}
-
-interface GeneratedAssets {
-  alt: string;
-  blur: string;
-  name: string;
-  type: string;
-  file: File;
-}
-
-async function generateAssets(assets: Asset[]): Promise<GeneratedAssets[]> {
-  const generatedAssets: GeneratedAssets[] = [];
-  for (const asset of assets) {
-    const base64 = await fileToBase64(asset.file);
-    const blur = await generateBlur(base64);
-    generatedAssets.push({
-      alt: asset.altText,
-      blur,
-      name: asset.file.name,
-      type: asset.file.type,
-      file: asset.file,
-    });
-  }
-  return generatedAssets;
-}
-
-async function downloadFile(
-  url: string,
-  name: string,
-  type: string
-): Promise<File> {
-  const res = await fetch(url);
-  const blob = await res.blob();
-  const file = new File([blob], name, { type });
-  return file;
-}
-
-interface FormValues {
-  altThumbnail: string;
-  assets: Asset[];
-  content: string;
-  date: Date;
-  description: string;
-  image: File[];
-  name: string;
-}
+import { usePostLoader } from "@/hooks/blog/usePostLoader";
+import { usePostSubmit, FormValues } from "@/hooks/blog/usePostSubmit";
+import { useAIThumbnail } from "@/hooks/blog/useAIThumbnail";
+import { AIModal } from "@/components/pages/admin/blog/AIModal";
+import { LoaderOverlay } from "@/components/pages/admin/blog/LoaderOverlay";
 
 export default function Page() {
   const router = useRouter();
   const postId =
     router.query.id === "new" ? undefined : (router.query.id as string);
-  const hidder = useRef<HTMLDivElement>(null);
-  const loader = useRef<HTMLDivElement>(null);
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [previewAssets, setPreviewAssets] = useState<Asset[]>([]);
-  const [showAIModal, setShowAIModal] = useState(false);
-  const [aiDescription, setAiDescription] = useState("");
-  const [isGeneratingAI, setIsGeneratingAI] = useState(false);
-  const [aiError, setAiError] = useState<string | null>(null);
   const { state: authState } = useAdminAuthentication();
   const formContext = useFormContext();
-  const formSubmit: FormSubmitEvent<FormValues> = useCallback(
-    async (e) => {
-      setIsLoading(true);
-      const {
-        altThumbnail,
-        assets,
-        content,
-        date,
-        description,
-        image: thumbnail,
-        name,
-      } = e;
-      if (!thumbnail[0]) {
-        alert("Selecione uma imagem para thumbnail");
-        return;
-      }
-      if (!(await verifyThumbnails(thumbnail[0]))) {
-        alert("A imagem da thumbnail deve ser PNG e ter 1000x667");
-        return;
-      }
 
-      const generatedThumbnails = await generateBlogThumbnails(thumbnail[0]);
+  // Custom hooks for cleaner logic
+  const {
+    isLoading,
+    setIsLoading,
+    previewAssets,
+    setPreviewAssets,
+    loadPostData,
+  } = usePostLoader(postId, formContext);
+  const { handleSubmit } = usePostSubmit(postId, setIsLoading);
+  const aiThumbnail = useAIThumbnail(formContext);
 
-      const generatedAssets = await generateAssets(assets);
-
-      await createOrUpdatePost({
-        id: postId,
-        name,
-        description,
-        date,
-        content,
-        thumbnail: {
-          ...generatedThumbnails,
-          alt: altThumbnail,
-        },
-        assets: generatedAssets,
-      });
-      setIsLoading(false);
-
-      router.push("/admin/blog");
-    },
-    [postId, router]
-  );
-
-  const handleGenerateAIThumbnail = useCallback(async () => {
-    if (!aiDescription.trim()) {
-      alert("Por favor, forneça uma descrição para a imagem");
-      return;
-    }
-
-    setIsGeneratingAI(true);
-    setAiError(null);
-
-    try {
-      const idToken = await retriveIdToken();
-
-      const response = await fetch("/api/ai/blog-thumbnail", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          idToken,
-          prompt: aiDescription,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Erro ao gerar thumbnail");
-      }
-
-      const data = await response.json();
-
-      // Converter base64 para File
-      const dataUri = data.imageBase64;
-      const file = base64ToFile(dataUri, "thumbnail-ai.png");
-
-      // Atualizar campos do formulário
-      formContext.changeInputValue("image", [file]);
-      formContext.changeInputValue("altThumbnail", data.alt);
-
-      // Fechar modal e limpar campos
-      setShowAIModal(false);
-      setAiDescription("");      
-      alert("✅ Thumbnail gerada com sucesso!");
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Erro desconhecido";
-      setAiError(errorMessage);
-      console.error("Erro ao gerar thumbnail:", err);
-    } finally {
-      setIsGeneratingAI(false);
-    }
-  }, [aiDescription, formContext]);
-
-  const loadDocData = useCallback(async () => {
-    if (!postId) return setIsLoading(false);
-
-    try {
-      const post = await getPost(postId);
-      if (!post) throw new MyError("Post não encontrado");
-
-      const thumbnail = await downloadFile(
-        post.thumbnail.originalPng,
-        "thumbnail.png",
-        "image/png"
-      );
-      const assets: Asset[] = [];
-      for (const asset of post.assets) {
-        const file = await downloadFile(asset.url, asset.name, asset.type);
-        assets.push({
-          altText: asset.alt,
-          file,
-        });
-      }
-      setPreviewAssets(assets);
-      formContext.changeMultipleInputValues({
-        name: post.name,
-        description: post.description,
-        date: post.date,
-        content: post.content,
-        altThumbnail: post.thumbnail.alt,
-        assets: assets,
-        image: [thumbnail],
-      });
-    } catch (e) {
-      if (e instanceof MyError) {
-        alert(e.message);
-      } else {
-        alert(
-          "Erro ao carregar dados do certificado. Veja o console para detalhes!"
-        );
-        console.error(e);
-      }
-      await wait(1000);
-      router.push("/admin/blog");
-    } finally {
-      setIsLoading(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [postId, router]);
+  const formSubmit: FormSubmitEvent<FormValues> = handleSubmit;
 
   useEffect(() => {
-    function showLoading() {
-      if (!loader.current || !hidder.current) return;
-      hidder.current.classList.add(styles.hide);
+    if (isLoading) {
       window.scrollTo(0, 0);
       document.body.style.overflow = "hidden";
-      loader.current.classList.add(styles.update);
-      loader.current.classList.add(styles.show);
-    }
-    function hideLoading() {
-      if (!loader.current || !hidder.current) return;
-      hidder.current.classList.remove(styles.hide);
-      loader.current.classList.remove(styles.update);
-      loader.current.classList.remove(styles.show);
+    } else {
       document.body.style.overflow = "auto";
     }
-    if (isLoading) showLoading();
-    else hideLoading();
-  }, [loader, hidder, isLoading]);
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isLoading]);
 
   useEffect(() => {
     if (authState === AuthState.Authenticated) {
-      loadDocData();
+      loadPostData();
     } else if (authState === AuthState.Unauthenticated) {
       router.push("/admin");
     }
-  }, [authState, loadDocData, router]);
+  }, [authState, loadPostData, router]);
 
   return (
     <>
-      <div className={classNames(styles.hidder, styles.hide)} ref={hidder}>
+      <div
+        className={classNames(styles.pageWrapper, { [styles.hide]: isLoading })}
+      >
         <div className={styles.container}>
           <Head>
             <title>{postId ? "Editar" : "Adicionar"} Post</title>
@@ -338,6 +96,7 @@ export default function Page() {
             <Textarea
               placeholder="Digite uma descrição para o Post:"
               required
+              className={styles.textarea}
               id="description"
               name="description"
               customComponent={({ ref, ...props }) => (
@@ -365,7 +124,7 @@ export default function Page() {
                   />
                   <button
                     type="button"
-                    onClick={() => setShowAIModal(true)}
+                    onClick={aiThumbnail.openModal}
                     className={styles.aiButton}
                   >
                     ✨ Gerar Thumbnail com IA
@@ -417,67 +176,17 @@ export default function Page() {
           </Form>
         </div>
       </div>
-      <div
-        className={classNames(styles.loader, styles.update, styles.show)}
-        ref={loader}
-      >
-        <Loader />
-        <span>Estamos fazendo algumas operações aguarde</span>
-      </div>
 
-      {/* Modal de Geração de Thumbnail via IA */}
-      {showAIModal && (
-        <div className={styles.aiModalOverlay} onClick={() => setShowAIModal(false)}>
-          <div className={styles.aiModalContent} onClick={(e) => e.stopPropagation()}>
-            <h2>🎨 Gerar Thumbnail com IA</h2>
-            
-            <div className={styles.aiFormGroup}>
-              <label htmlFor="aiDescription">
-                Descrição da imagem: *
-              </label>
-              <textarea
-                id="aiDescription"
-                value={aiDescription}
-                onChange={(e) => setAiDescription(e.target.value)}
-                placeholder="Ex: Uma paisagem futurista com prédios iluminados à noite, representando tecnologia e inovação..."
-                rows={4}
-                disabled={isGeneratingAI}
-                maxLength={2000}
-                className={styles.aiTextarea}
-              />
-              <small className={styles.aiCharCount}>{aiDescription.length}/2000 caracteres</small>
-            </div>
+      <LoaderOverlay isLoading={isLoading} />
 
-            {aiError && (
-              <div className={styles.aiErrorMessage}>
-                ⚠️ {aiError}
-              </div>
-            )}
-
-            <div className={styles.aiModalActions}>
-              <button 
-                onClick={() => {
-                  setShowAIModal(false);
-                  setAiError(null);
-                }} 
-                disabled={isGeneratingAI}
-                className={styles.aiButtonSecondary}
-                type="button"
-              >
-                Cancelar
-              </button>
-              <button 
-                onClick={handleGenerateAIThumbnail} 
-                disabled={isGeneratingAI || !aiDescription.trim()}
-                className={styles.aiButtonPrimary}
-                type="button"
-              >
-                {isGeneratingAI ? "⏳ Gerando..." : "✨ Gerar Thumbnail"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <AIModal
+        open={aiThumbnail.showModal}
+        description={aiThumbnail.description}
+        isGenerating={aiThumbnail.isGenerating}
+        onDescriptionChange={aiThumbnail.setDescription}
+        onGenerate={aiThumbnail.handleGenerate}
+        onClose={aiThumbnail.closeModal}
+      />
     </>
   );
 }
