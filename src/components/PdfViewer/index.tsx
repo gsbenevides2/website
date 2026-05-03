@@ -3,14 +3,11 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useCallback, useState } from "react";
 import { TbChevronLeft, TbChevronRight, TbDownload } from "react-icons/tb";
-import { PDFDocumentProxy } from "pdfjs-dist";
+
 import IconButton from "../IconButon";
-import styles from "./styles.module.css";
+import styles from "./styles.module.scss";
 import "react-pdf/dist/Page/TextLayer.css";
-
-export type DocumentCallback = PDFDocumentProxy;
-
-export type OnDocumentLoadSuccess = (document: DocumentCallback) => void;
+import { OnDocumentLoadSuccess } from "./types";
 
 export interface Props {
   file?: string;

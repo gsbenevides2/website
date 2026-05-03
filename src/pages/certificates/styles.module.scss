@@ -1,0 +1,98 @@
+.hidder {
+  opacity: 1;
+  transition: 0.5s;
+  &.hide {
+    opacity: 0;
+  }
+  .container {
+    padding: 20px;
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out forwards;
+    padding: 20px;
+    .header {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      .searchBox {
+        max-width: 980px;
+        width: 100%;
+        padding: 20px 0px;
+      }
+    }
+    .certificatesList {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
+      li {
+        position: relative;
+        margin: 10px;
+        list-style: none;
+        cursor: pointer;
+        transition: 0.5s;
+        .imageContainer {
+          position: relative;
+          width: 300px;
+          height: 200px;
+          .defaultImage {
+            position: absolute;
+            transition: 0.5s;
+            top: 0;
+            left: 0;
+            z-index: 1;
+          }
+        }
+        .certificateText {
+          position: absolute;
+          width: 300px;
+          height: 200px;
+          min-height: 200px;
+          min-width: 300px;
+          padding: 12px;
+          font-size: 1rem;
+          background-color: rgba(0, 0, 0, 0.8);
+          top: 0;
+          height: 0;
+          z-index: 2;
+          opacity: 0;
+          transition: 0.5s;
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          transition: 0.5s;
+          transform: scale(1.1);
+        }
+        .defaultImage {
+          transition: 0.5s;
+        }
+        &:hover {
+          .defaultImage {
+            transform: scale(1.1);
+          }
+          .certificateText {
+            opacity: 1;
+          }
+        }
+      }
+      li.go {
+        .imageContainer {
+          .defaultImage {
+            top: -200px;
+            left: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

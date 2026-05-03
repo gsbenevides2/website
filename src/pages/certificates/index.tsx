@@ -6,9 +6,17 @@ import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { MouseEvent, MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  MouseEvent,
+  MouseEventHandler,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
-import styles from "./styles.module.css";
+import styles from "./styles.module.scss";
 
 interface Certificate {
   id: string;
@@ -53,13 +61,19 @@ function updateImageToScale(size: number | string, scale: number) {
   return sizeNumber * scale;
 }
 
-function calculateAnimateImageToDesktop(width: number, height: number, headerHeight: number): Dimensions {
+function calculateAnimateImageToDesktop(
+  width: number,
+  height: number,
+  headerHeight: number,
+): Dimensions {
   const y = 12 + 44 + 12 + headerHeight;
-  const base = window.innerWidth > 1640 ? 800 : (800 * window.innerWidth) / 1640;
+  const base =
+    window.innerWidth > 1640 ? 800 : (800 * window.innerWidth) / 1640;
   let x = 0;
 
   if (window.innerWidth <= 1640 && width >= 800) x = 20;
-  if (window.innerWidth > 1640 && width >= 800) x = (window.innerWidth - 1600) / 2;
+  if (window.innerWidth > 1640 && width >= 800)
+    x = (window.innerWidth - 1600) / 2;
   if (window.innerWidth > 1640 && width < 800) {
     const initialPos = (window.innerWidth - 1600) / 2;
     const diff = 800 - width;
@@ -96,7 +110,11 @@ function calculateAnimateImageToDesktop(width: number, height: number, headerHei
   return { width: newWidth, height: newHeight, x, y };
 }
 
-function calculateAnimateImageToMobile(width: number, height: number, headerHeight: number): Dimensions {
+function calculateAnimateImageToMobile(
+  width: number,
+  height: number,
+  headerHeight: number,
+): Dimensions {
   const imageWidth = window.innerWidth - 40;
   const y = 12 + 44 + 12 + headerHeight;
   const newHeight = updateImageToScale(height, imageWidth / width);
@@ -108,19 +126,40 @@ function getCurrentImageDimensions(image: HTMLImageElement): Dimensions {
   return { width, height, x, y };
 }
 
-function createAnimatedImageAndRun(event: MouseEvent<HTMLAnchorElement>, certificates: Certificate[], fallback: () => void, hidder: React.RefObject<HTMLDivElement | null>) {
+function createAnimatedImageAndRun(
+  event: MouseEvent<HTMLAnchorElement>,
+  certificates: Certificate[],
+  fallback: () => void,
+  hidder: React.RefObject<HTMLDivElement | null>,
+) {
   const animatedImage = document.createElement("img");
   const img = event.currentTarget.querySelector("img");
-  const certificateFindResult = certificates.find((certificate) => certificate.id === event.currentTarget.dataset.certificateId);
+  const certificateFindResult = certificates.find(
+    (certificate) =>
+      certificate.id === event.currentTarget.dataset.certificateId,
+  );
   if (!img || !certificateFindResult) return fallback();
   const {
     certificate: { pdf: certificateFile },
   } = certificateFindResult;
-  if (certificateFile.width === null || certificateFile.height === null) return fallback();
+  if (certificateFile.width === null || certificateFile.height === null)
+    return fallback();
 
   const sourceDimensions = getCurrentImageDimensions(img);
-  const headerHeight = renderHeaderToVirtualCalculation(event, certificates) || 0;
-  const destinationDimensions = window.innerWidth > 798 ? calculateAnimateImageToDesktop(certificateFile.width, certificateFile.height, headerHeight) : calculateAnimateImageToMobile(certificateFile.width, certificateFile.height, headerHeight);
+  const headerHeight =
+    renderHeaderToVirtualCalculation(event, certificates) || 0;
+  const destinationDimensions =
+    window.innerWidth > 798
+      ? calculateAnimateImageToDesktop(
+          certificateFile.width,
+          certificateFile.height,
+          headerHeight,
+        )
+      : calculateAnimateImageToMobile(
+          certificateFile.width,
+          certificateFile.height,
+          headerHeight,
+        );
 
   animatedImage.src = img.src;
 
@@ -155,8 +194,14 @@ function createAnimatedImageAndRun(event: MouseEvent<HTMLAnchorElement>, certifi
   document.body.appendChild(animatedImage);
 }
 
-function renderHeaderToVirtualCalculation(event: MouseEvent<HTMLAnchorElement>, certificates: Certificate[]) {
-  const certificateFindResult = certificates.find((certificate) => certificate.id === event.currentTarget.dataset.certificateId);
+function renderHeaderToVirtualCalculation(
+  event: MouseEvent<HTMLAnchorElement>,
+  certificates: Certificate[],
+) {
+  const certificateFindResult = certificates.find(
+    (certificate) =>
+      certificate.id === event.currentTarget.dataset.certificateId,
+  );
   if (!certificateFindResult) return;
   const { name, institution } = certificateFindResult;
   const div = document.createElement("div");
@@ -184,36 +229,53 @@ function renderHeaderToVirtualCalculation(event: MouseEvent<HTMLAnchorElement>, 
   return height;
 }
 
-export default function Page(props: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function Page(
+  props: InferGetStaticPropsType<typeof getStaticProps>,
+) {
   const { certificates } = props;
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredCertificates, setFilteredCertificates] = useState<Certificate[]>();
+  const [filteredCertificates, setFilteredCertificates] =
+    useState<Certificate[]>();
   const router = useRouter();
   const hidder = useRef<HTMLDivElement>(null);
 
-  const handleClickCertificate: MouseEventHandler<HTMLAnchorElement> = useCallback(
-    async (event) => {
-      const currentTarget = event.currentTarget;
-      const href = currentTarget.href;
-      const fallback = async () => {
-        hidder.current?.classList.add(styles.hide);
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        router.push(href);
-      };
-      event.preventDefault();
-      createAnimatedImageAndRun(event, certificates, fallback, hidder);
-    },
-    [certificates, router]
-  );
+  const handleClickCertificate: MouseEventHandler<HTMLAnchorElement> =
+    useCallback(
+      async (event) => {
+        const currentTarget = event.currentTarget;
+        const href = currentTarget.href;
+        const fallback = async () => {
+          hidder.current?.classList.add(styles.hide);
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          router.push(href);
+        };
+        event.preventDefault();
+        createAnimatedImageAndRun(event, certificates, fallback, hidder);
+      },
+      [certificates, router],
+    );
 
   const visibleCertificates = filteredCertificates || certificates;
 
   const memorizedComponent = useMemo(() => {
     return visibleCertificates.map((certificate) => (
-      <Link href={`/certificate/${certificate.id}`} key={certificate.id} onClick={handleClickCertificate} data-certificate-id={certificate.id}>
+      <Link
+        href={`/certificate/${certificate.id}`}
+        key={certificate.id}
+        onClick={handleClickCertificate}
+        data-certificate-id={certificate.id}
+      >
         <li>
           <div className={styles.imageContainer}>
-            <Image src={certificate.certificate.thumbnail.png} width={300} height={200} alt={`Certificado de conclusão do curso de ${certificate.name}`} placeholder="blur" blurDataURL={certificate.certificate.thumbnail.blur} className={styles.defaultImage} />
+            <Image
+              src={certificate.certificate.thumbnail.png}
+              width={300}
+              height={200}
+              alt={`Certificado de conclusão do curso de ${certificate.name}`}
+              placeholder="blur"
+              blurDataURL={certificate.certificate.thumbnail.blur}
+              className={styles.defaultImage}
+            />
           </div>
           <div className={styles.certificateText}>{certificate.name}</div>
         </li>
@@ -242,10 +304,23 @@ export default function Page(props: InferGetStaticPropsType<typeof getStaticProp
     <>
       <div ref={hidder} className={styles.hidder}>
         <div className={styles.container}>
-          <DefaultSeo title="Mural de Certificações" description="Mural de Certificações do Guilherme" image={getOpenMediaImageForNextSeo("Meus Certificados")} site_name="Site do Guilherme" type="website" />
+          <DefaultSeo
+            title="Mural de Certificações"
+            description="Mural de Certificações do Guilherme"
+            image={getOpenMediaImageForNextSeo("Meus Certificados")}
+            site_name="Site do Guilherme"
+            type="website"
+          />
           <div className={styles.header}>
             <h1>Mural de Certificações</h1>
-            <Input boxClassName={styles.searchBox} type="text" placeholder="Procure por Linguagem ou Skill:" id="search" state={searchTerm} setState={setSearchTerm} />
+            <Input
+              boxClassName={styles.searchBox}
+              type="text"
+              placeholder="Procure por Linguagem ou Skill:"
+              id="search"
+              state={searchTerm}
+              setState={setSearchTerm}
+            />
           </div>
           <ul className={styles.certificatesList}>{memorizedComponent}</ul>
         </div>

@@ -1,6 +1,6 @@
 import FileInput, { FileInputProps } from "../FileInput";
 import { memo, useMemo } from "react";
-import styles from "./styles.module.css";
+import styles from "./styles.module.scss";
 import dynamic from "next/dynamic";
 
 interface Props extends Omit<FileInputProps, "accept"> {}
@@ -9,7 +9,7 @@ function PdfInputUnmemorized(props: Props) {
   const { state, ...rest } = props;
   const fileUrl = useMemo(
     () => (state?.[0] ? URL.createObjectURL(state[0]) : undefined),
-    [state]
+    [state],
   );
   const PdfViewer = dynamic(() => import("@/components/PdfViewer"), {
     ssr: false,
@@ -23,4 +23,3 @@ function PdfInputUnmemorized(props: Props) {
 }
 
 export const PdfInput = memo(PdfInputUnmemorized);
-

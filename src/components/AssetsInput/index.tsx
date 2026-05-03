@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useCallback, useMemo } from "react";
 import { FileInputProps } from "../FileInput";
 import { Button } from "../Button";
-import styles from "./styles.module.css";
+import styles from "./styles.module.scss";
 import { downloadFile } from "@/utils/downloadFile";
 
 interface Asset {
@@ -22,7 +22,7 @@ export default function AssetsInput(props: AssetsInputProps) {
     (index: number) => {
       setState(state.filter((_, i) => i !== index));
     },
-    [state, setState]
+    [state, setState],
   );
 
   const addAsset = useCallback(() => {

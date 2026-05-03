@@ -11,22 +11,22 @@
   color: #333;
   font-family: var(--font-nunito);
   font-size: 16px;
-}
 
-.input:hover {
-  border: 2px solid lightgrey;
-  box-shadow: 0px 0px 20px -17px;
-}
+  &:hover {
+    border: 2px solid lightgrey;
+    box-shadow: 0px 0px 20px -17px;
+  }
 
-.input:active {
-  transform: scale(0.95);
-}
+  &:active {
+    transform: scale(0.95);
+  }
 
-.input:focus {
-  border: 2px solid grey;
-}
+  &:focus {
+    border: 2px solid grey;
+  }
 
-.input::placeholder {
-  font-family: var(--font-nunito);
-  font-size: 16px;
+  &::placeholder {
+    font-family: var(--font-nunito);
+    font-size: 16px;
+  }
 }

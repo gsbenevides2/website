@@ -1,12 +1,15 @@
 import FileInput, { FileInputProps } from "../FileInput";
 import { useMemo } from "react";
-import styles from "./styles.module.css";
+import styles from "./styles.module.scss";
 
 interface Props extends Omit<FileInputProps, "accept"> {}
 
 export function ImageInput(props: Props) {
-  const { state,  ...rest } = props;
-  const fileUrl = useMemo(()=>state?.[0] ? URL.createObjectURL(state[0]) : undefined, [state])
+  const { state, ...rest } = props;
+  const fileUrl = useMemo(
+    () => (state?.[0] ? URL.createObjectURL(state[0]) : undefined),
+    [state],
+  );
 
   return (
     <div className={styles.imageInput}>

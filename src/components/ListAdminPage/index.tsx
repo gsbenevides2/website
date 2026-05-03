@@ -12,7 +12,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { IconType } from "react-icons";
 import { Form, Input, useFormContext } from "../Form";
 import CustomInput from "../Input";
-import styles from "./styles.module.css";
+import styles from "./styles.module.scss";
 export interface ListItem {
   id: string;
   title: string;
@@ -87,13 +87,15 @@ export default function ListAdminPage(props: Props) {
   const memorizedCompoment = useMemo(() => {
     if (!list) return <Loader />;
 
-    const filteredList = search.length === 0
-      ? list
-      : list.filter((item) =>
-        item.title.toLowerCase().includes(search.toLowerCase()) ||
-        (item.description &&
-          item.description.toLowerCase().includes(search.toLowerCase()))
-      );
+    const filteredList =
+      search.length === 0
+        ? list
+        : list.filter(
+            (item) =>
+              item.title.toLowerCase().includes(search.toLowerCase()) ||
+              (item.description &&
+                item.description.toLowerCase().includes(search.toLowerCase())),
+          );
     if (filteredList.length === 0) return <h2>{emptyListText}</h2>;
 
     return filteredList.map((item) => (
@@ -125,13 +127,7 @@ export default function ListAdminPage(props: Props) {
         </div>
       </li>
     ));
-  }, [
-    list,
-    emptyListText,
-    listButtons,
-    search,
-    handleButtonClick,
-  ]);
+  }, [list, emptyListText, listButtons, search, handleButtonClick]);
 
   return (
     <div className={styles.container} ref={containerRef}>
@@ -144,7 +140,8 @@ export default function ListAdminPage(props: Props) {
         <Form
           contextLoader={formContext.contextLoader}
           submit={({ searchQuery }: { searchQuery: string }) =>
-            setSearch(searchQuery)}
+            setSearch(searchQuery)
+          }
           className={styles.form}
         >
           <Input

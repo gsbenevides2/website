@@ -6,7 +6,7 @@ import { BedrockPingResponse } from "@minescope/mineping";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import localFont from "next/font/local";
 import React from "react";
-import styles from "./styles.module.css";
+import styles from "./styles.module.scss";
 import Window from "./window";
 
 export interface CMSData {
@@ -105,15 +105,13 @@ export default function MinecraftPage(props: ComponentProps) {
               {serverData && (
                 <>
                   <p>
-                    Jogadores online:{" "}
-                    {serverData.players.online}/{serverData.players.max}
+                    Jogadores online: {serverData.players.online}/
+                    {serverData.players.max}
                   </p>
                 </>
               )}
             </div>
-            <p className={styles.centerText}>
-              {cms.helperText}
-            </p>
+            <p className={styles.centerText}>{cms.helperText}</p>
           </div>
         </Window>
       </div>

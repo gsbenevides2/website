@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import { isValidElement, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import Mermaid from "@/components/Mermaid";
-import styles from "./styles.module.css";
+import styles from "./styles.module.scss";
 
 function extractText(node: ReactNode): string {
   if (typeof node === "string") return node;
@@ -57,12 +57,12 @@ export default function MarkdownEditor({
   const previewOptions = useMemo(
     () => ({
       components: {
-        img: ({
-          src,
-          alt,
-        }: React.ImgHTMLAttributes<HTMLImageElement>) => {
+        img: ({ src, alt }: React.ImgHTMLAttributes<HTMLImageElement>) => {
           let resolvedSrc = src ?? "";
-          if (resolvedSrc.startsWith("firebase://assets/")) {
+          if (
+            typeof resolvedSrc === "string" &&
+            resolvedSrc.startsWith("firebase://assets/")
+          ) {
             const filename = resolvedSrc.replace("firebase://assets/", "");
             resolvedSrc = assetUrls.get(filename) ?? resolvedSrc;
           }
@@ -75,10 +75,7 @@ export default function MarkdownEditor({
             />
           );
         },
-        code: ({
-          className,
-          children,
-        }: React.HTMLAttributes<HTMLElement>) => {
+        code: ({ className, children }: React.HTMLAttributes<HTMLElement>) => {
           if (String(className ?? "").includes("language-mermaid")) {
             return <Mermaid chart={extractText(children).trim()} />;
           }
@@ -86,7 +83,7 @@ export default function MarkdownEditor({
         },
       },
     }),
-    [assetUrls]
+    [assetUrls],
   );
 
   return (

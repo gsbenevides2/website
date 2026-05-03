@@ -1,6 +1,6 @@
 import { ChangeEventHandler, useCallback, useEffect, useState } from "react";
 import { Button } from "../Button";
-import styles from "./styles.module.css";
+import styles from "./styles.module.scss";
 import IconButton from "../IconButon";
 import { TbDownload } from "react-icons/tb";
 import { downloadFile } from "@/utils/downloadFile";
@@ -36,7 +36,7 @@ export default function FileInput(props: FileInputProps) {
         else setState(Array.from(files));
       }
     },
-    [setState, propOnChange]
+    [setState, propOnChange],
   );
 
   const buttonClick = useCallback(() => {

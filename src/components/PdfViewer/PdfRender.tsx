@@ -1,9 +1,5 @@
 import { Document, Page, pdfjs } from "react-pdf";
-import {
-  ClassName,
-  OnDocumentLoadSuccess,
-  OnPageLoadSuccess,
-} from "react-pdf/dist/cjs/shared/types";
+import { OnDocumentLoadSuccess, OnPageLoadSuccess, ClassName } from "./types";
 
 interface Props {
   file: File | undefined | string;
