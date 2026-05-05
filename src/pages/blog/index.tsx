@@ -80,6 +80,8 @@ export default function Blog(
         image={getOpenMediaImageForNextSeo("Blog do Guilherme")}
         type="blog"
         site_name="Blog do Guilherme"
+        canonical={process.env.NEXT_PUBLIC_DOMAIN + "/blog"}
+        keywords={["guilherme benevides", "blog"]}
       />
 
       <BlogHeader />

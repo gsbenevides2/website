@@ -82,7 +82,7 @@ export default function Contacts(props: Props) {
     },
   ];
   const filteredSocialMedias = socialMedias.filter((socialMedia) =>
-    Boolean(socialMedia.url)
+    Boolean(socialMedia.url),
   );
 
   return (
@@ -93,15 +93,14 @@ export default function Contacts(props: Props) {
         image={getOpenMediaImageForNextSeo("Contatos")}
         site_name="Site do Guilherme"
         type="website"
+        canonical={process.env.NEXT_PUBLIC_DOMAIN + "/contacts"}
+        keywords={["guilherme benevides", "contatos", "redes sociais"]}
       />
       <div className={styles.firstArea}>
         <h1>Contatos</h1>
         <ul className={styles.social}>
           {filteredSocialMedias.map((socialMedia) => (
-            <li
-              className={socialMedia.style}
-              key={socialMedia.name}
-            >
+            <li className={socialMedia.style} key={socialMedia.name}>
               <a
                 href={socialMedia.url ?? ""}
                 target="_blank"

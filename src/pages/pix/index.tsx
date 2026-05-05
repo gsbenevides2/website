@@ -76,6 +76,8 @@ export default function Pix(props: ComponentProps) {
         image={getOpenMediaImageForNextSeo("PIX")}
         site_name="Site do Guilherme"
         type="website"
+        canonical={process.env.NEXT_PUBLIC_DOMAIN + "/pix"}
+        keywords={["pix", "guilherme benevides", "doação", "apoio"]}
       />
       <h1>PIX</h1>
       <div className={styles.content}>

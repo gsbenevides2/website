@@ -15,6 +15,7 @@ import {
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./styles.module.scss";
+import { DefaultSeo } from "@/components/DefaultSeo";
 
 type States = "loading" | "loaded" | "not-found" | "firestore-error";
 
@@ -22,7 +23,6 @@ export default function Page() {
   const router = useRouter();
   const [state, setState] = useState<States>("loading");
   const [file, setFile] = useState<SelfStorageFileDocument | null>(null);
-  const serverUrl = getServerUrl();
 
   const [downloadUrl, setDownloadUrl] = useState<string>("");
 
@@ -63,6 +63,20 @@ export default function Page() {
 
   return (
     <div className={styles.container}>
+      <DefaultSeo
+        title={file ? `Arquivo: ${file.filename}` : "Arquivo não encontrado"}
+        description={
+          file
+            ? `Arquivo armazenado no serviço de armazenamento do site do Guilherme.`
+            : "O arquivo que você está procurando não foi encontrado no serviço de armazenamento do site do Guilherme."
+        }
+        site_name="Site do Guilherme"
+        type="website"
+        canonical={process.env.NEXT_PUBLIC_DOMAIN + `/storage/${id}`}
+        keywords={["arquivo", "armazenamento", "guilherme benevides"]}
+        noFollow
+        noIndex
+      />
       <h1>Serviço de Armazenamento de Arquivos</h1>
       <p>Identificador do arquivo: {id}</p>
       {state === "loading" && <p>Aguarde estamos buscando as informações...</p>}

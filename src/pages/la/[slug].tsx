@@ -4,6 +4,7 @@ import { logEvent } from "firebase/analytics";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import styles from "./styles.module.scss";
+import { DefaultSeo } from "@/components/DefaultSeo";
 
 export default function LinkRedirect() {
   const router = useRouter();
@@ -21,6 +22,12 @@ export default function LinkRedirect() {
 
   return (
     <div className={styles.container}>
+      <DefaultSeo
+        title="Redirecionando..."
+        site_name="Site do Guilherme"
+        noFollow
+        noIndex
+      />
       <Loader />
       <h1>Voce irá para seu destino em breve...</h1>
     </div>

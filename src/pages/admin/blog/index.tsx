@@ -11,6 +11,7 @@ import {
 import { parseYYYYMMDDtoDDMMYYYY } from "@/utils/parseDateStringtoDateObj";
 import { useCallback, useMemo, useState } from "react";
 import { TbEdit, TbEye, TbEyeOff, TbEyeglass2, TbTrash } from "react-icons/tb";
+import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 
 export default function Page() {
   const [posts, setPosts] = useState<Post[]>();
@@ -103,6 +104,25 @@ export default function Page() {
       addButtonHideOnClicked
       title="Gerenciador de Posts do Blog"
       executeBeforeAuthenticated={loadPosts}
+      seoProps={{
+        site_name: "Site do Guilherme",
+        title: "Administração do Blog do Guilherme",
+        description:
+          "Gerencie os posts do blog do site do Guilherme. Crie, edite, exclua e altere a visibilidade dos posts do blog.",
+        keywords: [
+          "administração",
+          "blog",
+          "posts",
+          "gerenciamento",
+          "guilherme benevides",
+        ],
+        image: getOpenMediaImageForNextSeo(
+          "Administração do Blog do Guilherme",
+        ),
+        noFollow: true,
+        canonical: process.env.NEXT_PUBLIC_DOMAIN + "/admin/blog",
+        noIndex: true,
+      }}
     />
   );
 }

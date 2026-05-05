@@ -103,6 +103,10 @@ export default function PostPage(
         }}
         site_name="Blog do Guilherme"
         type="blog"
+        keywords={props.post.keywords?.map((k) => k.toLowerCase()) || []}
+        canonical={
+          process.env.NEXT_PUBLIC_DOMAIN + "/blog/post/" + props.post.id
+        }
       />
       <BlogHeader />
       <article className={styles.container}>

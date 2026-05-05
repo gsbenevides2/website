@@ -17,6 +17,8 @@ import React, {
   useRef,
 } from "react";
 import styles from "./styles.module.scss";
+import { DefaultSeo } from "@/components/DefaultSeo";
+import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 
 const loggedButtonOptions = {
   Armazenamento: "/admin/storage",
@@ -112,9 +114,27 @@ export default function Home() {
 
   return (
     <div className={styles.container} ref={containerRef}>
-      <Head>
-        <title>Guilherme Benevides</title>
-      </Head>
+      <DefaultSeo
+        title="Administração do Site do Guilherme"
+        description="Painel de administração do site do Guilherme. Gerencie os projetos, certificações, blog e links do site."
+        image={getOpenMediaImageForNextSeo(
+          "Administração do Site do Guilherme",
+        )}
+        site_name="Site do Guilherme"
+        type="website"
+        canonical={process.env.NEXT_PUBLIC_DOMAIN + "/admin"}
+        keywords={[
+          "administração",
+          "painel de controle",
+          "projetos",
+          "certificações",
+          "blog",
+          "links",
+          "guilherme benevides",
+        ]}
+        noFollow
+        noIndex
+      />
       <div className={styles.firstArea}>
         <h1 className={styles.title}>Olá Guilherme 👋</h1>
         <h2 className={styles.subtitle}>

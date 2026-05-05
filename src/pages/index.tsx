@@ -53,11 +53,17 @@ export default function Home(props: ComponentProps) {
         image={getOpenMediaImageForNextSeo("Site do Guilherme")}
         site_name="Site do Guilherme"
         type="website"
+        canonical={process.env.NEXT_PUBLIC_DOMAIN}
+        keywords={[
+          "guilherme",
+          "benevides",
+          "site pessoal",
+          "blog",
+          "certificados",
+        ]}
       />
       <div className={styles.firstArea}>
-        <h1 className={styles.title}>
-          {props.cms.title}
-        </h1>
+        <h1 className={styles.title}>{props.cms.title}</h1>
         <ButtonSSRLink
           href="/about"
           className={styles.button}

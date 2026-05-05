@@ -26,6 +26,9 @@ import { usePostSubmit, FormValues } from "@/hooks/blog/usePostSubmit";
 import { useAIThumbnail } from "@/hooks/blog/useAIThumbnail";
 import { AIModal } from "@/components/pages/admin/blog/AIModal";
 import { LoaderOverlay } from "@/components/pages/admin/blog/LoaderOverlay";
+import { Default } from "node-vibrant/lib/generator";
+import { DefaultSeo } from "@/components/DefaultSeo";
+import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 
 export default function Page() {
   const router = useRouter();
@@ -75,9 +78,29 @@ export default function Page() {
         className={classNames(styles.pageWrapper, { [styles.hide]: isLoading })}
       >
         <div className={styles.container}>
-          <Head>
-            <title>{postId ? "Editar" : "Adicionar"} Post</title>
-          </Head>
+          <DefaultSeo
+            title={`${postId ? "Editar" : "Adicionar"} Post - Administração do Site do Guilherme`}
+            description={`${
+              postId ? "Editar" : "Adicionar"
+            } um post no blog do site do Guilherme. Gerencie os conteúdos do blog de forma fácil e rápida.`}
+            site_name="Site do Guilherme"
+            type="website"
+            canonical={
+              process.env.NEXT_PUBLIC_DOMAIN + "/blog/post/" + (postId || "new")
+            }
+            keywords={[
+              "administração",
+              "painel de controle",
+              "blog",
+              "post",
+              "adicionar/editar",
+            ]}
+            image={getOpenMediaImageForNextSeo(
+              "Administração do Blog do Guilherme",
+            )}
+            noFollow
+            noIndex
+          />
           <h1>{postId ? "Editar" : "Adicionar"} Post</h1>
           <Form
             className={styles.form}

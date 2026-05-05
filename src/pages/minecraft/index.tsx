@@ -92,6 +92,8 @@ export default function MinecraftPage(props: ComponentProps) {
         image={getOpenMediaImageForNextSeo("Minecraft")}
         site_name="Site do Guilherme"
         type="website"
+        canonical={process.env.NEXT_PUBLIC_DOMAIN + "/minecraft"}
+        keywords={["minecraft", "servidor de minecraft", "guilherme benevides"]}
       />
       <div className={styles.modalCenter}>
         <Window transparent>

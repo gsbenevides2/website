@@ -108,6 +108,8 @@ export default function Page(
           image={getOpenMediaImageForNextSeo("Mural de Projetos")}
           site_name="Site do Guilherme"
           type="website"
+          canonical={process.env.NEXT_PUBLIC_DOMAIN + "/projects"}
+          keywords={["projetos", "guilherme benevides", "mural de projetos"]}
         />
         <div className={styles.header}>
           <h1>Mural de Projetos</h1>

@@ -141,6 +141,10 @@ export default function Page(
         }}
         site_name="Site do Guilherme"
         type="website"
+        canonical={
+          process.env.NEXT_PUBLIC_DOMAIN + "/certificate/" + certificate.id
+        }
+        keywords={certificate.keywords.map((k) => k.toLowerCase())}
       />
       <h2>{certificate.name}</h2>
       <h3>{certificate.institution}</h3>

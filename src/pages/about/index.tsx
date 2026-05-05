@@ -94,13 +94,15 @@ export default function About(
     },
     [router],
   );
-  const textDesktop = cms.textDesktop.replaceAll("{age}", age.toString())
+  const textDesktop = cms.textDesktop
+    .replaceAll("{age}", age.toString())
     .replaceAll("{semesters}", semesters.toString());
-  const textMobile = cms.textMobile.replaceAll("{age}", age.toString())
+  const textMobile = cms.textMobile
+    .replaceAll("{age}", age.toString())
     .replaceAll("{semesters}", semesters.toString());
 
   const filterOptions = options.filter((option) =>
-    (cms.enabledLinks as EnabledLinkName[]).includes(option.name)
+    (cms.enabledLinks as EnabledLinkName[]).includes(option.name),
   );
 
   return (
@@ -111,6 +113,8 @@ export default function About(
         image={getOpenMediaImageForNextSeo("Sobre Mim")}
         site_name="Site do Guilherme"
         type="website"
+        canonical={process.env.NEXT_PUBLIC_DOMAIN + "/about"}
+        keywords={["guilherme benevides", "sobre mim"]}
       />
       <div className={styles.firstArea}>
         <div>
@@ -125,9 +129,7 @@ export default function About(
           ))}
         </div>
 
-        <p className={styles.textMobile}>
-          {textMobile}
-        </p>
+        <p className={styles.textMobile}>{textMobile}</p>
       </div>
       <nav className={styles.secondArea}>
         <ul>

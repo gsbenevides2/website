@@ -310,6 +310,12 @@ export default function Page(
             image={getOpenMediaImageForNextSeo("Meus Certificados")}
             site_name="Site do Guilherme"
             type="website"
+            canonical={process.env.NEXT_PUBLIC_DOMAIN + "/certificates"}
+            keywords={[
+              "guilherme benevides",
+              "certificados",
+              "mural de certificações",
+            ]}
           />
           <div className={styles.header}>
             <h1>Mural de Certificações</h1>

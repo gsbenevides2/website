@@ -13,6 +13,8 @@ import { IconType } from "react-icons";
 import { Form, Input, useFormContext } from "../Form";
 import CustomInput from "../Input";
 import styles from "./styles.module.scss";
+import { Default } from "node-vibrant/lib/generator";
+import { DefaultSeo, DefaultSeoProps } from "../DefaultSeo";
 export interface ListItem {
   id: string;
   title: string;
@@ -29,6 +31,7 @@ export interface ListButton {
 }
 
 interface Props {
+  seoProps?: DefaultSeoProps;
   title: string;
   addButtonText: string;
   addButtonClick: () => void | string;
@@ -132,9 +135,7 @@ export default function ListAdminPage(props: Props) {
   return (
     <div className={styles.container} ref={containerRef}>
       <div className={styles.containerInside}>
-        <Head>
-          <title>{title}</title>
-        </Head>
+        {props.seoProps && <DefaultSeo {...props.seoProps} />}
         <h1>{title}</h1>
         <Button onClick={handleAddClick}>{addButtonText}</Button>
         <Form

@@ -101,6 +101,8 @@ export default function Page(
         }}
         site_name="Site do Guilherme"
         type="website"
+        canonical={process.env.NEXT_PUBLIC_DOMAIN + `/project/${project.id}`}
+        keywords={project.keywords}
       />
       <h2>{project.name}</h2>
       <div className={styles.area1}>

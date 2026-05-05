@@ -1,4 +1,20 @@
-import { CollectionReference, DocumentData, Firestore, Timestamp, collection, deleteDoc, doc, getDoc, getDocs, limit, orderBy, query, setDoc, updateDoc, where } from "firebase/firestore";
+import {
+  CollectionReference,
+  DocumentData,
+  Firestore,
+  Timestamp,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  setDoc,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Firebase from "./config";
 
@@ -41,6 +57,7 @@ export interface Post extends DocumentData {
   thumbnail: Thumbnail;
   views: string[];
   visible: boolean;
+  keywords?: string[];
 }
 
 const getPostsCollection = (db: Firestore) => {
@@ -60,7 +77,9 @@ export async function getAllPosts() {
   const db = Firebase.getFirestore();
   const postsCollection = getPostsCollection(db);
 
-  const postsDocs = await getDocs(query(postsCollection, orderBy("date", "desc")));
+  const postsDocs = await getDocs(
+    query(postsCollection, orderBy("date", "desc")),
+  );
   const posts: Post[] = postsDocs.docs.map((doc) => {
     const docData = doc.data();
     return transformPostInDbToPost(docData);
@@ -72,7 +91,13 @@ export async function getVisiblePosts() {
   const db = Firebase.getFirestore();
   const postsCollection = getPostsCollection(db);
 
-  const postsDocs = await getDocs(query(postsCollection, orderBy("date", "desc"), where("visible", "==", true)));
+  const postsDocs = await getDocs(
+    query(
+      postsCollection,
+      orderBy("date", "desc"),
+      where("visible", "==", true),
+    ),
+  );
   const posts: Post[] = postsDocs.docs.map((doc) => {
     const docData = doc.data();
     return transformPostInDbToPost(docData);
@@ -83,7 +108,14 @@ export async function getVisiblePosts() {
 export async function getFirstTenVisblePostsIds() {
   const db = Firebase.getFirestore();
   const postsCollection = getPostsCollection(db);
-  const postsDocs = await getDocs(query(postsCollection, orderBy("date", "desc"), limit(10), where("visible", "==", true)));
+  const postsDocs = await getDocs(
+    query(
+      postsCollection,
+      orderBy("date", "desc"),
+      limit(10),
+      where("visible", "==", true),
+    ),
+  );
   const postsIds: string[] = postsDocs.docs.map((doc) => {
     return doc.id;
   });
@@ -146,10 +178,16 @@ interface PostInDbToCreate {
   thumbnail: ThumbnailToCreate;
 }
 
-async function saveThumbnailInStorage(thumbnail: ThumbnailToCreate, id: string): Promise<Thumbnail> {
+async function saveThumbnailInStorage(
+  thumbnail: ThumbnailToCreate,
+  id: string,
+): Promise<Thumbnail> {
   const storage = Firebase.getStorage();
   const storageRef = ref(storage, `/posts/${id}/thumbnail`);
-  await uploadBytes(ref(storageRef, "original.png"), thumbnail.originalPng), await uploadBytes(ref(storageRef, "original.webp"), thumbnail.originalWebp), await uploadBytes(ref(storageRef, "metaTag.png"), thumbnail.metaTag), await uploadBytes(ref(storageRef, "list.webp"), thumbnail.list);
+  (await uploadBytes(ref(storageRef, "original.png"), thumbnail.originalPng),
+    await uploadBytes(ref(storageRef, "original.webp"), thumbnail.originalWebp),
+    await uploadBytes(ref(storageRef, "metaTag.png"), thumbnail.metaTag),
+    await uploadBytes(ref(storageRef, "list.webp"), thumbnail.list));
   return {
     alt: thumbnail.alt,
     list: await getDownloadURL(ref(storageRef, "list.webp")),
@@ -160,7 +198,10 @@ async function saveThumbnailInStorage(thumbnail: ThumbnailToCreate, id: string):
   };
 }
 
-async function saveAssetsInStorage(assets: AssetToCreate[], id: string): Promise<Assent[]> {
+async function saveAssetsInStorage(
+  assets: AssetToCreate[],
+  id: string,
+): Promise<Assent[]> {
   const storage = Firebase.getStorage();
   const assetsRef = ref(storage, `/posts/${id}/assets`);
   const assetsToSave: Assent[] = [];
@@ -183,7 +224,9 @@ function generatePostId(postName: string): string {
   return postName.toLowerCase().replace(/\s/g, "-");
 }
 
-export async function createOrUpdatePost(post: PostInDbToCreate): Promise<string> {
+export async function createOrUpdatePost(
+  post: PostInDbToCreate,
+): Promise<string> {
   const db = Firebase.getFirestore();
   const postsCollection = getPostsCollection(db);
   const postId = post.id || generatePostId(post.name);
