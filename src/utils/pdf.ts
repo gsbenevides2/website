@@ -11,12 +11,14 @@ export async function pdf2Img(pdf: File): Promise<string> {
   if (!canvasContext) throw new Error("Canvas context not found");
   canvas.height = viewport.height;
   canvas.width = viewport.width;
-  await page.render({ canvasContext, viewport }).promise;
+  await page.render({ canvasContext, viewport, canvas }).promise;
   const img = canvas.toDataURL("image/png");
   return img;
 }
 
-export async function pdfSize(pdf: File): Promise<{ width: number; height: number }> {
+export async function pdfSize(
+  pdf: File,
+): Promise<{ width: number; height: number }> {
   pdfjs.GlobalWorkerOptions.workerSrc = "/pdfjs/pdf.worker.min.js";
   const pdfUrl = URL.createObjectURL(pdf);
   const pdfDoc = await pdfjs.getDocument(pdfUrl).promise;
