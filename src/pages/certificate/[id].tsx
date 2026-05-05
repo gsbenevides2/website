@@ -12,6 +12,7 @@ import { useCallback, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import useLoadColor from "@/hooks/useLoadColor";
 import styles from "./styles.module.scss";
+import MyError from "@/utils/MyError";
 
 interface Certification {
   id: string;
@@ -61,21 +62,32 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
 export const getStaticProps: GetStaticProps<Props, Params> = async (
   context,
 ) => {
-  const { id } = context.params as { id: string };
-  const certificate = await getCertification(id);
-  if (certificate == null)
+  try {
+    const { id } = context.params as { id: string };
+    const certificate = await getCertification(id);
+    if (certificate == null)
+      return {
+        notFound: true,
+      };
     return {
-      notFound: true,
-    };
-  return {
-    props: {
-      certificate: {
-        ...certificate,
-        date: parseDateObjcToDDMMYYYY(certificate.date),
+      props: {
+        certificate: {
+          ...certificate,
+          date: parseDateObjcToDDMMYYYY(certificate.date),
+        },
       },
-    },
-    revalidate: 60 * 60, // 1 hour
-  };
+      revalidate: 60 * 60, // 1 hour
+    };
+  } catch (error) {
+    if (error instanceof MyError) {
+      if (error.code === "certificate-not-found") {
+        return {
+          notFound: true,
+        };
+      }
+    }
+    throw error;
+  }
 };
 
 export default function Page(

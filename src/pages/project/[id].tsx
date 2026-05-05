@@ -8,6 +8,7 @@ import { ParsedUrlQuery } from "querystring";
 import { useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import styles from "./styles.module.scss";
+import MyError from "@/utils/MyError";
 
 interface Project {
   id: string;
@@ -43,17 +44,28 @@ export const getStaticProps: GetStaticProps<Props, Params> = async (
   context,
 ) => {
   const { id } = context.params!;
-  const project = await getProject(id);
-  if (project == null)
+  try {
+    const project = await getProject(id);
+    if (project == null)
+      return {
+        notFound: true,
+      };
     return {
-      notFound: true,
+      props: {
+        project,
+      },
+      revalidate: 60 * 60, // 1 hour
     };
-  return {
-    props: {
-      project,
-    },
-    revalidate: 60 * 60, // 1 hour
-  };
+  } catch (error) {
+    if (error instanceof MyError) {
+      if (error.code === "project-not-found") {
+        return {
+          notFound: true,
+        };
+      }
+    }
+    throw error;
+  }
 };
 
 export default function Page(

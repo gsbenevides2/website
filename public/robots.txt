@@ -1,0 +1,38 @@
+User-agent: *
+
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api
+Disallow: /api/
+Disallow: /la
+Disallow: /la/
+Disallow: /sad
+Disallow: /sad/
+Disallow: /storage
+Disallow: /storage/
+Disallow: /404
+Disallow: /500
+
+# --- Tracking / click ID params (duplicate content) ---
+Disallow: /*?utm_source=
+Disallow: /*?utm_medium=
+Disallow: /*?utm_campaign=
+Disallow: /*?utm_content=
+Disallow: /*?utm_term=
+Disallow: /*?utmi_cp=
+Disallow: /*?utmi_p=
+Disallow: /*?utmi_pc=
+Disallow: /*?gclid=
+Disallow: /*?fbclid=
+Disallow: /*?srsltid=
+Disallow: /*?gbraid=
+Disallow: /*?wbraid=
+Disallow: /*?msclkid=
+Disallow: /*?li_fat_id=
+
+# --- Cloudflare infra ---
+Disallow: /cdn-cgi/
+
+Allow: /
+
+Sitemap: https://gui.dev.br/sitemap.xml
