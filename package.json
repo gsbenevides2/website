@@ -42,7 +42,7 @@
     "react-dom": "19.2.5",
     "react-icons": "^4.9.0",
     "react-markdown": "^10.1.0",
-    "react-pdf": "^7.1.2",
+    "react-pdf": "^10.4.1",
     "react-qr-code": "^2.0.12",
     "react-syntax-highlighter": "^15.5.0",
     "sharp": "^0.32.1",

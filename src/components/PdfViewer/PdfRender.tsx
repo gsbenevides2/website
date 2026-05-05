@@ -10,7 +10,11 @@ interface Props {
 }
 
 export default function PdfRender(props: Props) {
-  pdfjs.GlobalWorkerOptions.workerSrc = "/noprecache/pdfjs/pdf.worker.min.js";
+  pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+    "pdfjs-dist/build/pdf.worker.min.mjs",
+    import.meta.url,
+  ).toString();
+
   return (
     <Document
       file={props.file}
