@@ -11,7 +11,7 @@ export async function pdf2Img(pdf: File): Promise<string> {
   if (!canvasContext) throw new Error("Canvas context not found");
   canvas.height = viewport.height;
   canvas.width = viewport.width;
-  await page.render({ canvasContext, viewport, canvas }).promise;
+  await page.render({ canvasContext, viewport }).promise;
   const img = canvas.toDataURL("image/png");
   return img;
 }
