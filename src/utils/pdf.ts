@@ -1,7 +1,7 @@
 import { pdfjs } from "react-pdf";
 
 export async function pdf2Img(pdf: File): Promise<string> {
-  pdfjs.GlobalWorkerOptions.workerSrc = "/pdfjs/pdf.worker.min.js";
+  pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
   const pdfUrl = URL.createObjectURL(pdf);
   const pdfDoc = await pdfjs.getDocument(pdfUrl).promise;
   const page = await pdfDoc.getPage(1);
@@ -19,7 +19,7 @@ export async function pdf2Img(pdf: File): Promise<string> {
 export async function pdfSize(
   pdf: File,
 ): Promise<{ width: number; height: number }> {
-  pdfjs.GlobalWorkerOptions.workerSrc = "/pdfjs/pdf.worker.min.js";
+  pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
   const pdfUrl = URL.createObjectURL(pdf);
   const pdfDoc = await pdfjs.getDocument(pdfUrl).promise;
   const page = await pdfDoc.getPage(1);
