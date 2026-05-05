@@ -1,4 +1,9 @@
-import { CollectionReference, DocumentData, Firestore, Timestamp } from "firebase-admin/firestore";
+import {
+  CollectionReference,
+  DocumentData,
+  Firestore,
+  Timestamp,
+} from "firebase-admin/firestore";
 import Firebase from "./config";
 
 interface Assent {
@@ -42,7 +47,6 @@ export interface Post extends DocumentData {
   visible: boolean;
 }
 
-
 export function transformPostInDbToPost(postInDb: PostInDb): Post {
   const data = postInDb.date.toDate();
 
@@ -53,22 +57,22 @@ export function transformPostInDbToPost(postInDb: PostInDb): Post {
 }
 
 const getPostsCollection = (db: Firestore) => {
-    return db.collection("/posts") as CollectionReference<PostInDb>;
-  };
+  return db.collection("/posts") as CollectionReference<PostInDb>;
+};
 
 export async function getPost(id: string) {
-    const db = Firebase.getFirestore();
-    const postsCollection = getPostsCollection(db);
-    const postDocumento = postsCollection.doc(id);
-    try {
-      const postDoc = await postDocumento.get();
-  
-      const docData = postDoc.data();
-      if (!postDoc.exists || docData === undefined) {
-        return null;
-      }
-      return transformPostInDbToPost(docData);
-    } catch (e) {
+  const db = Firebase.getFirestore();
+  const postsCollection = getPostsCollection(db);
+  const postDocumento = postsCollection.doc(id);
+  try {
+    const postDoc = await postDocumento.get();
+
+    const docData = postDoc.data();
+    if (!postDoc.exists || docData === undefined) {
       return null;
     }
+    return transformPostInDbToPost(docData);
+  } catch (e) {
+    return null;
   }
+}
