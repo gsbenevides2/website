@@ -25,6 +25,8 @@ import {
   FormValues,
 } from "@/hooks/projects/useProjectSubmit";
 import { LoaderOverlay } from "@/components/pages/admin/blog/LoaderOverlay";
+import { DefaultSeo } from "@/components/DefaultSeo";
+import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 
 export default function Page() {
   const router = useRouter();
@@ -70,9 +72,28 @@ export default function Page() {
         className={classNames(styles.pageWrapper, { [styles.hide]: isLoading })}
       >
         <div className={styles.container}>
-          <Head>
-            <title>{projectId ? "Editar" : "Adicionar"} Projeto</title>
-          </Head>
+          <DefaultSeo
+            title={`${projectId ? "Editar" : "Adicionar"} Projeto - Administração do Site do Guilherme`}
+            description={`${
+              projectId ? "Editar" : "Adicionar"
+            } um projeto no portfólio do site do Guilherme. Gerencie os projetos de forma fácil e rápida.`}
+            site_name="Site do Guilherme"
+            type="website"
+            canonical={
+              process.env.NEXT_PUBLIC_DOMAIN + "/admin/projects/editor/" + (projectId || "new")
+            }
+            keywords={[
+              "administração",
+              "painel de controle",
+              "projetos",
+              "adicionar/editar",
+            ]}
+            image={getOpenMediaImageForNextSeo(
+              "Administração dos Projetos do Guilherme",
+            )}
+            noFollow
+            noIndex
+          />
           <h1>{projectId ? "Editar" : "Adicionar"} Projeto</h1>
           <Form
             className={styles.form}

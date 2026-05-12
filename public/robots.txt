@@ -33,6 +33,14 @@ Disallow: /*?li_fat_id=
 # --- Cloudflare infra ---
 Disallow: /cdn-cgi/
 
+# NextJS internal files
+Disallow: /*.json$
+Disallow: /*_buildManifest.js$
+Disallow: /*_middlewareManifest.js$
+Disallow: /*_ssgManifest.js$
+Disallow: /*.js$
+Disallow: /_next/
+
 Allow: /
 
 Sitemap: https://gui.dev.br/sitemap.xml

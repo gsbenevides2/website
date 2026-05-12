@@ -4,6 +4,7 @@ import { deleteLink, listLinks } from "@/services/firebase/client/links";
 import { copyTextToClipboard } from "@/utils/copyTextToClipboard";
 import { useCallback, useMemo, useState } from "react";
 import { TbCopy, TbGraph, TbTrash } from "react-icons/tb";
+import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 
 interface LinkToList {
   id: string;
@@ -70,6 +71,25 @@ export default function Page() {
       ]}
       title="Gerenciador de Links Curtos"
       executeBeforeAuthenticated={loadLinks}
+      seoProps={{
+        site_name: "Site do Guilherme",
+        title: "Administração dos Links Curtos do Guilherme",
+        description:
+          "Gerencie os links curtos do site do Guilherme. Crie, exclua, copie e adicione analytics aos links.",
+        keywords: [
+          "administração",
+          "links",
+          "links curtos",
+          "gerenciamento",
+          "guilherme benevides",
+        ],
+        image: getOpenMediaImageForNextSeo(
+          "Administração dos Links Curtos do Guilherme",
+        ),
+        noFollow: true,
+        canonical: process.env.NEXT_PUBLIC_DOMAIN + "/admin/links",
+        noIndex: true,
+      }}
     />
   );
 }

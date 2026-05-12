@@ -5,6 +5,7 @@ import { uploadFileViaJs } from "@/utils/uploadFileViaJs";
 import { useCallback, useMemo, useState } from "react";
 import { TbEye, TbTrash, TbUpload } from "react-icons/tb";
 import { AddFileModal } from "../../../components/pages/admin/storage/AddFileModal/AddFileModal";
+import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 
 import dynamic from "next/dynamic";
 
@@ -88,6 +89,26 @@ export default function Page() {
             onClick: removeFile,
           },
         ]}
+        seoProps={{
+          site_name: "Site do Guilherme",
+          title: "Administração do Armazenamento do Guilherme",
+          description:
+            "Gerencie os arquivos armazenados na nuvem do site do Guilherme. Faça upload, modifique visibilidade, reenvie e exclua arquivos.",
+          keywords: [
+            "administração",
+            "armazenamento",
+            "arquivos",
+            "nuvem",
+            "gerenciamento",
+            "guilherme benevides",
+          ],
+          image: getOpenMediaImageForNextSeo(
+            "Administração do Armazenamento do Guilherme",
+          ),
+          noFollow: true,
+          canonical: process.env.NEXT_PUBLIC_DOMAIN + "/admin/storage",
+          noIndex: true,
+        }}
       />
     </>
   );

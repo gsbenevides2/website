@@ -4,6 +4,7 @@ import {
   deleteCertification,
   listCertifications,
 } from "@/services/firebase/client/certificates";
+import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TbEdit, TbTrash } from "react-icons/tb";
@@ -74,6 +75,25 @@ export default function Page() {
       addButtonHideOnClicked
       title="Gerenciador de Certificações"
       executeBeforeAuthenticated={loadCerts}
+      seoProps={{
+        site_name: "Site do Guilherme",
+        title: "Administração das Certificações do Guilherme",
+        description:
+          "Gerencie os certificados do site do Guilherme. Crie, edite, exclua e altere a visibilidade dos certificados.",
+        keywords: [
+          "administração",
+          "certificações",
+          "certificados",
+          "gerenciamento",
+          "guilherme benevides",
+        ],
+        image: getOpenMediaImageForNextSeo(
+          "Administração das Certificações do Guilherme",
+        ),
+        noFollow: true,
+        canonical: process.env.NEXT_PUBLIC_DOMAIN + "/admin/certifications",
+        noIndex: true,
+      }}
     />
   );
 }

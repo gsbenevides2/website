@@ -13,6 +13,8 @@ import {
   useAdminAuthentication,
 } from "@/services/firebase/client/auth";
 import classNames from "classnames";
+import { DefaultSeo } from "@/components/DefaultSeo";
+import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 
 interface FormValues {
   id: string;
@@ -75,9 +77,26 @@ export default function Page() {
     <>
       <div className={classNames(styles.hidder, styles.hide)} ref={hidder}>
         <div className={styles.container}>
-          <Head>
-            <title>Adicionar Link</title>
-          </Head>
+          <DefaultSeo
+            title="Adicionar Link - Administração do Site do Guilherme"
+            description="Adicionar um link curto no site do Guilherme. Gerencie os links de forma fácil e rápida."
+            site_name="Site do Guilherme"
+            type="website"
+            canonical={
+              process.env.NEXT_PUBLIC_DOMAIN + "/admin/links/editor/new"
+            }
+            keywords={[
+              "administração",
+              "painel de controle",
+              "links",
+              "adicionar",
+            ]}
+            image={getOpenMediaImageForNextSeo(
+              "Administração dos Links do Guilherme",
+            )}
+            noFollow
+            noIndex
+          />
           <h1>Adicionar Link</h1>
           <Form className={styles.form} submit={formSubmit}>
             <Input

@@ -6,6 +6,7 @@ import {
 } from "@/services/firebase/client/projects";
 import { revalidateNextPages } from "@/services/api/revalidateNextPages";
 import ListAdminPage from "@/components/ListAdminPage";
+import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 
 interface ProjectToList {
   id: string;
@@ -68,6 +69,25 @@ export default function Page() {
           onClick: openProject,
         },
       ]}
+      seoProps={{
+        site_name: "Site do Guilherme",
+        title: "Administração dos Projetos do Guilherme",
+        description:
+          "Gerencie os projetos do site do Guilherme. Crie, edite, exclua e visualize os projetos do portfólio.",
+        keywords: [
+          "administração",
+          "projetos",
+          "portfólio",
+          "gerenciamento",
+          "guilherme benevides",
+        ],
+        image: getOpenMediaImageForNextSeo(
+          "Administração dos Projetos do Guilherme",
+        ),
+        noFollow: true,
+        canonical: process.env.NEXT_PUBLIC_DOMAIN + "/admin/projects",
+        noIndex: true,
+      }}
     ></ListAdminPage>
   );
 }

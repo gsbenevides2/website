@@ -25,6 +25,8 @@ import {
   FormValues,
 } from "@/hooks/certifications/useCertificationSubmit";
 import { LoaderOverlay } from "@/components/pages/admin/blog/LoaderOverlay";
+import { DefaultSeo } from "@/components/DefaultSeo";
+import getOpenMediaImageForNextSeo from "@/utils/getOpenMediaImageForNextSeo";
 
 export default function Page() {
   const router = useRouter();
@@ -68,9 +70,31 @@ export default function Page() {
         className={classNames(styles.pageWrapper, { [styles.hide]: isLoading })}
       >
         <div className={styles.container}>
-          <Head>
-            <title>{certId ? "Editar" : "Adicionar"} Certificação</title>
-          </Head>
+          <DefaultSeo
+            title={`${certId ? "Editar" : "Adicionar"} Certificação - Administração do Site do Guilherme`}
+            description={`${
+              certId ? "Editar" : "Adicionar"
+            } uma certificação no site do Guilherme. Gerencie as certificações de forma fácil e rápida.`}
+            site_name="Site do Guilherme"
+            type="website"
+            canonical={
+              process.env.NEXT_PUBLIC_DOMAIN +
+              "/certifications/editor/" +
+              (certId || "new")
+            }
+            keywords={[
+              "administração",
+              "painel de controle",
+              "certificações",
+              "certificado",
+              "adicionar/editar",
+            ]}
+            image={getOpenMediaImageForNextSeo(
+              "Administração das Certificações do Guilherme",
+            )}
+            noFollow
+            noIndex
+          />
           <h1>{certId ? "Editar" : "Adicionar"} Certificado</h1>
           <Form
             className={styles.form}
