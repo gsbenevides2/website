@@ -24,7 +24,9 @@ import classNames from "classnames";
 import { usePostLoader } from "@/hooks/blog/usePostLoader";
 import { usePostSubmit, FormValues } from "@/hooks/blog/usePostSubmit";
 import { useAIThumbnail } from "@/hooks/blog/useAIThumbnail";
+import { useAIKeywords } from "@/hooks/blog/useAIKeywords";
 import { AIModal } from "@/components/pages/admin/blog/AIModal";
+import { AIKeywordsModal } from "@/components/pages/admin/blog/AIKeywordsModal";
 import { LoaderOverlay } from "@/components/pages/admin/blog/LoaderOverlay";
 import { Default } from "node-vibrant/lib/generator";
 import { DefaultSeo } from "@/components/DefaultSeo";
@@ -48,6 +50,7 @@ export default function Page() {
   } = usePostLoader(postId, formContext);
   const { handleSubmit } = usePostSubmit(postId, setIsLoading);
   const aiThumbnail = useAIThumbnail(formContext);
+  const aiKeywords = useAIKeywords(formContext);
 
   const formSubmit: FormSubmitEvent<FormValues> = handleSubmit;
 
@@ -124,6 +127,29 @@ export default function Page() {
               name="description"
               customComponent={({ ref, ...props }) => (
                 <TextareaCustom {...props} label="Descrição:" />
+              )}
+            />
+            <Textarea
+              placeholder="Digite keywords separadas por vírgula (ex: react, typescript, next.js)"
+              className={styles.textarea}
+              id="keywords"
+              name="keywords"
+              customComponent={({ ref, ...props }) => (
+                <div>
+                  <TextareaCustom
+                    {...props}
+                    label="Keywords (SEO):"
+                    rows={2}
+                    maxLength={200}
+                  />
+                  <button
+                    type="button"
+                    onClick={aiKeywords.openModal}
+                    className={styles.aiButton}
+                  >
+                    ✨ Gerar Keywords com IA
+                  </button>
+                </div>
               )}
             />
             <Input
@@ -209,6 +235,18 @@ export default function Page() {
         onDescriptionChange={aiThumbnail.setDescription}
         onGenerate={aiThumbnail.handleGenerate}
         onClose={aiThumbnail.closeModal}
+      />
+
+      <AIKeywordsModal
+        open={aiKeywords.showModal}
+        isGenerating={aiKeywords.isGenerating}
+        keywords={aiKeywords.generatedKeywords}
+        error={aiKeywords.error}
+        onGenerate={aiKeywords.handleGenerate}
+        onApply={aiKeywords.applyKeywords}
+        onRemove={aiKeywords.removeKeyword}
+        onAdd={aiKeywords.addKeyword}
+        onClose={aiKeywords.closeModal}
       />
     </>
   );

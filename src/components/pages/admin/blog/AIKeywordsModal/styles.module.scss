@@ -1,0 +1,192 @@
+/* AI Keywords Modal Styles */
+.aiModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 1rem;
+
+  .aiModalContent {
+    background: linear-gradient(270deg, #4c3e4a 26.56%, #575469 100%);
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 700px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+
+    h2 {
+      margin: 0 0 1rem 0;
+      color: #fff;
+      font-size: 1.5rem;
+    }
+
+    h3 {
+      margin: 0 0 0.75rem 0;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .aiDescription {
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+      font-size: 0.95rem;
+    }
+
+    .aiEmptyState {
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+
+      p {
+        color: rgba(255, 255, 255, 0.7);
+        margin: 0;
+      }
+    }
+
+    .aiErrorMessage {
+      background-color: #fee;
+      color: #c33;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border: 1px solid #fcc;
+
+      strong {
+        display: block;
+        margin-bottom: 0.25rem;
+      }
+    }
+
+    .aiKeywordsContainer {
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+
+      .aiKeywordsList {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+
+        .aiKeywordChip {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          background-color: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 20px;
+          padding: 0.4rem 0.75rem;
+          font-size: 0.9rem;
+          color: #fff;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+          }
+
+          span {
+            user-select: none;
+          }
+
+          .aiRemoveButton {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.5rem;
+            line-height: 1;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+
+            &:hover {
+              background-color: rgba(255, 255, 255, 0.1);
+              color: #fff;
+            }
+
+            &:active {
+              transform: scale(0.9);
+            }
+          }
+        }
+      }
+    }
+
+    .aiAddKeyword {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-end;
+      margin-bottom: 1.5rem;
+
+      > div {
+        flex: 1;
+      }
+
+      button {
+        flex-shrink: 0;
+        margin-bottom: 0.5rem;
+      }
+    }
+
+    .aiModalActions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+
+      button {
+        min-width: 120px;
+      }
+    }
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .aiModalOverlay {
+    .aiModalContent {
+      padding: 1.5rem;
+
+      h2 {
+        font-size: 1.25rem;
+      }
+
+      .aiModalActions {
+        flex-direction: column;
+
+        button {
+          width: 100%;
+        }
+      }
+
+      .aiAddKeyword {
+        flex-direction: column;
+        align-items: stretch;
+
+        button {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

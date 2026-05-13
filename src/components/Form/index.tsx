@@ -24,11 +24,18 @@ export function Form<T>(props: FormProps<T>) {
   }, []);
 
   const addStateInput = useCallback(
-    (inputName: string, retriveStateValue: () => any, changeStateValue: (v: any) => void) => {
+    (
+      inputName: string,
+      retriveStateValue: () => any,
+      changeStateValue: (v: any) => void,
+    ) => {
       setInputs((inputs) => {
         const hasInput = inputs.findIndex((input) => input.name === inputName);
         if (hasInput !== -1) return inputs;
-        const oldElements = [...inputs.slice(0, hasInput), ...inputs.slice(hasInput + 1)];
+        const oldElements = [
+          ...inputs.slice(0, hasInput),
+          ...inputs.slice(hasInput + 1),
+        ];
         oldElements.push({
           name: inputName,
           retriveStateValue,
@@ -38,10 +45,13 @@ export function Form<T>(props: FormProps<T>) {
       });
     },
 
-    []
+    [],
   );
 
-  const value = React.useMemo(() => ({ inputs, addSimpleInput, addStateInput, formNode }), [inputs, addSimpleInput, addStateInput]);
+  const value = React.useMemo(
+    () => ({ inputs, addSimpleInput, addStateInput, formNode }),
+    [inputs, addSimpleInput, addStateInput],
+  );
 
   React.useEffect(() => {
     if (props.contextLoader) props.contextLoader(value);
@@ -50,7 +60,9 @@ export function Form<T>(props: FormProps<T>) {
   const handleSubmit: FormEventHandler<HTMLFormElement> = useCallback(
     (event) => {
       event.preventDefault();
-      const notStateInputsNames = inputs.filter((input) => !input.retriveStateValue).map((input) => input.name);
+      const notStateInputsNames = inputs
+        .filter((input) => !input.retriveStateValue)
+        .map((input) => input.name);
       const stateInputs = inputs.filter((input) => input.retriveStateValue);
 
       const values = {
@@ -66,7 +78,7 @@ export function Form<T>(props: FormProps<T>) {
 
       props.submit(values);
     },
-    [inputs, props]
+    [inputs, props],
   );
 
   return (
@@ -85,24 +97,29 @@ export const StatelessInput = StatelessInputImported;
 export const useFormContext = () => {
   const contextRef = useRef<FormContextData>(null);
 
-  const changeInputValue = useCallback((name: string, value: string | Array<File>) => {
-    const context = contextRef.current;
-    if (!context) return;
+  const changeInputValue = useCallback(
+    (name: string, value: string | Array<File>) => {
+      const context = contextRef.current;
+      if (!context) return;
 
-    if (!context.formNode?.current) return;
-    const findedInput = context.inputs.find((input) => input.name === name);
+      if (!context.formNode?.current) return;
+      const findedInput = context.inputs.find((input) => input.name === name);
 
-    if (!findedInput) return;
+      if (!findedInput) return;
 
-    if (findedInput.changeStateValue) {
-      findedInput.changeStateValue(value);
-    } else {
-      const input = context.formNode.current.querySelector(`[name="${name}"]`);
-      if (!input) return;
+      if (findedInput.changeStateValue) {
+        findedInput.changeStateValue(value);
+      } else {
+        const input = context.formNode.current.querySelector(
+          `[name="${name}"]`,
+        );
+        if (!input) return;
 
-      (input as HTMLInputElement).value = value as string;
-    }
-  }, []);
+        (input as HTMLInputElement).value = value as string;
+      }
+    },
+    [],
+  );
 
   const changeMultipleInputValues = useCallback(
     (values: any) => {
@@ -111,11 +128,36 @@ export const useFormContext = () => {
         changeInputValue(key, values[key]);
       });
     },
-    [changeInputValue]
+    [changeInputValue],
   );
 
   const contextLoader = useCallback((contextReceived: FormContextData) => {
     contextRef.current = contextReceived;
   }, []);
-  return { changeInputValue, changeMultipleInputValues, contextLoader };
+
+  const getValue = useCallback((name: string) => {
+    const context = contextRef.current;
+    if (!context) return;
+
+    if (!context.formNode?.current) return;
+    console.log(context.inputs);
+    const findedInput = context.inputs.find((input) => input.name === name);
+
+    if (!findedInput) return;
+
+    if (!findedInput.retriveStateValue) {
+      const input = context.formNode.current.querySelector(`[name="${name}"]`);
+      console.log("input", input);
+      if (!input) return;
+      return (input as HTMLInputElement).value;
+    }
+
+    return findedInput.retriveStateValue?.();
+  }, []);
+  return {
+    changeInputValue,
+    changeMultipleInputValues,
+    contextLoader,
+    getValue,
+  };
 };

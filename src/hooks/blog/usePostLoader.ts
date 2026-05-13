@@ -48,6 +48,9 @@ export function usePostLoader(
         });
       }
       setPreviewAssets(assets);
+      // Convert keywords array to comma-separated string
+      const keywordsString = post.keywords ? post.keywords.join(", ") : "";
+
       formContext.changeMultipleInputValues({
         name: post.name,
         description: post.description,
@@ -56,6 +59,7 @@ export function usePostLoader(
         altThumbnail: post.thumbnail.alt,
         assets: assets,
         image: [thumbnail],
+        keywords: keywordsString,
       });
     } catch (e) {
       if (e instanceof MyError) {

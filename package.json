@@ -47,7 +47,8 @@
     "react-syntax-highlighter": "^15.5.0",
     "sharp": "^0.32.1",
     "typescript": "5.1.3",
-    "ytdl-core": "^4.11.5"
+    "ytdl-core": "^4.11.5",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/cookies": "^0.7.7",

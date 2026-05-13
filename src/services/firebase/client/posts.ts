@@ -176,6 +176,7 @@ interface PostInDbToCreate {
   id?: string;
   name: string;
   thumbnail: ThumbnailToCreate;
+  keywords?: string[];
 }
 
 async function saveThumbnailInStorage(

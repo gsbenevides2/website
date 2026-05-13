@@ -16,6 +16,7 @@ export interface FormValues {
   date: Date;
   description: string;
   image: File[];
+  keywords: string;
   name: string;
 }
 
@@ -35,6 +36,7 @@ export function usePostSubmit(
         date,
         description,
         image: thumbnail,
+        keywords,
         name,
       } = formData;
 
@@ -44,6 +46,12 @@ export function usePostSubmit(
 
         const generatedThumbnails = await generateBlogThumbnails(thumbnail[0]!);
         const generatedAssets = await generateAssets(assets);
+
+        // Parse keywords from comma-separated string to array
+        const keywordsArray = keywords
+          .split(",")
+          .map((k) => k.trim().toLowerCase())
+          .filter((k) => k.length > 0);
 
         await createOrUpdatePost({
           id: postId,
@@ -56,6 +64,7 @@ export function usePostSubmit(
             alt: altThumbnail,
           },
           assets: generatedAssets,
+          keywords: keywordsArray.length > 0 ? keywordsArray : undefined,
         });
 
         router.push("/admin/blog");
