@@ -8,6 +8,7 @@ import {
   validateThumbnailFormat,
 } from "@/services/blog/thumbnail.service";
 import { Asset, generateAssets } from "@/services/blog/assets.service";
+import { revalidateNextPages } from "@/services/api/revalidateNextPages";
 
 export interface FormValues {
   altThumbnail: string;
@@ -53,7 +54,7 @@ export function usePostSubmit(
           .map((k) => k.trim().toLowerCase())
           .filter((k) => k.length > 0);
 
-        await createOrUpdatePost({
+        const receivedPostId = await createOrUpdatePost({
           id: postId,
           name,
           description,
@@ -66,6 +67,8 @@ export function usePostSubmit(
           assets: generatedAssets,
           keywords: keywordsArray.length > 0 ? keywordsArray : undefined,
         });
+
+        await revalidateNextPages("blog", receivedPostId);
 
         router.push("/admin/blog");
       } catch (error) {
