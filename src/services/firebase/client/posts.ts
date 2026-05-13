@@ -233,14 +233,20 @@ export async function createOrUpdatePost(
   const postId = post.id || generatePostId(post.name);
   const postDoc = doc(postsCollection, postId);
 
+  // Preserve visible status and views on update, set defaults only on creation
+  const existingPost = post.id ? await getDoc(postDoc) : null;
+  const existingData = existingPost?.exists() ? existingPost.data() : null;
+  const currentVisible = existingData?.visible ?? false;
+  const currentViews = existingData?.views ?? [];
+
   await setDoc(postDoc, {
     ...post,
     id: postId,
     date: Timestamp.fromDate(post.date),
     thumbnail: await saveThumbnailInStorage(post.thumbnail, postDoc.id),
     assets: await saveAssetsInStorage(post.assets, postDoc.id),
-    views: [],
-    visible: false,
+    views: currentViews,
+    visible: currentVisible,
   });
 
   return postId;
