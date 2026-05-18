@@ -17,9 +17,13 @@ export default async function handler(
     //if (!certificateId) return res.status(400).json({ error: "Missing certificateId" });
     const isAdmin = await validateAdminUser(idToken);
     if (!isAdmin) return res.status(401).json({ error: "Unauthorized by firebase" });
-    if(pageUrl) await res.revalidate(pageUrl, {
-      unstable_onlyGenerated: true,
-    })
+
+    if (pageUrl) {
+      // CMS pages might be served via ISR/ISG; force regeneration instead of
+      // relying on `unstable_onlyGenerated`.
+      await res.revalidate(pageUrl);
+    }
+
     return res.status(200).json({ message: "Page revalidated" });
   } catch (error) {
     console.error("erro da api",error);
