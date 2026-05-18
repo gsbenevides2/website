@@ -9,6 +9,8 @@ import { useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import styles from "./styles.module.scss";
 import MyError from "@/utils/MyError";
+import { JsonLd } from "@/components/JsonLd";
+import { buildCreativeWorkJsonLd } from "@/utils/jsonld";
 
 interface Project {
   id: string;
@@ -73,6 +75,17 @@ export default function Page(
 ) {
   const { project } = props;
 
+  const creativeWorkJsonLd =
+    process.env.NEXT_PUBLIC_DOMAIN && project
+      ? buildCreativeWorkJsonLd({
+          url: process.env.NEXT_PUBLIC_DOMAIN + `/project/${project.id}`,
+          name: project.name,
+          description: `Projeto ${project.name}`,
+          image: project.image,
+          sameAs: project.github ? [project.github] : undefined,
+        })
+      : null;
+
   const githubButton = useMemo(() => {
     if (!project) return null;
     if (!project.github) return null;
@@ -104,6 +117,11 @@ export default function Page(
         canonical={process.env.NEXT_PUBLIC_DOMAIN + `/project/${project.id}`}
         keywords={project.keywords}
       />
+
+      {creativeWorkJsonLd && (
+        <JsonLd id="creativework" jsonLd={creativeWorkJsonLd} />
+      )}
+
       <h2>{project.name}</h2>
       <div className={styles.area1}>
         <div className={styles.image}>
