@@ -17,9 +17,7 @@ export default async function handler(
     const isAdmin = await validateAdminUser(idToken);
     if (!isAdmin) return res.status(401).json({ error: "Unauthorized" });
     await res.revalidate('/projects')
-    await res.revalidate(`/project/${encodeURIComponent(projectId)}`, {
-      unstable_onlyGenerated: true,
-    })
+    await res.revalidate(`/project/${encodeURIComponent(projectId)}`);
     return res.status(200).json({ message: "Project revalidated" });
   } catch (error) {
     console.error(error);
