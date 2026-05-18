@@ -167,32 +167,22 @@ export function buildFAQPageJsonLd(params: {
   };
 }
 
-export function buildSoftwareApplicationJsonLd(params: {
+export function buildCreativeWorkJsonLd(params: {
   url: string;
   name: string;
   description?: string;
   image?: string;
-  codeRepository?: string;
-  applicationCategory?: string;
+  sameAs?: string[];
 }): Record<string, unknown> {
-  const {
-    url,
-    name,
-    description,
-    image,
-    codeRepository,
-    applicationCategory,
-  } = params;
-
+  const { url, name, description, image, sameAs } = params;
   return {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
+    "@type": "CreativeWork",
     name,
     url,
     ...(description ? { description } : {}),
     ...(image ? { image } : {}),
-    ...(applicationCategory ? { applicationCategory } : {}),
-    ...(codeRepository ? { codeRepository } : {}),
+    ...(sameAs && sameAs.length > 0 ? { sameAs } : {}),
   };
 }
 

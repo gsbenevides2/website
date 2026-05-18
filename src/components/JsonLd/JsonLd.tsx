@@ -13,3 +13,4 @@ export function JsonLd({ id, jsonLd }: { id?: string; jsonLd: unknown }) {
     </Head>
   );
 }
+
