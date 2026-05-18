@@ -12,6 +12,8 @@ import { useCallback, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import useLoadColor from "@/hooks/useLoadColor";
 import styles from "./styles.module.scss";
+import { JsonLd } from "@/components/JsonLd";
+import { buildCourseJsonLd } from "@/utils/jsonld";
 import MyError from "@/utils/MyError";
 
 interface Certification {
@@ -95,6 +97,24 @@ export default function Page(
 ) {
   const { certificate } = props;
 
+  const canonicalUrl = process.env.NEXT_PUBLIC_DOMAIN +
+    "/certificate/" +
+    (certificate?.id ?? "");
+
+  const courseJsonLd = certificate
+    ? buildCourseJsonLd({
+        url: canonicalUrl,
+        name: certificate.name,
+        description: certificate.description.desktop,
+        provider: {
+          name: certificate.institution,
+          url: certificate.externalReference,
+        },
+        datePublished: certificate.date,
+        image: certificate.certificate.thumbnail.png,
+      })
+    : null;
+
   const referenceButton = useMemo(() => {
     if (!certificate) return null;
     if (!certificate.externalReference) return null;
@@ -131,6 +151,9 @@ export default function Page(
 
   return (
     <div className={styles.containerCertification} id="container">
+      {courseJsonLd && (
+        <JsonLd id="course" jsonLd={courseJsonLd} />
+      )}
       <DefaultSeo
         title={certificate.name}
         description={`Certificado de ${certificate.name} emitido pela instituição ${certificate.institution}`}

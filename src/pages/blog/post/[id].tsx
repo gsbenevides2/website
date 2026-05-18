@@ -58,14 +58,21 @@ export default function PostPage(
     "/blog/post/" +
     props.post.id;
 
+  const toDateTimeForSchema = (dateYMD: string) => {
+    // post.date is stored as YYYY-MM-DD (UTC date only). Structured data prefers dateTime.
+    // Use Sao Paulo offset (America/Sao_Paulo): UTC-03:00 (approx; good enough for date-only fields).
+    return `${dateYMD}T00:00:00-03:00`;
+  };
+
   const blogPostingJsonLd = buildBlogPostingJsonLd({
     url: canonicalUrl,
     headline: props.post.name,
     description: props.post.description,
-    datePublished: props.post.date,
-    dateModified: props.post.date,
+    datePublished: toDateTimeForSchema(props.post.date),
+    dateModified: toDateTimeForSchema(props.post.date),
     author: {
       name: "Guilherme Benevides",
+      url: "https://github.com/gsbenevides2",
     },
     publisher: {
       name: "Site do Guilherme",
