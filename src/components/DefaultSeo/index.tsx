@@ -1,10 +1,7 @@
 import { NextSeo } from "next-seo";
 import { OpenGraphMedia } from "next-seo/lib/types";
 import { JsonLd } from "@/components/JsonLd";
-import {
-  buildOrganizationJsonLd,
-  buildWebPageJsonLd,
-} from "@/utils/jsonld";
+import { buildOrganizationJsonLd, buildWebPageJsonLd } from "@/utils/jsonld";
 
 export interface DefaultSeoProps {
   title: string;
@@ -89,12 +86,8 @@ export function DefaultSeo(props: DefaultSeoProps) {
 
   return (
     <>
-      {organizationJsonLd && (
-        <JsonLd id="org" jsonLd={organizationJsonLd} />
-      )}
-      {webpageJsonLd && (
-        <JsonLd id="webpage" jsonLd={webpageJsonLd} />
-      )}
+      {organizationJsonLd && <JsonLd id="org" jsonLd={organizationJsonLd} />}
+      {webpageJsonLd && <JsonLd id="webpage" jsonLd={webpageJsonLd} />}
       <NextSeo
         title={title}
         description={description}
