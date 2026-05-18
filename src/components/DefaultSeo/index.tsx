@@ -1,5 +1,10 @@
 import { NextSeo } from "next-seo";
 import { OpenGraphMedia } from "next-seo/lib/types";
+import { JsonLd } from "@/components/JsonLd";
+import {
+  buildOrganizationJsonLd,
+  buildWebPageJsonLd,
+} from "@/utils/jsonld";
 
 export interface DefaultSeoProps {
   title: string;
@@ -25,6 +30,30 @@ export function DefaultSeo(props: DefaultSeoProps) {
     noIndex,
     noFollow,
   } = props;
+
+  let organizationUrl: string | undefined = undefined;
+  try {
+    if (canonical) organizationUrl = new URL(canonical).origin;
+  } catch {
+    organizationUrl = canonical;
+  }
+
+  const organizationJsonLd =
+    organizationUrl && site_name
+      ? buildOrganizationJsonLd({
+          url: organizationUrl,
+          name: site_name,
+        })
+      : null;
+
+  const webpageJsonLd =
+    canonical && title
+      ? buildWebPageJsonLd({
+          url: canonical,
+          name: title,
+          description,
+        })
+      : null;
 
   const aditionalMetaTags = [
     {
@@ -59,26 +88,34 @@ export function DefaultSeo(props: DefaultSeoProps) {
   }
 
   return (
-    <NextSeo
-      title={title}
-      description={description}
-      canonical={canonical}
-      noindex={noIndex}
-      openGraph={{
-        title,
-        description,
-        site_name,
-        locale: "pt_BR",
-        images,
-        type,
-      }}
-      nofollow={noFollow}
-      additionalMetaTags={aditionalMetaTags}
-      twitter={{
-        site: "@gsbenevides2",
-        handle: "@gsbenevides2",
-        cardType: "summary_large_image",
-      }}
-    />
+    <>
+      {organizationJsonLd && (
+        <JsonLd id="org" jsonLd={organizationJsonLd} />
+      )}
+      {webpageJsonLd && (
+        <JsonLd id="webpage" jsonLd={webpageJsonLd} />
+      )}
+      <NextSeo
+        title={title}
+        description={description}
+        canonical={canonical}
+        noindex={noIndex}
+        openGraph={{
+          title,
+          description,
+          site_name,
+          locale: "pt_BR",
+          images,
+          type,
+        }}
+        nofollow={noFollow}
+        additionalMetaTags={aditionalMetaTags}
+        twitter={{
+          site: "@gsbenevides2",
+          handle: "@gsbenevides2",
+          cardType: "summary_large_image",
+        }}
+      />
+    </>
   );
 }

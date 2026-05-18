@@ -13,6 +13,8 @@ import { serialize } from "next-mdx-remote-client/serialize";
 import Image from "next/image";
 import { ParsedUrlQuery } from "querystring";
 import styles from "./styles.module.scss";
+import { JsonLd } from "@/components/JsonLd";
+import { buildBlogPostingJsonLd } from "@/utils/jsonld";
 
 interface Props {
   post: Post;
@@ -52,6 +54,26 @@ export const getStaticProps: GetStaticProps<Props> = async (context) => {
 export default function PostPage(
   props: InferGetStaticPropsType<typeof getStaticProps>,
 ) {
+  const canonicalUrl = process.env.NEXT_PUBLIC_DOMAIN +
+    "/blog/post/" +
+    props.post.id;
+
+  const blogPostingJsonLd = buildBlogPostingJsonLd({
+    url: canonicalUrl,
+    headline: props.post.name,
+    description: props.post.description,
+    datePublished: props.post.date,
+    dateModified: props.post.date,
+    author: {
+      name: "Guilherme Benevides",
+    },
+    publisher: {
+      name: "Site do Guilherme",
+      url: process.env.NEXT_PUBLIC_DOMAIN,
+    },
+    image: props.post.thumbnail.metaTag,
+  });
+
   const ResponsiveImage = (imageProps: React.HTMLProps<HTMLImageElement>) => {
     const src = imageProps.src as string;
     let url = src;
@@ -92,6 +114,7 @@ export default function PostPage(
 
   return (
     <div className={styles.external}>
+      <JsonLd id="blogposting" jsonLd={blogPostingJsonLd} />
       <DefaultSeo
         title={`${props.post.name} - Blog do Guilherme`}
         description={props.post.description}

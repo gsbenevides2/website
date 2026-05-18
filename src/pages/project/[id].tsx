@@ -9,6 +9,8 @@ import { useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import styles from "./styles.module.scss";
 import MyError from "@/utils/MyError";
+import { JsonLd } from "@/components/JsonLd";
+import { buildSoftwareApplicationJsonLd } from "@/utils/jsonld";
 
 interface Project {
   id: string;
@@ -73,6 +75,18 @@ export default function Page(
 ) {
   const { project } = props;
 
+  const softwareAppJsonLd =
+    process.env.NEXT_PUBLIC_DOMAIN && project
+      ? buildSoftwareApplicationJsonLd({
+          url: process.env.NEXT_PUBLIC_DOMAIN + `/project/${project.id}`,
+          name: project.name,
+          description: `Projeto ${project.name}`,
+          image: project.image,
+          codeRepository: project.github,
+          applicationCategory: "WebApplication",
+        })
+      : null;
+
   const githubButton = useMemo(() => {
     if (!project) return null;
     if (!project.github) return null;
@@ -104,6 +118,11 @@ export default function Page(
         canonical={process.env.NEXT_PUBLIC_DOMAIN + `/project/${project.id}`}
         keywords={project.keywords}
       />
+
+      {softwareAppJsonLd && (
+        <JsonLd id="softwareapplication" jsonLd={softwareAppJsonLd} />
+      )}
+
       <h2>{project.name}</h2>
       <div className={styles.area1}>
         <div className={styles.image}>
