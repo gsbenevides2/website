@@ -202,7 +202,11 @@ export function buildCourseJsonLd(params: {
     name,
     url,
     ...(description ? { description } : {}),
-    provider,
+    provider: {
+      "@type": "Organization",
+      name: provider.name,
+      ...(provider.url ? { url: provider.url } : {}),
+    },
     ...(datePublished ? { datePublished } : {}),
     ...(image ? { image } : {}),
   };
