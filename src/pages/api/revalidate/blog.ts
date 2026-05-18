@@ -16,10 +16,14 @@ export default async function handler(
     if (!postId) return res.status(400).json({ error: "Missing postId" });
     const isAdmin = await validateAdminUser(idToken);
     if (!isAdmin) return res.status(401).json({ error: "Unauthorized" });
-    await res.revalidate('/blog')
-    await res.revalidate(`/blog/post/${encodeURIComponent(postId)}`, {
-      unstable_onlyGenerated: true,
-    })
+
+    await res.revalidate("/blog");
+
+    // /blog/post/[id] uses `fallback: "blocking"`, so we need to force
+    // regeneration (not `unstable_onlyGenerated`) to avoid serving stale
+    // content after updates.
+    await res.revalidate(`/blog/post/${encodeURIComponent(postId)}`);
+
     return res.status(200).json({ message: "Post revalidated" });
   } catch (error) {
     console.error(error);

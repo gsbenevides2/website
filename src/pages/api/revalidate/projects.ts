@@ -16,8 +16,13 @@ export default async function handler(
     if (!projectId) return res.status(400).json({ error: "Missing projectId" });
     const isAdmin = await validateAdminUser(idToken);
     if (!isAdmin) return res.status(401).json({ error: "Unauthorized" });
-    await res.revalidate('/projects')
+
+    await res.revalidate("/projects");
+
+    // /project/[id] uses `fallback: true`, so we need to force regeneration
+    // (not `unstable_onlyGenerated`) to avoid serving stale content after updates.
     await res.revalidate(`/project/${encodeURIComponent(projectId)}`);
+
     return res.status(200).json({ message: "Project revalidated" });
   } catch (error) {
     console.error(error);
