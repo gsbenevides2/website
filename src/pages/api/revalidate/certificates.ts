@@ -18,9 +18,12 @@ export default async function handler(
     const isAdmin = await validateAdminUser(idToken);
     if (!isAdmin) return res.status(401).json({ error: "Unauthorized by firebase" });
     await res.revalidate('/certificates')
-    if(certificateId) await res.revalidate(`/certificate/${encodeURIComponent(certificateId)}`, {
-      unstable_onlyGenerated: true,
-    })
+
+    // /certificate/[id] uses `fallback: true`, so we need to force regeneration
+    // (not `unstable_onlyGenerated`) to avoid serving stale content after updates.
+    if (certificateId)
+      await res.revalidate(`/certificate/${encodeURIComponent(certificateId)}`);
+
     return res.status(200).json({ message: "Certificate revalidated" });
   } catch (error) {
     console.error("erro da api",error);
