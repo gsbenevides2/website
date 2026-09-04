@@ -29,6 +29,7 @@ openobserveRum.init({
   defaultPrivacyLevel: "mask-user-input",
   sessionSampleRate: 100,
   sessionReplaySampleRate: 100,
+  trackingConsent: "granted",
 });
 
 openobserveLogs.init({
