@@ -26,9 +26,9 @@ openobserveRum.init({
   trackUserInteractions: true,
   apiVersion: options.apiVersion,
   insecureHTTP: options.insecureHTTP,
-  defaultPrivacyLevel: "allow",
+  defaultPrivacyLevel: "mask-user-input",
   sessionSampleRate: 100,
-  sessionReplaySampleRate: 50,
+  sessionReplaySampleRate: 100,
 });
 
 openobserveLogs.init({
