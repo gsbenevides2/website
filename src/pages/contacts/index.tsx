@@ -12,6 +12,7 @@ import {
   TbBrandX,
   TbMail,
   TbMusic,
+  TbShieldCheck,
 } from "react-icons/tb";
 import styles from "./styles.module.scss";
 
@@ -147,6 +148,12 @@ export default function Contacts(props: Props) {
                 </Link>
               </li>
             )}
+            <li>
+              <Link href="/telemetria">
+                <TbShieldCheck />
+                Telemetria e privacidade
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

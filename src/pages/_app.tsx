@@ -8,6 +8,7 @@ import Script from "next/script";
 import { useEffect } from "react";
 
 import { ToastProvider } from "@/contexts/ToastContext";
+import TelemetryNotice from "@/components/TelemetryNotice";
 import ToastContainer from "@/components/ToastContainer";
 import "./globals.scss";
 import "@uiw/react-md-editor/markdown-editor.css";
@@ -36,6 +37,7 @@ export default function MyApp(props: AppProps) {
         <Analytics />
         <SpeedInsights />
         <ToastContainer />
+        <TelemetryNotice />
       </main>
     </ToastProvider>
   );
